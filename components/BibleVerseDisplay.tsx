@@ -44,6 +44,8 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       <ScrollView style={styles.scrollContent}>
       {verses.map((verse, index) => (
         <View
+          key={`verse-${index}`}
+        <View
           key={verse.reference}
           style={[
             styles.verseContainer,
