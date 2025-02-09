@@ -151,17 +151,26 @@ const styles = StyleSheet.create({
   versesContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    display: 'flex',
-    flexDirection: 'column',
+    position: 'relative',
   },
   topSection: {
-    marginBottom: 'auto',
+    position: 'absolute',
+    top: 20,
+    left: 16,
+    right: 16,
   },
   middleSection: {
-    marginVertical: 20,
+    position: 'absolute',
+    top: '50%',
+    left: 16,
+    right: 16,
+    transform: [{ translateY: -50 }],
   },
   bottomSection: {
-    marginTop: 'auto',
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    right: 16,
   },
   verseContent: {
     padding: 16,
