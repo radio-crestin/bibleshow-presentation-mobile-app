@@ -37,24 +37,17 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       paddingRight: insets.right,
     }]}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingRight: 16 }}>
           <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
         </View>
-        <View style={{ flex: 2, alignItems: 'center' }}>
-          <View style={styles.connectionStatus}>
-            <ThemedText style={styles.connectionText}>
-              {isConnected ? 'Conectat' : 'Deconectat'}
-            </ThemedText>
-            <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
-          </View>
-        </View>
-        <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Pressable 
             onPress={handleRefresh}
             style={[styles.iconButton, isRefreshing && styles.rotating]}
           >
             <IconSymbol name="arrow.clockwise" size={24} />
           </Pressable>
+          <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
           <Pressable 
             onPress={() => router.push('/settings')}
             style={styles.iconButton}
@@ -108,15 +101,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     backgroundColor: 'white',
-  },
-  connectionStatus: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  connectionText: {
-    fontSize: 14,
-    color: '#666',
   },
   connectionDot: {
     width: 8,
