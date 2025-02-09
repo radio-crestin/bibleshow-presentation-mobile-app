@@ -95,6 +95,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
               <ThemedText style={[styles.verseText, { fontSize }]}>{verse.text}</ThemedText>
             </View>
           </Pressable>
+          </View>
       ))}
       </ScrollView>
     </View>
