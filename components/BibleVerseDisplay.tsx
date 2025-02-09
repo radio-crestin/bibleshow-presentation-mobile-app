@@ -10,9 +10,10 @@ type BibleVerse = {
 
 type Props = {
   verses: BibleVerse[];
+  currentBook: string;
 };
 
-export function BibleVerseDisplay({ verses }: Props) {
+export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const insets = useSafeAreaInsets();
   const { fontSize } = useSettings();
 
@@ -23,7 +24,7 @@ export function BibleVerseDisplay({ verses }: Props) {
       paddingLeft: insets.left + 16,
       paddingRight: insets.right + 16,
     }]}>
-      <ThemedText style={styles.currentReference}>{verses[1].reference}</ThemedText>
+      <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
       {verses.map((verse, index) => (
         <View
           key={verse.reference}
