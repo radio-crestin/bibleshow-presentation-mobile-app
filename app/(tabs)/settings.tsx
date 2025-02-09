@@ -16,7 +16,11 @@ export default function SettingsScreen() {
     powerSaveEnabled,
     setPowerSaveEnabled,
     powerSaveTimeout,
-    setPowerSaveTimeout
+    setPowerSaveTimeout,
+    testPowerSave: () => {
+      setIsConnected(false);
+      setDisconnectedTime(new Date(Date.now() - powerSaveTimeout * 60 * 1000));
+    }
   } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -109,6 +113,15 @@ export default function SettingsScreen() {
                 editable={powerSaveEnabled}
               />
             </View>
+            
+            {powerSaveEnabled && (
+              <Pressable
+                onPress={testPowerSave}
+                style={styles.testButton}
+              >
+                <ThemedText style={styles.testButtonText}>Testează economisire energie</ThemedText>
+              </Pressable>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -223,5 +236,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+  },
+  testButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  testButtonText: {
+    color: 'white',
+    fontWeight: '600',
   },
 });
