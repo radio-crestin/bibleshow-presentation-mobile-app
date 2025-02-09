@@ -100,7 +100,7 @@ wss.on('connection', async (ws) => {
           type: 'verses',
           data: {
             currentBook: currentVerse.book,
-            verses: [currentVerse, currentVerse, currentVerse]
+            verses: [currentVerse]
           }
         }));
       }
