@@ -1,4 +1,4 @@
-import { View, Animated, useWindowDimensions } from 'react-native';
+import { View, Animated, useWindowDimensions, Text } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,7 +9,7 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws, isPowerSaving } = useSettings();
+  const { fontSize, isConnected, ws, isPowerSaving, isDisconnectedTimeout } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -35,7 +35,14 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
         onRefresh={handleRefresh}
         paddingTop={insets.top}
       />
-      <View style={styles.versesContainer}>
+      {isDisconnectedTimeout ? (
+        <View style={styles.disconnectedMessage}>
+          <Text style={[styles.disconnectedText, { fontSize: fontSize * 1.2 }]}>
+            Dispozitivul a pierdut conexiunea
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.versesContainer}>
         {verses.length === 1 ? (
           <View style={styles.topSection}>
             <VerseSection
@@ -102,6 +109,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
           </>
         )}
       </View>
+      )}
     </View>
   );
 }

@@ -264,4 +264,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
+  disconnectedMessage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  disconnectedText: {
+    textAlign: 'center',
+    color: '#666',
+    fontWeight: '500',
+  },
 });
