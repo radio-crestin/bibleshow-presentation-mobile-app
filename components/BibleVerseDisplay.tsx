@@ -46,7 +46,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
               {isConnected ? 'Conectat' : 'Deconectat'}
             </ThemedText>
             <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
-          </View>
+          </Pressable>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
           <Pressable 
@@ -75,7 +75,15 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
               styles.verseContainer,
               index === 1 && styles.middleVerseContainer,
             ]}>
-          <View 
+          <Pressable 
+            onPress={() => {
+              if (ws && isConnected) {
+                ws.send(JSON.stringify({
+                  type: 'setReference',
+                  reference: verse.reference
+                }));
+              }
+            }}
             style={[
               styles.verseContent, 
               index === 1 && styles.highlightedVerse,

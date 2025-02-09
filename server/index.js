@@ -73,7 +73,7 @@ wss.on('connection', (ws) => {
             client.send(JSON.stringify({
               type: 'verses',
               data: {
-                currentBook: 'John',
+                currentBook: 'Ioan',
                 verses: getVerseGroup(currentVerseIndex)
               }
             }));
