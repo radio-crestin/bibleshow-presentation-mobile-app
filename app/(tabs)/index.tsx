@@ -6,16 +6,16 @@ export default function HomeScreen() {
   const [currentBook] = useState("John");
   const [verses] = useState([
     {
-      text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
-      reference: "3:16"
+      text: "Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'",
+      reference: "14:6"
     },
     {
-      text: "I can do all this through him who gives me strength.",
-      reference: "4:13"
+      text: "Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.",
+      reference: "14:27"
     },
     {
-      text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
-      reference: "5:9"
+      text: "Greater love has no one than this: to lay down one's life for one's friends.",
+      reference: "15:13"
     }
   ]);
 
