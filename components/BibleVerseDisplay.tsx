@@ -1,7 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { IconSymbol } from './ui/IconSymbol';
+import { useRouter } from 'expo-router';
 
 type BibleVerse = {
   text: string;
@@ -16,6 +18,7 @@ type Props = {
 export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const insets = useSafeAreaInsets();
   const { fontSize } = useSettings();
+  const router = useRouter();
 
   return (
     <View style={[styles.container, { 
@@ -25,6 +28,12 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       paddingRight: insets.right + 16,
     }]}>
       <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
+      <Pressable 
+        onPress={() => router.push('/settings')}
+        style={styles.settingsButton}
+      >
+        <IconSymbol name="gear" size={24} />
+      </Pressable>
       {verses.map((verse, index) => (
         <View
           key={verse.reference}
@@ -53,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     position: 'absolute',
-    top: 50,
+    top: 60,
     left: 16,
   },
   verseContainer: {
@@ -84,5 +93,11 @@ const styles = StyleSheet.create({
   },
   referenceText: {
     fontWeight: 'bold',
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 60,
+    right: 16,
+    padding: 8,
   },
 });
