@@ -94,8 +94,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
               <ThemedText style={[styles.referenceText, { fontSize }]}>{verse.reference}</ThemedText>
               <ThemedText style={[styles.verseText, { fontSize }]}>{verse.text}</ThemedText>
             </View>
-          </View>
-        </View>
+          </Pressable>
       ))}
       </ScrollView>
     </View>
