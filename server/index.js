@@ -34,20 +34,15 @@ async function parseXMLFile() {
     const xmlContent = await fs.promises.readFile(XML_PATH, 'utf-8');
     const result = await parser.parseStringPromise(xmlContent);
     
-    // Extract verse data and render HTML
+    // Extract verse data
     const data = result.BibleShowData;
-    const renderedText = data.Scripture
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/\[([^\]]+)\]/g, '<i>$1</i>'); // Convert [text] to <i>text</i>
-    
     return {
-      text: renderedText,
+      text: data.Scripture,
       reference: data.Reference,
       book: data.BookName,
       chapter: data.ChapterNumber,
       verse: data.VerseNumber,
-      html: `<p>${renderedText}</p>`
+      html: data.Scripture
     };
   } catch (error) {
     console.error('Error parsing XML:', error);
