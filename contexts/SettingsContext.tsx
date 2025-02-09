@@ -50,7 +50,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     };
 
     websocket.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      // console.error('WebSocket error:', error);
       setIsConnected(false);
     };
 
