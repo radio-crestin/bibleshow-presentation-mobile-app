@@ -7,16 +7,16 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 const verses = [
-  { text: "In the beginning was the Word, and the Word was with God, and the Word was God.", reference: "1:1" },
-  { text: "He was with God in the beginning.", reference: "1:2" },
-  { text: "Through him all things were made; without him nothing was made that has been made.", reference: "1:3" },
-  { text: "In him was life, and that life was the light of all mankind.", reference: "1:4" },
-  { text: "The light shines in the darkness, and the darkness has not overcome it.", reference: "1:5" },
-  { text: "The Word became flesh and made his dwelling among us.", reference: "1:14" },
-  { text: "For God so loved the world that he gave his one and only Son.", reference: "3:16" },
-  { text: "I am the way and the truth and the life.", reference: "14:6" },
-  { text: "Peace I leave with you; my peace I give you.", reference: "14:27" },
-  { text: "Greater love has no one than this: to lay down one's life for one's friends.", reference: "15:13" }
+  { text: "La început era Cuvântul, și Cuvântul era cu Dumnezeu, și Cuvântul era Dumnezeu.", reference: "1:1" },
+  { text: "El era la început cu Dumnezeu.", reference: "1:2" },
+  { text: "Toate lucrurile au fost făcute prin El; și nimic din ce a fost făcut n-a fost făcut fără El.", reference: "1:3" },
+  { text: "În El era viața, și viața era lumina oamenilor.", reference: "1:4" },
+  { text: "Lumina luminează în întuneric, și întunericul n-a biruit-o.", reference: "1:5" },
+  { text: "Și Cuvântul S-a făcut trup și a locuit printre noi.", reference: "1:14" },
+  { text: "Fiindcă atât de mult a iubit Dumnezeu lumea, că a dat pe singurul Lui Fiu.", reference: "3:16" },
+  { text: "Eu sunt calea, adevărul și viața.", reference: "14:6" },
+  { text: "Vă las pacea, vă dau pacea Mea.", reference: "14:27" },
+  { text: "Nu este mai mare dragoste decât să-și dea cineva viața pentru prietenii săi.", reference: "15:13" }
 ];
 
 let currentVerseIndex = 4; // Start with verse 1:5
@@ -34,7 +34,7 @@ wss.on('connection', (ws) => {
   ws.send(JSON.stringify({
     type: 'verses',
     data: {
-      currentBook: 'John',
+      currentBook: 'Ioan',
       verses: getVerseGroup(currentVerseIndex)
     }
   }));

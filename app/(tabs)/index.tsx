@@ -4,11 +4,11 @@ import { BibleVerseDisplay } from '@/components/BibleVerseDisplay';
 import { useSettings } from '@/contexts/SettingsContext';
 
 export default function HomeScreen() {
-  const [currentBook, setCurrentBook] = useState("John");
+  const [currentBook, setCurrentBook] = useState("Ioan");
   const [verses, setVerses] = useState([
-    { text: "Loading...", reference: "..." },
-    { text: "Loading...", reference: "..." },
-    { text: "Loading...", reference: "..." }
+    { text: "Se încarcă...", reference: "..." },
+    { text: "Se încarcă...", reference: "..." },
+    { text: "Se încarcă...", reference: "..." }
   ]);
   const { ws } = useSettings();
 
