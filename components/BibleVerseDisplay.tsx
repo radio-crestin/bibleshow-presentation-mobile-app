@@ -114,10 +114,10 @@ const styles = StyleSheet.create({
   versesContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+    paddingVertical: 20,
   },
   verseContainer: {
-    marginVertical: 10,
     borderRadius: 8,
   },
   verseContent: {
