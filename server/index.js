@@ -36,8 +36,15 @@ async function parseXMLFile() {
     
     // Extract verse data
     const data = result.BibleShowData;
+    // Strip HTML tags for plain text version
+    const plainText = data.Scripture
+      .replace(/<[^>]+>/g, '') // Remove HTML tags
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+    
     return {
-      text: data.Scripture,
+      text: plainText,
       reference: data.Reference,
       book: data.BookName,
       chapter: data.ChapterNumber,
