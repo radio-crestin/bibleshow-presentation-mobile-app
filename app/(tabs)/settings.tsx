@@ -14,7 +14,7 @@ export default function SettingsScreen() {
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <ThemedText style={styles.headerTitle}>Settings</ThemedText>
+        <ThemedText style={styles.headerTitle}>Setări</ThemedText>
         <Pressable 
           onPress={() => router.back()}
           style={styles.closeButton}
@@ -27,7 +27,7 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <IconSymbol name="textformat.size" size={24} />
-            <ThemedText style={styles.sectionTitle}>Font Size</ThemedText>
+            <ThemedText style={styles.sectionTitle}>Mărime Text</ThemedText>
           </View>
           
           <View style={styles.fontSizeControl}>
@@ -55,11 +55,11 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <IconSymbol name="network" size={24} />
-            <ThemedText style={styles.sectionTitle}>Server Connection</ThemedText>
+            <ThemedText style={styles.sectionTitle}>Conexiune Server</ThemedText>
           </View>
           
           <View style={styles.wsUrlContainer}>
-            <ThemedText style={styles.wsUrlLabel}>WebSocket URL:</ThemedText>
+            <ThemedText style={styles.wsUrlLabel}>Adresă server:</ThemedText>
             <TextInput
               style={styles.wsUrlInput}
               value={wsUrl}

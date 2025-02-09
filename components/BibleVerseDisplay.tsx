@@ -27,8 +27,11 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       paddingRight: insets.right,
     }]}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
-        <View style={styles.headerLeft}>
-          <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
+        <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
+        <View style={styles.connectionStatus}>
+          <ThemedText style={styles.connectionText}>
+            {isConnected ? 'Conectat' : 'Deconectat'}
+          </ThemedText>
           <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
         </View>
         <Pressable 
@@ -77,10 +80,14 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     backgroundColor: 'white',
   },
-  headerLeft: {
+  connectionStatus: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  connectionText: {
+    fontSize: 14,
+    color: '#666',
   },
   connectionDot: {
     width: 8,
