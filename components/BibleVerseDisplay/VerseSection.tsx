@@ -61,9 +61,17 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
             },
             span: {
               fontSize
-            },
-            '.Isus': {
+            }
+          }}
+          classesStyles={{
+            'Isus': {
               color: '#ff0000'
+            }
+          }}
+          defaultTextProps={{}}
+          renderersProps={{
+            img: {
+              enableExperimentalPercentWidth: true
             }
           }}
         />
