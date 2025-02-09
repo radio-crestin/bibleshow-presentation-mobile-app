@@ -45,7 +45,7 @@ export default function SettingsScreen() {
               <IconSymbol name="plus.circle.fill" size={32} />
             </Pressable>
           </View>
-          <View style={styles.previewContainer}>
+          <View style={[styles.previewContainer, { minHeight: fontSize * 4 }]}>
             <ThemedText style={[styles.previewText, { fontSize }]}>
               The quick brown fox jumps over the lazy dog
             </ThemedText>
@@ -116,10 +116,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: 'rgba(0,0,0,0.05)',
     borderRadius: 12,
-    minHeight: 100,
   },
   previewText: {
     textAlign: 'center',
     flexWrap: 'wrap',
+    flexShrink: 1,
   },
 });
