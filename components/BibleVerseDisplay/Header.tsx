@@ -34,10 +34,11 @@ export function Header({
   return (
     <View style={[styles.header, { paddingTop }]}>
       <View style={{ flex: 1, paddingRight: 16 }}>
-        <ThemedText style={[styles.currentReference, { fontSize: 32, textAlign: 'center' }]}>
+        <ThemedText style={[styles.currentReference, { fontSize: 32, textAlign: 'right' }]}>
           {currentTime.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
-            minute: '2-digit', 
+            minute: '2-digit',
+            second: '2-digit',
             hour12: false 
           })}
         </ThemedText>
