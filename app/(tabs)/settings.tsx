@@ -47,7 +47,7 @@ export default function SettingsScreen() {
           </View>
           <View style={styles.previewContainer}>
             <ThemedText style={[styles.previewText, { fontSize }]}>
-              Preview text
+              The quick brown fox jumps over the lazy dog
             </ThemedText>
           </View>
         </View>
@@ -116,8 +116,10 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: 'rgba(0,0,0,0.05)',
     borderRadius: 12,
+    minHeight: 100,
   },
   previewText: {
     textAlign: 'center',
+    flexWrap: 'wrap',
   },
 });
