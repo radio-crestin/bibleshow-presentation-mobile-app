@@ -19,18 +19,20 @@ export function PowerSaveOverlay({ active }: PowerSaveOverlayProps) {
   }, [active]);
 
   return (
-    <Pressable 
-      style={StyleSheet.absoluteFill}
-      onPress={() => active && setIsPowerSaving(false)}
-    >
-      <Animated.View 
-        style={[
-          styles.overlay,
-          { opacity },
-          active && styles.active
-        ]} 
-      />
-    </Pressable>
+    active ? (
+      <Pressable 
+        style={StyleSheet.absoluteFill}
+        onPress={() => setIsPowerSaving(false)}
+      >
+        <Animated.View 
+          style={[
+            styles.overlay,
+            { opacity },
+            styles.active
+          ]} 
+        />
+      </Pressable>
+    ) : null
   );
 }
 
