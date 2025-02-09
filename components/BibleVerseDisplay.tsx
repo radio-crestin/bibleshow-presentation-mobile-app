@@ -41,13 +41,13 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
           <Pressable 
             onPress={handleRefresh}
             style={[styles.iconButton, isRefreshing && styles.rotating]}
           >
             <IconSymbol name="arrow.clockwise" size={24} />
           </Pressable>
-          <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
           <Pressable 
             onPress={() => router.push('/settings')}
             style={styles.iconButton}
