@@ -123,34 +123,6 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
             </View>
           </Pressable>
         </View>
-          <View
-            key={`verse-${index}`}
-            style={[
-              styles.verseContainer,
-              index === 1 && styles.middleVerseContainer,
-            ]}>
-          <Pressable 
-            onPress={() => {
-              if (ws && isConnected) {
-                ws.send(JSON.stringify({
-                  type: 'setReference',
-                  reference: verse.reference
-                }));
-              }
-            }}
-            style={[
-              styles.verseContent, 
-              index === 1 && styles.highlightedVerse,
-              { minHeight: Math.max(80, fontSize * 3) }
-            ]}
-          >
-            <View style={styles.verseWrapper}>
-              <ThemedText style={[styles.referenceText, { fontSize }]}>{verse.reference}</ThemedText>
-              <ThemedText style={[styles.verseText, { fontSize }]}>{verse.text}</ThemedText>
-            </View>
-          </Pressable>
-          </View>
-      ))}
       </View>
     </View>
   );
