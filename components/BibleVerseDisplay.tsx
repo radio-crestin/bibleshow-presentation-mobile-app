@@ -38,7 +38,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
       {isDisconnectedTimeout ? (
         <View style={[styles.disconnectedMessage, { flex: 1, justifyContent: 'center' }]}>
           <Text style={[styles.disconnectedText, { 
-            fontSize: fontSize * 1.2,
+            fontSize: fontSize * 0.9,
             color: '#999999',
             textAlign: 'center'
           }]}>
