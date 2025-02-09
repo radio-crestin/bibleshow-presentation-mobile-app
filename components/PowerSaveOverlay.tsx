@@ -7,7 +7,7 @@ type PowerSaveOverlayProps = {
 };
 
 export function PowerSaveOverlay({ active }: PowerSaveOverlayProps) {
-  const { setIsPowerSaving } = useSettings();
+  const { setIsPowerSaving, setDisconnectedTime } = useSettings();
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -22,7 +22,10 @@ export function PowerSaveOverlay({ active }: PowerSaveOverlayProps) {
     active ? (
       <Pressable 
         style={StyleSheet.absoluteFill}
-        onPress={() => setIsPowerSaving(false)}
+        onPress={() => {
+          setIsPowerSaving(false);
+          setDisconnectedTime(new Date());
+        }}
       >
         <Animated.View 
           style={[

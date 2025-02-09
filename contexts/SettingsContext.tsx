@@ -16,6 +16,7 @@ type SettingsContextType = {
   testPowerSave: () => void;
   isPowerSaving: boolean;
   setIsPowerSaving: (value: boolean) => void;
+  setDisconnectedTime: (date: Date) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -192,7 +193,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setIsPowerSaving(true);
       },
       isPowerSaving,
-      setIsPowerSaving
+      setIsPowerSaving,
+      setDisconnectedTime
     }}>
       {children}
     </SettingsContext.Provider>
