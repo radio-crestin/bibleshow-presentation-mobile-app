@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, TextInput } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -7,7 +7,17 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
-  const { fontSize, increaseFontSize, decreaseFontSize, wsUrl, setWsUrl } = useSettings();
+  const { 
+    fontSize, 
+    increaseFontSize, 
+    decreaseFontSize, 
+    wsUrl, 
+    setWsUrl,
+    powerSaveEnabled,
+    setPowerSaveEnabled,
+    powerSaveTimeout,
+    setPowerSaveTimeout
+  } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -23,7 +33,7 @@ export default function SettingsScreen() {
         </Pressable>
       </View>
 
-      <View style={styles.content}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <IconSymbol name="textformat.size" size={24} color={''} />
@@ -70,7 +80,38 @@ export default function SettingsScreen() {
             />
           </View>
         </View>
-      </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="powersleep" size={24} color={''} />
+            <ThemedText style={styles.sectionTitle}>Economisire Energie</ThemedText>
+          </View>
+          
+          <View style={styles.powerSaveContainer}>
+            <View style={styles.switchRow}>
+              <ThemedText style={styles.switchLabel}>Activează economisire energie</ThemedText>
+              <Switch
+                value={powerSaveEnabled}
+                onValueChange={setPowerSaveEnabled}
+              />
+            </View>
+            
+            <View style={styles.timeoutContainer}>
+              <ThemedText style={styles.timeoutLabel}>Timp până la stingere (minute):</ThemedText>
+              <TextInput
+                style={styles.timeoutInput}
+                value={powerSaveTimeout.toString()}
+                onChangeText={(text) => {
+                  const number = parseInt(text) || 1;
+                  setPowerSaveTimeout(Math.max(1, Math.min(60, number)));
+                }}
+                keyboardType="number-pad"
+                editable={powerSaveEnabled}
+              />
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </ThemedView>
   );
 }
@@ -151,6 +192,33 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   wsUrlInput: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+  },
+  powerSaveContainer: {
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 12,
+    padding: 16,
+    gap: 16,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  switchLabel: {
+    flex: 1,
+    fontWeight: '600',
+  },
+  timeoutContainer: {
+    opacity: 0.8,
+  },
+  timeoutLabel: {
+    marginBottom: 8,
+  },
+  timeoutInput: {
     backgroundColor: 'white',
     borderRadius: 8,
     padding: 12,
