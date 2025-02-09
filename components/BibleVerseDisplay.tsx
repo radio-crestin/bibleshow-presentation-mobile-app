@@ -71,7 +71,6 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
             fontSize={fontSize}
             onPress={() => {
               if (ws && isConnected) {
-                animateTransition();
                 ws.send(JSON.stringify({
                   type: 'setReference',
                   reference: verses[2].reference
