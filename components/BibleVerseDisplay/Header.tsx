@@ -5,7 +5,6 @@ import { styles } from './styles';
 import { useRouter } from 'expo-router';
 
 type HeaderProps = {
-  currentBook: string;
   currentReference: string;
   isConnected: boolean;
   isRefreshing: boolean;
@@ -13,8 +12,7 @@ type HeaderProps = {
   paddingTop: number;
 };
 
-export function Header({ 
-  currentBook, 
+export function Header({
   currentReference, 
   isConnected, 
   isRefreshing, 
@@ -26,7 +24,7 @@ export function Header({
   return (
     <View style={[styles.header, { paddingTop }]}>
       <View style={{ flex: 1, paddingRight: 16 }}>
-        <ThemedText style={styles.currentReference}>{currentBook} {currentReference}</ThemedText>
+        <ThemedText style={styles.currentReference}>{currentReference}</ThemedText>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
@@ -34,13 +32,13 @@ export function Header({
           onPress={onRefresh}
           style={[styles.iconButton, isRefreshing && styles.rotating]}
         >
-          <IconSymbol name="arrow.clockwise" size={24} />
+          <IconSymbol name="arrow.clockwise" size={24} color={""}/>
         </Pressable>
         <Pressable 
           onPress={() => router.push('/settings')}
           style={styles.iconButton}
         >
-          <IconSymbol name="gear" size={24} />
+          <IconSymbol name="gear" size={24} color={""} />
         </Pressable>
       </View>
     </View>
