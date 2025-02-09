@@ -27,7 +27,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const [powerSaveEnabled, setPowerSaveEnabled] = useState(false);
   const [powerSaveTimeout, setPowerSaveTimeout] = useState(5); // 5 minutes default
-  const [disconnectedTime, setDisconnectedTime] = useState<Date>(new Date());
+  const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
 
   const connectWebSocket = () => {
@@ -41,13 +41,16 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       console.log('Connected to server');
       setWs(websocket);
       setIsConnected(true);
+      setDisconnectedTime(null);
     };
 
     websocket.onclose = () => {
       console.log('Disconnected from server');
       setIsConnected(false);
       setWs(null);
-      setDisconnectedTime(new Date());
+      if(!disconnectedTime) {
+        setDisconnectedTime(new Date());
+      }
     };
 
     websocket.onerror = (error) => {
@@ -139,6 +142,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const checkPowerSave = setInterval(() => {
       const now = new Date();
       const disconnectedMinutes = (now.getTime() - disconnectedTime.getTime()) / (1000 * 60);
+      console.log({disconnectedMinutes})
       
       if (disconnectedMinutes >= powerSaveTimeout) {
         setIsPowerSaving(true);
