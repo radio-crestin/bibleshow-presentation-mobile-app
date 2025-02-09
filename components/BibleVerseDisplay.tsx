@@ -36,8 +36,12 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
         paddingTop={insets.top}
       />
       {isDisconnectedTimeout ? (
-        <View style={styles.disconnectedMessage}>
-          <Text style={[styles.disconnectedText, { fontSize: fontSize * 1.2 }]}>
+        <View style={[styles.disconnectedMessage, { flex: 1, justifyContent: 'center' }]}>
+          <Text style={[styles.disconnectedText, { 
+            fontSize: fontSize * 1.2,
+            color: '#999999',
+            textAlign: 'center'
+          }]}>
             Dispozitivul a pierdut conexiunea
           </Text>
         </View>
