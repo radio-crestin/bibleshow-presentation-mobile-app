@@ -1,4 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { FC } from 'react';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -10,6 +11,30 @@ import { useSettings } from '@/contexts/SettingsContext';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+const RootLayoutContent: FC<{ colorScheme: 'light' | 'dark' | null }> = ({ colorScheme }) => {
+  const { isPowerSaving } = useSettings();
+  
+  return (
+    <>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)/index" />
+          <Stack.Screen 
+            name="(tabs)/settings" 
+            options={{
+              presentation: 'modal',
+              animation: 'slide_from_bottom',
+            }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" backgroundColor="white" />
+      </ThemeProvider>
+      <PowerSaveOverlay active={isPowerSaving} />
+    </>
+  );
+};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -30,27 +55,9 @@ export default function RootLayout() {
     return null;
   }
 
-  const { isPowerSaving } = useSettings();
-
   return (
-    <>
     <SettingsProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)/index" />
-        <Stack.Screen 
-          name="(tabs)/settings" 
-          options={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-          }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" backgroundColor="white" />
-    </ThemeProvider>
+      <RootLayoutContent colorScheme={colorScheme} />
     </SettingsProvider>
-    <PowerSaveOverlay active={isPowerSaving} />
-    </>
   );
 }
