@@ -63,11 +63,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           </Pressable>
         </View>
       </View>
-      <ScrollView 
-        style={styles.scrollContent}
-        contentContainerStyle={styles.scrollContentContainer}
-        showsVerticalScrollIndicator={false}
-      >
+      <View style={styles.versesContainer}>
         {verses.map((verse, index) => (
           <View
             key={`verse-${index}`}
@@ -97,7 +93,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           </Pressable>
           </View>
       ))}
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -131,12 +127,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  scrollContent: {
+  versesContainer: {
     flex: 1,
     paddingHorizontal: 16,
-  },
-  scrollContentContainer: {
-    paddingVertical: 16,
+    justifyContent: 'center',
   },
   verseContainer: {
     marginVertical: 10,
