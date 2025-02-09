@@ -21,8 +21,6 @@
     "pkg": "^5.8.1"
   },
   "pkg": {
-    "assets": [
-      "config.json"
-    ]
+    "assets": []
   }
 }

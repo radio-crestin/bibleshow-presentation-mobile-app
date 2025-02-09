@@ -8,13 +8,14 @@ const path = require('path');
 const ip = require('ip');
 const os = require('os');
 
-// Load config
+// Load config from executable's directory
 let config;
 try {
-    const configPath = path.join(process.pkg ? process.cwd() : __dirname, 'config.json');
+    const configPath = path.join(process.cwd(), 'config.json');
     config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 } catch (error) {
-    console.error('Error loading config.json:', error);
+    console.error('Error loading config.json. Please ensure config.json exists in the same directory as the executable.');
+    console.error('Error details:', error);
     process.exit(1);
 }
 
