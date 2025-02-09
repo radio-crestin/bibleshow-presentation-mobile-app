@@ -30,6 +30,10 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
     }
   }, [verse.text, verse.reference]);
 
+  const { width } = useWindowDimensions();
+  const colorScheme = useColorScheme();
+  const textColor = colorScheme === 'dark' ? '#fff' : '#000';
+
   if (isLoading) {
     return <SkeletonLoader numberOfLines={numberOfLines} fontSize={fontSize} />;
   }
@@ -46,12 +50,12 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
       <View style={styles.verseWrapper}>
         <ThemedText style={[styles.referenceText, { fontSize }]}>{currentVerse.reference}</ThemedText>
         <RenderHtml
-          contentWidth={useWindowDimensions().width}
+          contentWidth={width}
           source={{ html: currentVerse.html || currentVerse.text }}
           tagsStyles={{
             p: {
               fontSize,
-              color: useColorScheme() === 'dark' ? '#fff' : '#000',
+              color: textColor,
               margin: 0,
               padding: 0
             },
