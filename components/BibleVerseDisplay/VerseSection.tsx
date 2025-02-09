@@ -18,7 +18,7 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
   const numberOfLines = Math.ceil(verse.text.length / 40); // Rough estimate of lines based on text length
 
   useEffect(() => {
-    if (verse !== currentVerse) {
+    if (verse.text !== currentVerse.text || verse.reference !== currentVerse.reference) {
       setIsLoading(true);
       const timer = setTimeout(() => {
         setCurrentVerse(verse);
@@ -26,7 +26,7 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [verse]);
+  }, [verse.text, verse.reference]);
 
   if (isLoading) {
     return <SkeletonLoader numberOfLines={numberOfLines} fontSize={fontSize} />;
