@@ -72,7 +72,7 @@ watcher.on('change', async () => {
         type: 'verses',
         data: {
           currentBook: currentVerse.book,
-          verses: [currentVerse] // Only send the current verse
+          verses: [currentVerse,] // Only send the current verse
         }
       }));
     });
@@ -96,6 +96,7 @@ wss.on('connection', async (ws) => {
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
+      console.log('Received message:', {data});
       if (data.type === 'refresh' && currentVerse) {
         ws.send(JSON.stringify({
           type: 'verses',
