@@ -128,9 +128,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   scrollContentContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    minHeight: '100%',
+    paddingVertical: 16,
   },
   verseContainer: {
     marginVertical: 10,
