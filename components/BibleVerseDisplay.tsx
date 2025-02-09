@@ -27,19 +27,25 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       paddingRight: insets.right,
     }]}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
-        <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
-        <View style={styles.connectionStatus}>
-          <ThemedText style={styles.connectionText}>
-            {isConnected ? 'Conectat' : 'Deconectat'}
-          </ThemedText>
-          <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
+        <View style={{ flex: 1 }}>
+          <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
         </View>
-        <Pressable 
-          onPress={() => router.push('/settings')}
-          style={styles.settingsButton}
-        >
-          <IconSymbol name="gear" size={24} />
-        </Pressable>
+        <View style={{ flex: 2, alignItems: 'center' }}>
+          <View style={styles.connectionStatus}>
+            <ThemedText style={styles.connectionText}>
+              {isConnected ? 'Conectat' : 'Deconectat'}
+            </ThemedText>
+            <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
+          </View>
+        </View>
+        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+          <Pressable 
+            onPress={() => router.push('/settings')}
+            style={styles.settingsButton}
+          >
+            <IconSymbol name="gear" size={24} />
+          </Pressable>
+        </View>
       </View>
       <ScrollView style={styles.scrollContent}>
         {verses.map((verse, index) => (
@@ -74,7 +80,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 16,
