@@ -1,5 +1,4 @@
 import { StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { ThemedText } from './ThemedText';
 
 type BibleVerse = {
@@ -22,12 +21,10 @@ export function BibleVerseDisplay({ verses }: Props) {
             index === 1 && styles.middleVerseContainer,
           ]}>
           {index === 1 ? (
-            <LinearGradient
-              colors={['#FFD700', '#FFA500']}
-              style={styles.gradient}>
+            <View style={styles.highlightedVerse}>
               <ThemedText style={styles.verseText}>{verse.text}</ThemedText>
               <ThemedText style={styles.referenceText}>{verse.reference}</ThemedText>
-            </LinearGradient>
+            </View>
           ) : (
             <>
               <ThemedText style={styles.verseText}>{verse.text}</ThemedText>
@@ -58,9 +55,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
-  gradient: {
+  highlightedVerse: {
     padding: 16,
     borderRadius: 8,
+    backgroundColor: '#FFA500',
   },
   verseText: {
     fontSize: 18,
