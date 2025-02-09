@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, ScrollView } from 'react-native';
+import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +17,7 @@ type Props = {
 
 export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const insets = useSafeAreaInsets();
-  const { fontSize } = useSettings();
+  const { fontSize, isConnected } = useSettings();
   const router = useRouter();
 
   return (
@@ -27,7 +27,10 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       paddingRight: insets.right,
     }]}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
-        <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
+        <View style={styles.headerLeft}>
+          <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
+          <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
+        </View>
         <Pressable 
           onPress={() => router.push('/settings')}
           style={styles.settingsButton}
@@ -73,6 +76,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     backgroundColor: 'white',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  connectionDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   currentReference: {
     fontSize: 20,

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
-  const { fontSize, increaseFontSize, decreaseFontSize } = useSettings();
+  const { fontSize, increaseFontSize, decreaseFontSize, wsUrl, setWsUrl } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -49,6 +49,25 @@ export default function SettingsScreen() {
             <ThemedText style={[styles.previewText, { fontSize }]}>
               The quick brown fox jumps over the lazy dog
             </ThemedText>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="network" size={24} />
+            <ThemedText style={styles.sectionTitle}>Server Connection</ThemedText>
+          </View>
+          
+          <View style={styles.wsUrlContainer}>
+            <ThemedText style={styles.wsUrlLabel}>WebSocket URL:</ThemedText>
+            <TextInput
+              style={styles.wsUrlInput}
+              value={wsUrl}
+              onChangeText={setWsUrl}
+              placeholder="ws://localhost:3000"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
           </View>
         </View>
       </View>
@@ -121,5 +140,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flexWrap: 'wrap',
     flexShrink: 1,
+  },
+  wsUrlContainer: {
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 12,
+    padding: 16,
+  },
+  wsUrlLabel: {
+    marginBottom: 8,
+    fontWeight: '600',
+  },
+  wsUrlInput: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
   },
 });

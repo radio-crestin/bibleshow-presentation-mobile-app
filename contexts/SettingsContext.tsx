@@ -6,6 +6,9 @@ type SettingsContextType = {
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
   ws: WebSocket | null;
+  wsUrl: string;
+  setWsUrl: (url: string) => void;
+  isConnected: boolean;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -13,23 +16,65 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [fontSize, setFontSize] = useState(18);
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [wsUrl, setWsUrl] = useState('ws://localhost:3000');
+  const [isConnected, setIsConnected] = useState(false);
 
-  useEffect(() => {
-    const websocket = new WebSocket('ws://localhost:3000');
+  const connectWebSocket = () => {
+    if (ws) {
+      ws.close();
+    }
+
+    const websocket = new WebSocket(wsUrl);
     
     websocket.onopen = () => {
       console.log('Connected to server');
       setWs(websocket);
+      setIsConnected(true);
+    };
+
+    websocket.onclose = () => {
+      console.log('Disconnected from server');
+      setIsConnected(false);
+      setWs(null);
     };
 
     websocket.onerror = (error) => {
       console.error('WebSocket error:', error);
+      setIsConnected(false);
     };
 
+    return websocket;
+  };
+
+  useEffect(() => {
+    const loadWsUrl = async () => {
+      try {
+        const savedWsUrl = await AsyncStorage.getItem('wsUrl');
+        if (savedWsUrl) {
+          setWsUrl(savedWsUrl);
+        }
+      } catch (error) {
+        console.error('Error loading WebSocket URL:', error);
+      }
+    };
+    loadWsUrl();
+  }, []);
+
+  useEffect(() => {
+    const websocket = connectWebSocket();
+    
+    const reconnectInterval = setInterval(() => {
+      if (!isConnected) {
+        console.log('Attempting to reconnect...');
+        connectWebSocket();
+      }
+    }, 5000);
+
     return () => {
+      clearInterval(reconnectInterval);
       websocket.close();
     };
-  }, []);
+  }, [wsUrl]);
 
   // Load saved font size on mount
   useEffect(() => {
@@ -67,7 +112,22 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <SettingsContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize, ws }}>
+    <SettingsContext.Provider value={{ 
+      fontSize, 
+      increaseFontSize, 
+      decreaseFontSize, 
+      ws, 
+      wsUrl, 
+      setWsUrl: async (url: string) => {
+        setWsUrl(url);
+        try {
+          await AsyncStorage.setItem('wsUrl', url);
+        } catch (error) {
+          console.error('Error saving WebSocket URL:', error);
+        }
+      },
+      isConnected 
+    }}>
       {children}
     </SettingsContext.Provider>
   );
