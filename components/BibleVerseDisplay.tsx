@@ -32,12 +32,11 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
             styles.verseContainer,
             index === 1 && styles.middleVerseContainer,
           ]}>
-          <View style={[
-            styles.verseContent,
-            index === 1 && styles.highlightedVerse
-          ]}>
-            <ThemedText style={[styles.referenceText, { fontSize }]}>{verse.reference}</ThemedText>
-            <ThemedText style={[styles.verseText, { fontSize }]}>{verse.text}</ThemedText>
+          <View style={[styles.verseContent, index === 1 && styles.highlightedVerse]}>
+            <View style={styles.verseWrapper}>
+              <ThemedText style={[styles.referenceText, { fontSize }]}>{verse.reference}</ThemedText>
+              <ThemedText style={[styles.verseText, { fontSize }]}>{verse.text}</ThemedText>
+            </View>
           </View>
         </View>
       ))}
@@ -64,7 +63,9 @@ const styles = StyleSheet.create({
   verseContent: {
     padding: 16,
     borderRadius: 8,
-    flexDirection: 'row',
+  },
+  verseWrapper: {
+    width: '100%',
   },
   middleVerseContainer: {
     elevation: 3,
@@ -77,12 +78,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFA500',
   },
   verseText: {
-    flex: 1,
+    width: '100%',
     textAlign: 'left',
-    marginLeft: 16,
+    marginTop: 8,
   },
   referenceText: {
     fontWeight: 'bold',
-    width: 80,
   },
 });
