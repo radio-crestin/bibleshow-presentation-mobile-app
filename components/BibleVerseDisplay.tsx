@@ -35,7 +35,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
       />
       <View style={styles.versesContainer}>
         {verses.length === 1 ? (
-          <View style={styles.middleSection}>
+          <View style={styles.topSection}>
             <VerseSection
               verse={verses[0]}
               fontSize={fontSize}
