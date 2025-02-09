@@ -17,7 +17,9 @@ export default function SettingsScreen() {
     setPowerSaveEnabled,
     powerSaveTimeout,
     setPowerSaveTimeout,
-    testPowerSave
+    testPowerSave,
+    showSeconds,
+    setShowSeconds
   } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -119,6 +121,23 @@ export default function SettingsScreen() {
                 <ThemedText style={styles.testButtonText}>Testează economisire energie</ThemedText>
               </Pressable>
             )}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="clock" size={24} color={''} />
+            <ThemedText style={styles.sectionTitle}>Afișare Ceas</ThemedText>
+          </View>
+          
+          <View style={styles.powerSaveContainer}>
+            <View style={styles.switchRow}>
+              <ThemedText style={styles.switchLabel}>Arată secunde</ThemedText>
+              <Switch
+                value={showSeconds}
+                onValueChange={setShowSeconds}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>

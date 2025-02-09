@@ -21,6 +21,7 @@ export function Header({
   paddingTop 
 }: HeaderProps) {
   const router = useRouter();
+  const { showSeconds } = useSettings();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export function Header({
           {currentTime.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit',
-            second: '2-digit',
+            second: showSeconds ? '2-digit' : undefined,
             hour12: false 
           })}
         </ThemedText>

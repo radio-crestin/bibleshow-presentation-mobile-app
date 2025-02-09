@@ -17,6 +17,8 @@ type SettingsContextType = {
   isPowerSaving: boolean;
   setIsPowerSaving: (value: boolean) => void;
   setDisconnectedTime: (date: Date) => void;
+  showSeconds: boolean;
+  setShowSeconds: (show: boolean) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [powerSaveTimeout, setPowerSaveTimeout] = useState(30); // 5 minutes default
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
+  const [showSeconds, setShowSeconds] = useState(true);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -66,15 +69,17 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [savedWsUrl, savedPowerSave, savedTimeout] = await Promise.all([
+        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds] = await Promise.all([
           AsyncStorage.getItem('wsUrl'),
           AsyncStorage.getItem('powerSaveEnabled'),
-          AsyncStorage.getItem('powerSaveTimeout')
+          AsyncStorage.getItem('powerSaveTimeout'),
+          AsyncStorage.getItem('showSeconds')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
         if (savedPowerSave) setPowerSaveEnabled(savedPowerSave === 'true');
         if (savedTimeout) setPowerSaveTimeout(Number(savedTimeout));
+        if (savedShowSeconds) setShowSeconds(savedShowSeconds === 'true');
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -195,7 +200,16 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       },
       isPowerSaving,
       setIsPowerSaving,
-      setDisconnectedTime
+      setDisconnectedTime,
+      showSeconds,
+      setShowSeconds: async (show: boolean) => {
+        setShowSeconds(show);
+        try {
+          await AsyncStorage.setItem('showSeconds', show.toString());
+        } catch (error) {
+          console.error('Error saving show seconds setting:', error);
+        }
+      }
     }}>
       {children}
     </SettingsContext.Provider>
