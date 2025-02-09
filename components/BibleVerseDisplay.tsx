@@ -6,6 +6,7 @@ import { BibleVerseDisplayProps } from './BibleVerseDisplay/types';
 import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
+import { SkeletonLoader } from './BibleVerseDisplay/SkeletonLoader';
 
 export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
@@ -36,7 +37,11 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
         paddingTop={insets.top}
       />
       <View style={styles.versesContainer}>
-        {verses.length === 1 ? (
+        {!isConnected ? (
+          <View style={styles.topSection}>
+            <SkeletonLoader numberOfLines={4} fontSize={fontSize} />
+          </View>
+        ) : verses.length === 1 ? (
             <View style={styles.topSection}>
               <VerseSection
                   verse={verses[0]}
