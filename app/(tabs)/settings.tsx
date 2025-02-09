@@ -17,10 +17,7 @@ export default function SettingsScreen() {
     setPowerSaveEnabled,
     powerSaveTimeout,
     setPowerSaveTimeout,
-    testPowerSave: () => {
-      setIsConnected(false);
-      setDisconnectedTime(new Date(Date.now() - powerSaveTimeout * 60 * 1000));
-    }
+    testPowerSave
   } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();

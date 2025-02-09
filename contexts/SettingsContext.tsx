@@ -175,6 +175,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
           console.error('Error saving power save timeout:', error);
         }
+      },
+      testPowerSave: () => {
+        setIsConnected(false);
+        setDisconnectedTime(new Date(Date.now() - powerSaveTimeout * 60 * 1000));
       }
     }}>
       {children}
