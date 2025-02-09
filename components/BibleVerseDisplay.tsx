@@ -1,5 +1,4 @@
 import { View, Animated, useWindowDimensions } from 'react-native';
-import { PowerSaveOverlay } from './PowerSaveOverlay';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -103,7 +102,6 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
           </>
         )}
       </View>
-      <PowerSaveOverlay active={isPowerSaving} />
     </View>
   );
 }

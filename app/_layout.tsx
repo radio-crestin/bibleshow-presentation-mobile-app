@@ -5,6 +5,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { PowerSaveOverlay } from '@/components/PowerSaveOverlay';
+import { useSettings } from '@/contexts/SettingsContext';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -28,7 +30,10 @@ export default function RootLayout() {
     return null;
   }
 
+  const { isPowerSaving } = useSettings();
+
   return (
+    <>
     <SettingsProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
@@ -45,5 +50,7 @@ export default function RootLayout() {
       <StatusBar style="auto" backgroundColor="white" />
     </ThemeProvider>
     </SettingsProvider>
+    <PowerSaveOverlay active={isPowerSaving} />
+    </>
   );
 }
