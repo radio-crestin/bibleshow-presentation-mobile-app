@@ -5,6 +5,8 @@ const fs = require('fs');
 const xml2js = require('xml2js');
 const chokidar = require('chokidar');
 const path = require('path');
+const ip = require('ip');
+const os = require('os');
 
 // Load config
 let config;
@@ -105,4 +107,19 @@ wss.on('connection', async (ws) => {
 const PORT = process.env.PORT || config.port;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  
+  // Get and display all external IP addresses
+  const networkInterfaces = os.networkInterfaces();
+  console.log('\nAvailable IP addresses:');
+  
+  Object.keys(networkInterfaces).forEach((interfaceName) => {
+    const addresses = networkInterfaces[interfaceName];
+    addresses.forEach((addr) => {
+      if (addr.family === 'IPv4' && !addr.internal) {
+        console.log(`${interfaceName}: ${addr.address}`);
+      }
+    });
+  });
+  
+  console.log(`\nPrimary IP: ${ip.address()}`);
 });
