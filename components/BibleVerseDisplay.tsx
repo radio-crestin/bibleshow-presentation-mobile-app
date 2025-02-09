@@ -104,6 +104,17 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
             </>
         )}
       </View>
+      {!isConnected && (
+        <View style={{ 
+          position: 'absolute', 
+          bottom: insets.bottom + 10, 
+          left: 0, 
+          right: 0, 
+          alignItems: 'center' 
+        }}>
+          <Text style={{ color: '#888888' }}>Disconnected from server</Text>
+        </View>
+      )}
     </View>
   );
 }
