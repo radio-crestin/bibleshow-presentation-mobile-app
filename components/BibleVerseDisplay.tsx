@@ -25,8 +25,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
       paddingLeft: insets.left,
       paddingRight: insets.right,
     }]}>
-      <Header 
-        currentBook={currentBook}
+      <Header
         currentReference={verses.length === 1 ? verses[0].reference : verses[1].reference}
         isConnected={isConnected}
         isRefreshing={isRefreshing}
