@@ -16,7 +16,7 @@ export function ThemedText({
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
   const fontSize = StyleSheet.flatten(style)?.fontSize || getDefaultFontSize(type);
-  const lineHeight = Math.round(fontSize * 1.5); // 1.5x line height ratio
+  const lineHeight = Math.round(fontSize * 1.3); // 1.3x line height ratio
 
   return (
     <Text
