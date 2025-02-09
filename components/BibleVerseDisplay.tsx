@@ -112,7 +112,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
           right: 0, 
           alignItems: 'center' 
         }}>
-          <Text style={{ color: '#888888' }}>Disconnected from server</Text>
+          <Text style={{ color: '#888888', fontSize: 16 }}>Disconnected from server</Text>
         </View>
       )}
     </View>
