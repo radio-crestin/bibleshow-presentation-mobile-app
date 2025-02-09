@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type BibleVerse = {
   text: string;
@@ -11,8 +12,16 @@ type Props = {
 };
 
 export function BibleVerseDisplay({ verses }: Props) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { 
+      paddingTop: insets.top,
+      paddingBottom: insets.bottom,
+      paddingLeft: insets.left + 16,
+      paddingRight: insets.right + 16,
+    }]}>
+      <ThemedText style={styles.currentReference}>{verses[1].reference}</ThemedText>
       {verses.map((verse, index) => (
         <View
           key={verse.reference}
@@ -20,17 +29,13 @@ export function BibleVerseDisplay({ verses }: Props) {
             styles.verseContainer,
             index === 1 && styles.middleVerseContainer,
           ]}>
-          {index === 1 ? (
-            <View style={styles.highlightedVerse}>
-              <ThemedText style={styles.verseText}>{verse.text}</ThemedText>
-              <ThemedText style={styles.referenceText}>{verse.reference}</ThemedText>
-            </View>
-          ) : (
-            <>
-              <ThemedText style={styles.verseText}>{verse.text}</ThemedText>
-              <ThemedText style={styles.referenceText}>{verse.reference}</ThemedText>
-            </>
-          )}
+          <View style={[
+            styles.verseContent,
+            index === 1 && styles.highlightedVerse
+          ]}>
+            <ThemedText style={styles.referenceText}>{verse.reference}</ThemedText>
+            <ThemedText style={styles.verseText}>{verse.text}</ThemedText>
+          </View>
         </View>
       ))}
     </View>
@@ -41,12 +46,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 16,
+  },
+  currentReference: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: 50,
+    left: 16,
   },
   verseContainer: {
     marginVertical: 10,
+    borderRadius: 8,
+  },
+  verseContent: {
     padding: 16,
     borderRadius: 8,
+    flexDirection: 'row',
   },
   middleVerseContainer: {
     elevation: 3,
@@ -56,18 +71,17 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   highlightedVerse: {
-    padding: 16,
-    borderRadius: 8,
     backgroundColor: '#FFA500',
   },
   verseText: {
+    flex: 1,
     fontSize: 18,
-    marginBottom: 8,
-    textAlign: 'center',
+    textAlign: 'left',
+    marginLeft: 16,
   },
   referenceText: {
     fontSize: 14,
-    fontStyle: 'italic',
-    textAlign: 'right',
+    fontWeight: 'bold',
+    width: 80,
   },
 });
