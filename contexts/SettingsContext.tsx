@@ -68,7 +68,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         console.log('Attempting to reconnect...');
         connectWebSocket();
       }
-    }, 5000);
+    }, 1000);
 
     return () => {
       clearInterval(reconnectInterval);
