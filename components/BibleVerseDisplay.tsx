@@ -35,8 +35,8 @@ export function BibleVerseDisplay({ verses }: Props) {
             styles.verseContent,
             index === 1 && styles.highlightedVerse
           ]}>
-            <ThemedText style={styles.referenceText}>{verse.reference}</ThemedText>
-            <ThemedText style={styles.verseText}>{verse.text}</ThemedText>
+            <ThemedText style={[styles.referenceText, { fontSize }]}>{verse.reference}</ThemedText>
+            <ThemedText style={[styles.verseText, { fontSize }]}>{verse.text}</ThemedText>
           </View>
         </View>
       ))}
@@ -77,12 +77,10 @@ const styles = StyleSheet.create({
   },
   verseText: {
     flex: 1,
-    fontSize: fontSize,
     textAlign: 'left',
     marginLeft: 16,
   },
   referenceText: {
-    fontSize: fontSize,
     fontWeight: 'bold',
     width: 80,
   },
