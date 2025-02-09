@@ -19,6 +19,7 @@ type SettingsContextType = {
   setDisconnectedTime: (date: Date) => void;
   showSeconds: boolean;
   setShowSeconds: (show: boolean) => void;
+  isDisconnectedTimeout: boolean;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -33,6 +34,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
+  const [isDisconnectedTimeout, setIsDisconnectedTimeout] = useState(false);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -148,12 +150,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const checkPowerSave = setInterval(() => {
       const now = new Date();
       if(!disconnectedTime) return;
-      const disconnectedMinutes = (now.getTime() - disconnectedTime.getTime()) / (1000 * 60);
+      const disconnectedSeconds = (now.getTime() - disconnectedTime.getTime()) / 1000;
+      const disconnectedMinutes = disconnectedSeconds / 60;
       console.log({disconnectedMinutes})
       
       if (disconnectedMinutes >= powerSaveTimeout) {
         setIsPowerSaving(true);
       }
+
+      setIsDisconnectedTimeout(disconnectedSeconds >= 30);
     }, 1000); // Check every second
 
     return () => clearInterval(checkPowerSave);
@@ -209,7 +214,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         } catch (error) {
           console.error('Error saving show seconds setting:', error);
         }
-      }
+      },
+      isDisconnectedTimeout,
     }}>
       {children}
     </SettingsContext.Provider>
