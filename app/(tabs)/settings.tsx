@@ -45,6 +45,11 @@ export default function SettingsScreen() {
               <IconSymbol name="plus.circle.fill" size={32} />
             </Pressable>
           </View>
+          <View style={styles.previewContainer}>
+            <ThemedText style={[styles.previewText, { fontSize }]}>
+              Preview text
+            </ThemedText>
+          </View>
         </View>
       </View>
     </ThemedView>
@@ -105,5 +110,14 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 8,
+  },
+  previewContainer: {
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius: 12,
+  },
+  previewText: {
+    textAlign: 'center',
   },
 });
