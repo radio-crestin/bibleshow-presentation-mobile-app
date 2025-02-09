@@ -1,4 +1,5 @@
 import { View, Pressable } from 'react-native';
+import { useState, useEffect } from 'react';
 import { ThemedText } from '../ThemedText';
 import { IconSymbol } from '../ui/IconSymbol';
 import { styles } from './styles';
@@ -20,11 +21,22 @@ export function Header({
   paddingTop 
 }: HeaderProps) {
   const router = useRouter();
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <View style={[styles.header, { paddingTop }]}>
       <View style={{ flex: 1, paddingRight: 16 }}>
-        <ThemedText style={styles.currentReference}>{currentReference}</ThemedText>
+        <ThemedText style={styles.currentReference}>
+          {currentTime.toLocaleTimeString()}
+        </ThemedText>
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
