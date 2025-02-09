@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     top: '50%',
     left: 16,
     right: 16,
-    transform: [{ translateY: -80 }],
+    transform: [{ translateY: -120 }],
   },
   bottomSection: {
     position: 'absolute',
