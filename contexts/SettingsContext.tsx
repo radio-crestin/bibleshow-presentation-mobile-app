@@ -48,6 +48,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       setWs(websocket);
       setIsConnected(true);
       setDisconnectedTime(null);
+      setIsDisconnectedTimeout(false);
     };
 
     websocket.onclose = () => {
