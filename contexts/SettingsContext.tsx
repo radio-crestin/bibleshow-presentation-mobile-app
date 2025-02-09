@@ -27,7 +27,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [wsUrl, setWsUrl] = useState('ws://localhost:3000');
   const [isConnected, setIsConnected] = useState(false);
   const [powerSaveEnabled, setPowerSaveEnabled] = useState(false);
-  const [powerSaveTimeout, setPowerSaveTimeout] = useState(5); // 5 minutes default
+  const [powerSaveTimeout, setPowerSaveTimeout] = useState(30); // 5 minutes default
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
 
@@ -142,6 +142,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
     const checkPowerSave = setInterval(() => {
       const now = new Date();
+      if(!disconnectedTime) return;
       const disconnectedMinutes = (now.getTime() - disconnectedTime.getTime()) / (1000 * 60);
       console.log({disconnectedMinutes})
       

@@ -104,7 +104,7 @@ export default function SettingsScreen() {
                 value={powerSaveTimeout.toString()}
                 onChangeText={(text) => {
                   const number = parseInt(text) || 1;
-                  setPowerSaveTimeout(Math.max(1, Math.min(60, number)));
+                  setPowerSaveTimeout(Math.max(1, number));
                 }}
                 keyboardType="number-pad"
                 editable={powerSaveEnabled}
