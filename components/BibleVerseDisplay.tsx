@@ -1,22 +1,13 @@
-import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator, Animated } from 'react-native';
+import { View, Animated } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
-import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconSymbol } from './ui/IconSymbol';
-import { useRouter } from 'expo-router';
+import { BibleVerseDisplayProps } from './types';
+import { styles } from './styles';
+import { Header } from './Header';
+import { VerseSection } from './VerseSection';
 
-type BibleVerse = {
-  text: string;
-  reference: string;
-};
-
-type Props = {
-  verses: BibleVerse[];
-  currentBook: string;
-};
-
-export function BibleVerseDisplay({ verses, currentBook }: Props) {
+export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws } = useSettings();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -43,34 +34,20 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       setTimeout(() => setIsRefreshing(false), 1000);
     }
   };
-  const router = useRouter();
-
   return (
     <View style={[styles.container, {
       paddingBottom: insets.bottom,
       paddingLeft: insets.left,
       paddingRight: insets.right,
     }]}>
-      <View style={[styles.header, { paddingTop: insets.top }]}>
-        <View style={{ flex: 1, paddingRight: 16 }}>
-          <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
-          <Pressable 
-            onPress={handleRefresh}
-            style={[styles.iconButton, isRefreshing && styles.rotating]}
-          >
-            <IconSymbol name="arrow.clockwise" size={24} />
-          </Pressable>
-          <Pressable 
-            onPress={() => router.push('/settings')}
-            style={styles.iconButton}
-          >
-            <IconSymbol name="gear" size={24} />
-          </Pressable>
-        </View>
-      </View>
+      <Header 
+        currentBook={currentBook}
+        currentReference={verses[1].reference}
+        isConnected={isConnected}
+        isRefreshing={isRefreshing}
+        onRefresh={handleRefresh}
+        paddingTop={insets.top}
+      />
       <Animated.View 
         style={[
           styles.versesContainer,
@@ -79,7 +56,9 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           }
         ]}>
         <View style={styles.topSection}>
-          <Pressable 
+          <VerseSection
+            verse={verses[0]}
+            fontSize={fontSize}
             onPress={() => {
               if (ws && isConnected) {
                 animateTransition('down');
@@ -89,20 +68,14 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
                 }));
               }
             }}
-            style={[
-              styles.verseContent,
-              { minHeight: Math.max(80, fontSize * 3) }
-            ]}
-          >
-            <View style={styles.verseWrapper}>
-              <ThemedText style={[styles.referenceText, { fontSize }]}>{verses[0].reference}</ThemedText>
-              <ThemedText style={[styles.verseText, { fontSize }]}>{verses[0].text}</ThemedText>
-            </View>
-          </Pressable>
+          />
         </View>
 
         <View style={styles.middleSection}>
-          <Pressable 
+          <VerseSection
+            verse={verses[1]}
+            fontSize={fontSize}
+            isHighlighted
             onPress={() => {
               if (ws && isConnected) {
                 ws.send(JSON.stringify({
@@ -111,21 +84,13 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
                 }));
               }
             }}
-            style={[
-              styles.verseContent,
-              styles.highlightedVerse,
-              { minHeight: Math.max(80, fontSize * 3) }
-            ]}
-          >
-            <View style={styles.verseWrapper}>
-              <ThemedText style={[styles.referenceText, { fontSize }]}>{verses[1].reference}</ThemedText>
-              <ThemedText style={[styles.verseText, { fontSize }]}>{verses[1].text}</ThemedText>
-            </View>
-          </Pressable>
+          />
         </View>
 
         <View style={styles.bottomSection}>
-          <Pressable 
+          <VerseSection
+            verse={verses[2]}
+            fontSize={fontSize}
             onPress={() => {
               if (ws && isConnected) {
                 animateTransition('up');
@@ -135,98 +100,10 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
                 }));
               }
             }}
-            style={[
-              styles.verseContent,
-              { minHeight: Math.max(80, fontSize * 3) }
-            ]}
-          >
-            <View style={styles.verseWrapper}>
-              <ThemedText style={[styles.referenceText, { fontSize }]}>{verses[2].reference}</ThemedText>
-              <ThemedText style={[styles.verseText, { fontSize }]}>{verses[2].text}</ThemedText>
-            </View>
-          </Pressable>
+          />
         </View>
       </Animated.View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: 'white',
-  },
-  connectionDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  currentReference: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  versesContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-    position: 'relative',
-  },
-  topSection: {
-    position: 'absolute',
-    top: 20,
-    left: 16,
-    right: 16,
-  },
-  middleSection: {
-    position: 'absolute',
-    top: '50%',
-    left: 16,
-    right: 16,
-    transform: [{ translateY: -120 }],
-  },
-  bottomSection: {
-    position: 'absolute',
-    bottom: 20,
-    left: 16,
-    right: 16,
-  },
-  verseContent: {
-    padding: 16,
-    borderRadius: 8,
-    minHeight: 80,
-  },
-  verseWrapper: {
-    width: '100%',
-  },
-  middleVerseContainer: {
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  highlightedVerse: {
-    backgroundColor: '#FFA500',
-  },
-  verseText: {
-    width: '100%',
-    textAlign: 'left',
-    marginTop: 8,
-    flexWrap: 'wrap',
-    flexShrink: 1,
-  },
-  referenceText: {
-    fontWeight: 'bold',
-  },
-  iconButton: {
-    padding: 8,
-  },
-  rotating: {
-    opacity: 0.5,
-  },
-});
