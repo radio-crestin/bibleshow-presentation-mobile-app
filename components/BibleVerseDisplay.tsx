@@ -72,9 +72,11 @@ const styles = StyleSheet.create({
   verseContent: {
     padding: 16,
     borderRadius: 8,
+    minHeight: 100,
   },
   verseWrapper: {
     width: '100%',
+    flex: 1,
   },
   middleVerseContainer: {
     elevation: 3,
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'left',
     marginTop: 8,
+    flexWrap: 'wrap',
   },
   referenceText: {
     fontWeight: 'bold',
