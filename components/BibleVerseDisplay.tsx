@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { useSettings } from '@/contexts/SettingsContext';
 import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -13,6 +14,7 @@ type Props = {
 
 export function BibleVerseDisplay({ verses }: Props) {
   const insets = useSafeAreaInsets();
+  const { fontSize } = useSettings();
 
   return (
     <View style={[styles.container, { 
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   },
   verseText: {
     flex: 1,
-    fontSize: 18,
+    fontSize: fontSize,
     textAlign: 'left',
     marginLeft: 16,
   },
