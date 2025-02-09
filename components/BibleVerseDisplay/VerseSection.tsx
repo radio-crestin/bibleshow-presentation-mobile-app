@@ -1,10 +1,10 @@
-import { View, Pressable, useWindowDimensions } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { styles } from './styles';
 import { BibleVerse } from './types';
 import { useState, useEffect } from 'react';
 import { SkeletonLoader } from './SkeletonLoader';
-import RenderHtml from 'react-native-render-html';
+import { WebView } from 'react-native-webview';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 type VerseSectionProps = {
@@ -30,9 +30,8 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
     }
   }, [verse.text, verse.reference]);
 
-  const { width } = useWindowDimensions();
   const colorScheme = useColorScheme();
-  const textColor = colorScheme === 'dark' ? '#fff' : '#000';
+  const isDark = colorScheme === 'dark';
 
   if (isLoading) {
     return <SkeletonLoader numberOfLines={numberOfLines} fontSize={fontSize} />;
@@ -49,20 +48,36 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
     >
       <View style={styles.verseWrapper}>
         <ThemedText style={[styles.referenceText, { fontSize }]}>{currentVerse.reference}</ThemedText>
-        <RenderHtml
-          contentWidth={width}
-          source={{ html: currentVerse.text }}
-          // tagsStyles={{
-          //   p: {
-          //     fontSize,
-          //     color: textColor,
-          //     margin: 0,
-          //     padding: 0
-          //   },
-          //   span: {
-          //     fontSize
-          //   }
-          // }}
+        <WebView
+          style={[styles.webview, { height: fontSize * numberOfLines * 1.5 }]}
+          source={{
+            html: `
+              <html>
+                <head>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+                  <style>
+                    body {
+                      margin: 0;
+                      padding: 0;
+                      font-size: ${fontSize}px;
+                      color: ${isDark ? '#fff' : '#000'};
+                      background-color: ${isDark ? '#000' : '#fff'};
+                      font-family: system-ui;
+                    }
+                    .Isus {
+                      color: #ff0000;
+                    }
+                  </style>
+                </head>
+                <body>
+                  ${currentVerse.text}
+                </body>
+              </html>
+            `
+          }}
+          scrollEnabled={false}
+          originWhitelist={['*']}
+          bounces={false}
         />
       </View>
     </Pressable>

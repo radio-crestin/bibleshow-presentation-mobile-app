@@ -52,6 +52,10 @@ export const styles = StyleSheet.create({
   verseWrapper: {
     width: '100%',
   },
+  webview: {
+    backgroundColor: 'transparent',
+    marginTop: 8,
+  },
   middleVerseContainer: {
     elevation: 3,
     shadowColor: '#000',
