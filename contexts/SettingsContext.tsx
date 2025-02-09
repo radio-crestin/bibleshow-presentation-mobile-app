@@ -12,7 +12,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [fontSize, setFontSize] = useState(18);
 
   const increaseFontSize = () => {
-    setFontSize(prev => Math.min(prev + 2, 32));
+    setFontSize(prev => Math.min(prev + 2, 64));
   };
 
   const decreaseFontSize = () => {
