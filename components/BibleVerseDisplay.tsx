@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   referenceText: {
-    fontSize: 14,
+    fontSize: fontSize,
     fontWeight: 'bold',
     width: 80,
   },
