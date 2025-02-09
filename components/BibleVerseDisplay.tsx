@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable, ScrollView } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,7 +21,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const router = useRouter();
 
   return (
-    <View style={[styles.container, { 
+    <ScrollView style={[styles.container, { 
       paddingTop: insets.top,
       paddingBottom: insets.bottom,
       paddingLeft: insets.left + 16,
@@ -55,14 +55,13 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
   },
   currentReference: {
     fontSize: 20,
