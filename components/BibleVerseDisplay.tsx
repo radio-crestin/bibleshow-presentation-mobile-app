@@ -11,20 +11,21 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws } = useSettings();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [transitionDirection, setTransitionDirection] = useState<'up' | 'down' | null>(null);
-  const slideAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const animateTransition = (direction: 'up' | 'down') => {
-    setTransitionDirection(direction);
-    slideAnim.setValue(direction === 'up' ? 300 : -300);
-    
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setTransitionDirection(null);
-    });
+  const animateTransition = () => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      })
+    ]).start();
   };
 
   const handleRefresh = () => {
@@ -51,8 +52,8 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
       <Animated.View 
         style={[
           styles.versesContainer,
-          transitionDirection && {
-            transform: [{ translateY: slideAnim }]
+          {
+            opacity: fadeAnim
           }
         ]}>
         <View style={styles.topSection}>
@@ -61,7 +62,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
             fontSize={fontSize}
             onPress={() => {
               if (ws && isConnected) {
-                animateTransition('down');
+                animateTransition();
                 ws.send(JSON.stringify({
                   type: 'setReference',
                   reference: verses[0].reference
@@ -93,7 +94,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
             fontSize={fontSize}
             onPress={() => {
               if (ws && isConnected) {
-                animateTransition('up');
+                animateTransition();
                 ws.send(JSON.stringify({
                   type: 'setReference',
                   reference: verses[2].reference
