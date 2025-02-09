@@ -9,6 +9,10 @@ type SettingsContextType = {
   wsUrl: string;
   setWsUrl: (url: string) => void;
   isConnected: boolean;
+  powerSaveEnabled: boolean;
+  setPowerSaveEnabled: (enabled: boolean) => void;
+  powerSaveTimeout: number;
+  setPowerSaveTimeout: (minutes: number) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -18,6 +22,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [wsUrl, setWsUrl] = useState('ws://localhost:3000');
   const [isConnected, setIsConnected] = useState(false);
+  const [powerSaveEnabled, setPowerSaveEnabled] = useState(false);
+  const [powerSaveTimeout, setPowerSaveTimeout] = useState(5); // 5 minutes default
+  const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(null);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -36,6 +43,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       console.log('Disconnected from server');
       setIsConnected(false);
       setWs(null);
+      setDisconnectedTime(new Date());
     };
 
     websocket.onerror = (error) => {
@@ -46,18 +54,24 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return websocket;
   };
 
+  // Load saved settings
   useEffect(() => {
-    const loadWsUrl = async () => {
+    const loadSettings = async () => {
       try {
-        const savedWsUrl = await AsyncStorage.getItem('wsUrl');
-        if (savedWsUrl) {
-          setWsUrl(savedWsUrl);
-        }
+        const [savedWsUrl, savedPowerSave, savedTimeout] = await Promise.all([
+          AsyncStorage.getItem('wsUrl'),
+          AsyncStorage.getItem('powerSaveEnabled'),
+          AsyncStorage.getItem('powerSaveTimeout')
+        ]);
+
+        if (savedWsUrl) setWsUrl(savedWsUrl);
+        if (savedPowerSave) setPowerSaveEnabled(savedPowerSave === 'true');
+        if (savedTimeout) setPowerSaveTimeout(Number(savedTimeout));
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
     };
-    loadWsUrl();
+    loadSettings();
   }, []);
 
   useEffect(() => {
@@ -111,6 +125,23 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Power save effect
+  useEffect(() => {
+    if (!powerSaveEnabled || isConnected || !disconnectedTime) return;
+
+    const checkPowerSave = setInterval(() => {
+      const now = new Date();
+      const disconnectedMinutes = (now.getTime() - disconnectedTime.getTime()) / (1000 * 60);
+      
+      if (disconnectedMinutes >= powerSaveTimeout) {
+        // Implement screen dimming here
+        console.log('Screen should be dimmed now');
+      }
+    }, 10000); // Check every 10 seconds
+
+    return () => clearInterval(checkPowerSave);
+  }, [powerSaveEnabled, isConnected, disconnectedTime, powerSaveTimeout]);
+
   return (
     <SettingsContext.Provider value={{ 
       fontSize, 
@@ -126,7 +157,25 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           console.error('Error saving WebSocket URL:', error);
         }
       },
-      isConnected 
+      isConnected,
+      powerSaveEnabled,
+      setPowerSaveEnabled: async (enabled: boolean) => {
+        setPowerSaveEnabled(enabled);
+        try {
+          await AsyncStorage.setItem('powerSaveEnabled', enabled.toString());
+        } catch (error) {
+          console.error('Error saving power save setting:', error);
+        }
+      },
+      powerSaveTimeout,
+      setPowerSaveTimeout: async (minutes: number) => {
+        setPowerSaveTimeout(minutes);
+        try {
+          await AsyncStorage.setItem('powerSaveTimeout', minutes.toString());
+        } catch (error) {
+          console.error('Error saving power save timeout:', error);
+        }
+      }
     }}>
       {children}
     </SettingsContext.Provider>
