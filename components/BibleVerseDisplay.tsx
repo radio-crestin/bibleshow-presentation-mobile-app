@@ -66,6 +66,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
       <ScrollView 
         style={styles.scrollContent}
         contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
       >
         {verses.map((verse, index) => (
           <View
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
   scrollContentContainer: {
     flexGrow: 1,
     justifyContent: 'center',
+    minHeight: '100%',
   },
   verseContainer: {
     marginVertical: 10,
