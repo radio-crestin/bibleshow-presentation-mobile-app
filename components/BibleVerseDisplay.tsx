@@ -101,7 +101,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
               </View>
 
 
-              <View style={[styles.disconnectedMessage, { flex: 1, justifyContent: 'center' }]}>
+              <View style={[styles.disconnectedMessage, { position: 'absolute', bottom: 20, left: 0, right: 0 }]}>
                 <Text style={[styles.disconnectedText, {
                   fontSize: fontSize * 0.9,
                   color: '#999999',

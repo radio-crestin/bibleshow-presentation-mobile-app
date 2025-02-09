@@ -275,4 +275,8 @@ const styles = StyleSheet.create({
     color: '#666',
     fontWeight: '500',
   },
+  disconnectedMessage: {
+    alignItems: 'center',
+    padding: 20,
+  },
 });
