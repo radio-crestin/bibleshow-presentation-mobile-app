@@ -55,29 +55,56 @@ async function parseXMLFile() {
   }
 }
 
+// Initialize currentVerse
+parseXMLFile().then(verse => {
+  if (verse) {
+    currentVerse = verse;
+    console.log('Initial verse loaded:', currentVerse.reference);
+  }
+});
+
 // Watch for XML file changes
 const watcher = chokidar.watch(XML_PATH, {
   persistent: true,
   usePolling: true,
-  interval: 100
-});
-
-watcher.on('change', async () => {
-  const newVerse = await parseXMLFile();
-  if (newVerse) {
-    currentVerse = newVerse;
-    // Broadcast to all clients
-    wss.clients.forEach(client => {
-      client.send(JSON.stringify({
-        type: 'verses',
-        data: {
-          currentBook: currentVerse.book,
-          verses: [currentVerse,] // Only send the current verse
-        }
-      }));
-    });
+  interval: 100,
+  awaitWriteFinish: {
+    stabilityThreshold: 300,
+    pollInterval: 100
   }
 });
+
+watcher
+  .on('ready', () => {
+    console.log('Initial file scan complete. Ready for changes.');
+  })
+  .on('change', async (path) => {
+    console.log('File changed:', path);
+    try {
+      const newVerse = await parseXMLFile();
+      if (newVerse) {
+        currentVerse = newVerse;
+        console.log('Verse updated to:', currentVerse.reference);
+        // Broadcast to all clients
+        wss.clients.forEach(client => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(JSON.stringify({
+              type: 'verses',
+              data: {
+                currentBook: currentVerse.book,
+                verses: [currentVerse] // Only send the current verse
+              }
+            }));
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error updating verse:', error);
+    }
+  })
+  .on('error', error => {
+    console.error('Watcher error:', error);
+  });
 
 wss.on('connection', async (ws) => {
   console.log('Client connected');
