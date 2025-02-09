@@ -58,6 +58,23 @@ parseXMLFile().then(verse => {
   }
 });
 
+// Function to broadcast verse to all connected clients
+function broadcastVerse(verse) {
+  if (!verse) return;
+  
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) { // WebSocket.OPEN
+      client.send(JSON.stringify({
+        type: 'verses',
+        data: {
+          currentBook: verse.book,
+          verses: [verse]
+        }
+      }));
+    }
+  });
+}
+
 // Watch for XML file changes
 const watcher = chokidar.watch(XML_PATH, {
   persistent: true,
@@ -66,36 +83,48 @@ const watcher = chokidar.watch(XML_PATH, {
   awaitWriteFinish: {
     stabilityThreshold: 300,
     pollInterval: 100
-  }
+  },
+  ignoreInitial: false
 });
 
 watcher
   .on('ready', () => {
     console.log('Initial file scan complete. Ready for changes.');
+    console.log('Watching file:', XML_PATH);
+  })
+  .on('add', async (path) => {
+    console.log('File added:', path);
+    try {
+      const verse = await parseXMLFile();
+      if (verse) {
+        currentVerse = verse;
+        console.log('Initial verse loaded:', verse.reference);
+        broadcastVerse(verse);
+      }
+    } catch (error) {
+      console.error('Error loading initial verse:', error);
+    }
   })
   .on('change', async (path) => {
     console.log('File changed:', path);
     try {
-      const newVerse = await parseXMLFile();
-      if (newVerse) {
-        currentVerse = newVerse;
-        console.log('Verse updated to:', currentVerse.reference);
-        // Broadcast to all clients
-        wss.clients.forEach(client => {
-          if (client.readyState === 1) { // WebSocket.OPEN
-            client.send(JSON.stringify({
-              type: 'verses',
-              data: {
-                currentBook: currentVerse.book,
-                verses: [currentVerse] // Only send the current verse
-              }
-            }));
-          }
-        });
+      const verse = await parseXMLFile();
+      if (verse && (
+        !currentVerse || 
+        verse.reference !== currentVerse.reference || 
+        verse.text !== currentVerse.text
+      )) {
+        currentVerse = verse;
+        console.log('Verse updated to:', verse.reference);
+        broadcastVerse(verse);
       }
     } catch (error) {
       console.error('Error updating verse:', error);
     }
+  })
+  .on('unlink', () => {
+    console.log('File removed:', XML_PATH);
+    currentVerse = null;
   })
   .on('error', error => {
     console.error('Watcher error:', error);
