@@ -70,7 +70,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
             <IconSymbol name="gear" size={24} />
           </Pressable>
         </View>
-      </Animated.View>
+      </View>
       <Animated.View 
         style={[
           styles.versesContainer,
@@ -146,7 +146,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
             </View>
           </Pressable>
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 }
