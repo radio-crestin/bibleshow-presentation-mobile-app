@@ -27,58 +27,78 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
     }]}>
       <Header 
         currentBook={currentBook}
-        currentReference={verses[1].reference}
+        currentReference={verses.length === 1 ? verses[0].reference : verses[1].reference}
         isConnected={isConnected}
         isRefreshing={isRefreshing}
         onRefresh={handleRefresh}
         paddingTop={insets.top}
       />
       <View style={styles.versesContainer}>
-        <View style={styles.topSection}>
-          <VerseSection
-            verse={verses[0]}
-            fontSize={fontSize}
-            onPress={() => {
-              if (ws && isConnected) {
-                ws.send(JSON.stringify({
-                  type: 'setReference',
-                  reference: verses[0].reference
-                }));
-              }
-            }}
-          />
-        </View>
+        {verses.length === 1 ? (
+          <View style={styles.middleSection}>
+            <VerseSection
+              verse={verses[0]}
+              fontSize={fontSize}
+              isHighlighted
+              onPress={() => {
+                if (ws && isConnected) {
+                  ws.send(JSON.stringify({
+                    type: 'setReference',
+                    reference: verses[0].reference
+                  }));
+                }
+              }}
+            />
+          </View>
+        ) : (
+          <>
+            <View style={styles.topSection}>
+              <VerseSection
+                verse={verses[0]}
+                fontSize={fontSize}
+                onPress={() => {
+                  if (ws && isConnected) {
+                    ws.send(JSON.stringify({
+                      type: 'setReference',
+                      reference: verses[0].reference
+                    }));
+                  }
+                }}
+              />
+            </View>
 
-        <View style={styles.middleSection}>
-          <VerseSection
-            verse={verses[1]}
-            fontSize={fontSize}
-            isHighlighted
-            onPress={() => {
-              if (ws && isConnected) {
-                ws.send(JSON.stringify({
-                  type: 'setReference',
-                  reference: verses[1].reference
-                }));
-              }
-            }}
-          />
-        </View>
+            <View style={styles.middleSection}>
+              <VerseSection
+                verse={verses[1]}
+                fontSize={fontSize}
+                isHighlighted
+                onPress={() => {
+                  if (ws && isConnected) {
+                    ws.send(JSON.stringify({
+                      type: 'setReference',
+                      reference: verses[1].reference
+                    }));
+                  }
+                }}
+              />
+            </View>
 
-        <View style={styles.bottomSection}>
-          <VerseSection
-            verse={verses[2]}
-            fontSize={fontSize}
-            onPress={() => {
-              if (ws && isConnected) {
-                ws.send(JSON.stringify({
-                  type: 'setReference',
-                  reference: verses[2].reference
-                }));
-              }
-            }}
-          />
-        </View>
+            <View style={styles.bottomSection}>
+              <VerseSection
+                verse={verses[2]}
+                fontSize={fontSize}
+                onPress={() => {
+                  if (ws && isConnected) {
+                    ws.send(JSON.stringify({
+                      type: 'setReference',
+                      reference: verses[2].reference
+                    }));
+                  }
+                }}
+              />
+            </View>
+          </>
+        )}
       </View>
     </View>
   );
