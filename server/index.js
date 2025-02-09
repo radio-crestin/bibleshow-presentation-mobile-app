@@ -6,11 +6,21 @@ const xml2js = require('xml2js');
 const chokidar = require('chokidar');
 const path = require('path');
 
+// Load config
+let config;
+try {
+    const configPath = path.join(process.pkg ? process.cwd() : __dirname, 'config.json');
+    config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+} catch (error) {
+    console.error('Error loading config.json:', error);
+    process.exit(1);
+}
+
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const XML_PATH = path.join(__dirname, 'bibleshow.xml');
+const XML_PATH = path.join(process.cwd(), config.xmlPath);
 let currentVerse = null;
 
 // XML parser
@@ -92,7 +102,7 @@ wss.on('connection', async (ws) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || config.port;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
