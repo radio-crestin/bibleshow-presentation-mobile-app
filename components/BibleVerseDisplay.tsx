@@ -57,7 +57,72 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
         </View>
       </View>
       <View style={styles.versesContainer}>
-        {verses.map((verse, index) => (
+        <View style={styles.topSection}>
+          <Pressable 
+            onPress={() => {
+              if (ws && isConnected) {
+                ws.send(JSON.stringify({
+                  type: 'setReference',
+                  reference: verses[0].reference
+                }));
+              }
+            }}
+            style={[
+              styles.verseContent,
+              { minHeight: Math.max(80, fontSize * 3) }
+            ]}
+          >
+            <View style={styles.verseWrapper}>
+              <ThemedText style={[styles.referenceText, { fontSize }]}>{verses[0].reference}</ThemedText>
+              <ThemedText style={[styles.verseText, { fontSize }]}>{verses[0].text}</ThemedText>
+            </View>
+          </Pressable>
+        </View>
+
+        <View style={styles.middleSection}>
+          <Pressable 
+            onPress={() => {
+              if (ws && isConnected) {
+                ws.send(JSON.stringify({
+                  type: 'setReference',
+                  reference: verses[1].reference
+                }));
+              }
+            }}
+            style={[
+              styles.verseContent,
+              styles.highlightedVerse,
+              { minHeight: Math.max(80, fontSize * 3) }
+            ]}
+          >
+            <View style={styles.verseWrapper}>
+              <ThemedText style={[styles.referenceText, { fontSize }]}>{verses[1].reference}</ThemedText>
+              <ThemedText style={[styles.verseText, { fontSize }]}>{verses[1].text}</ThemedText>
+            </View>
+          </Pressable>
+        </View>
+
+        <View style={styles.bottomSection}>
+          <Pressable 
+            onPress={() => {
+              if (ws && isConnected) {
+                ws.send(JSON.stringify({
+                  type: 'setReference',
+                  reference: verses[2].reference
+                }));
+              }
+            }}
+            style={[
+              styles.verseContent,
+              { minHeight: Math.max(80, fontSize * 3) }
+            ]}
+          >
+            <View style={styles.verseWrapper}>
+              <ThemedText style={[styles.referenceText, { fontSize }]}>{verses[2].reference}</ThemedText>
+              <ThemedText style={[styles.verseText, { fontSize }]}>{verses[2].text}</ThemedText>
+            </View>
+          </Pressable>
+        </View>
           <View
             key={`verse-${index}`}
             style={[
@@ -114,11 +179,17 @@ const styles = StyleSheet.create({
   versesContainer: {
     flex: 1,
     paddingHorizontal: 16,
-    justifyContent: 'space-evenly',
-    paddingVertical: 20,
+    display: 'flex',
+    flexDirection: 'column',
   },
-  verseContainer: {
-    borderRadius: 8,
+  topSection: {
+    marginBottom: 'auto',
+  },
+  middleSection: {
+    marginVertical: 20,
+  },
+  bottomSection: {
+    marginTop: 'auto',
   },
   verseContent: {
     padding: 16,
