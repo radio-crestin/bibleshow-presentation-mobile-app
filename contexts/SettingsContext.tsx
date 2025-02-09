@@ -19,7 +19,6 @@ type SettingsContextType = {
   setDisconnectedTime: (date: Date) => void;
   showSeconds: boolean;
   setShowSeconds: (show: boolean) => void;
-  isDisconnectedTimeout: boolean;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -34,12 +33,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
-  const [isDisconnectedTimeout, setIsDisconnectedTimeout] = useState(false);
 
   const connectWebSocket = () => {
     if (ws) {
       ws.close();
     }
+
+    console.log('Connecting to server...');
 
     const websocket = new WebSocket(wsUrl);
     
@@ -48,7 +48,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       setWs(websocket);
       setIsConnected(true);
       setDisconnectedTime(null);
-      setIsDisconnectedTimeout(false);
     };
 
     websocket.onclose = () => {
@@ -61,7 +60,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     };
 
     websocket.onerror = (error) => {
-      // console.error('WebSocket error:', error);
+      console.error('WebSocket error:', error);
       setIsConnected(false);
     };
 
@@ -91,8 +90,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const websocket = connectWebSocket();
-    
     const reconnectInterval = setInterval(() => {
       if (!isConnected) {
         console.log('Attempting to reconnect...');
@@ -102,9 +99,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       clearInterval(reconnectInterval);
-      websocket.close();
+      if(ws) {
+        ws.close();
+      }
     };
-  }, [wsUrl]);
+  }, [wsUrl, isConnected]);
 
   // Load saved font size on mount
   useEffect(() => {
@@ -158,8 +157,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       if (disconnectedMinutes >= powerSaveTimeout) {
         setIsPowerSaving(true);
       }
-
-      setIsDisconnectedTimeout(disconnectedSeconds >= 30);
     }, 1000); // Check every second
 
     return () => clearInterval(checkPowerSave);
@@ -216,7 +213,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           console.error('Error saving show seconds setting:', error);
         }
       },
-      isDisconnectedTimeout,
     }}>
       {children}
     </SettingsContext.Provider>

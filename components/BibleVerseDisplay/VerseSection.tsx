@@ -4,8 +4,6 @@ import { styles } from './styles';
 import { BibleVerse } from './types';
 import { useState, useEffect } from 'react';
 import { SkeletonLoader } from './SkeletonLoader';
-import { WebView } from 'react-native-webview';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 type VerseSectionProps = {
   verse: BibleVerse;
@@ -30,15 +28,12 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
     }
   }, [verse.text, verse.reference]);
 
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-
   if (isLoading) {
     return <SkeletonLoader numberOfLines={numberOfLines} fontSize={fontSize} />;
   }
 
   return (
-    <Pressable 
+    <Pressable
       onPress={onPress}
       style={[
         styles.verseContent,
@@ -48,37 +43,7 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
     >
       <View style={styles.verseWrapper}>
         <ThemedText style={[styles.referenceText, { fontSize }]}>{currentVerse.reference}</ThemedText>
-        <WebView
-          style={[styles.webview, { height: fontSize * numberOfLines * 1.5 }]}
-          source={{
-            html: `
-              <html>
-                <head>
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-                  <style>
-                    body {
-                      margin: 0;
-                      padding: 0;
-                      font-size: ${fontSize}px;
-                      color: ${isDark ? '#fff' : '#000'};
-                      background-color: ${isDark ? '#000' : '#fff'};
-                      font-family: system-ui;
-                    }
-                    .Isus {
-                      color: #ff0000;
-                    }
-                  </style>
-                </head>
-                <body>
-                  ${currentVerse.text}
-                </body>
-              </html>
-            `
-          }}
-          scrollEnabled={false}
-          originWhitelist={['*']}
-          bounces={false}
-        />
+        <ThemedText style={[styles.verseText, { fontSize }]}>{currentVerse.text}</ThemedText>
       </View>
     </Pressable>
   );

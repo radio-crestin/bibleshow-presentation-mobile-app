@@ -4,6 +4,7 @@ import { ThemedText } from '../ThemedText';
 import { IconSymbol } from '../ui/IconSymbol';
 import { styles } from './styles';
 import { useRouter } from 'expo-router';
+import {useSettings} from "@/contexts/SettingsContext";
 
 type HeaderProps = {
   currentReference: string;

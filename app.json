@@ -13,7 +13,8 @@
       "bundleIdentifier": "com.iosifnicolae2.biblieamvon",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "appleTeamId": "2KNY2RZVGC"
     },
     "android": {
       "adaptiveIcon": {

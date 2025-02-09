@@ -23,7 +23,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const XML_PATH = path.join(process.cwd(), config.xmlPath);
+const XML_PATH = config.xmlPath;
 let currentVerse = null;
 
 // XML parser
@@ -45,7 +45,7 @@ async function parseXMLFile() {
     
     return {
       text: plainText,
-      reference: data.Reference,
+      reference: `${data.BookName} ${data.ChapterNumber}:${data.VerseNumber}`,
       book: data.BookName,
       chapter: data.ChapterNumber,
       verse: data.VerseNumber,

@@ -11,8 +11,9 @@ import { useSettings } from '@/contexts/SettingsContext';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import {ColorSchemeName} from "react-native/Libraries/Utilities/Appearance";
 
-const RootLayoutContent: FC<{ colorScheme: 'light' | 'dark' | null }> = ({ colorScheme }) => {
+const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }) => {
   const { isPowerSaving } = useSettings();
   
   return (
@@ -20,8 +21,8 @@ const RootLayoutContent: FC<{ colorScheme: 'light' | 'dark' | null }> = ({ color
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen 
-            name="settings" 
+          <Stack.Screen
+            name="settings"
             options={{
               presentation: 'modal',
               animation: 'slide_from_bottom',
