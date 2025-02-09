@@ -1,84 +1,90 @@
 const express = require('express');
 const { WebSocketServer } = require('ws');
 const http = require('http');
+const fs = require('fs');
+const xml2js = require('xml2js');
+const chokidar = require('chokidar');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const verses = [
-  { text: "La început era Cuvântul, și Cuvântul era cu Dumnezeu, și Cuvântul era Dumnezeu.", reference: "1:1" },
-  { text: "El era la început cu Dumnezeu.", reference: "1:2" },
-  { text: "Toate lucrurile au fost făcute prin El; și nimic din ce a fost făcut n-a fost făcut fără El.", reference: "1:3" },
-  { text: "În El era viața, și viața era lumina oamenilor.", reference: "1:4" },
-  { text: "Lumina luminează în întuneric, și întunericul n-a biruit-o.", reference: "1:5" },
-  { text: "Și Cuvântul S-a făcut trup și a locuit printre noi.", reference: "1:14" },
-  { text: "Fiindcă atât de mult a iubit Dumnezeu lumea, că a dat pe singurul Lui Fiu.", reference: "3:16" },
-  { text: "Eu sunt calea, adevărul și viața.", reference: "14:6" },
-  { text: "Vă las pacea, vă dau pacea Mea.", reference: "14:27" },
-  { text: "Nu este mai mare dragoste decât să-și dea cineva viața pentru prietenii săi.", reference: "15:13" }
-];
+const XML_PATH = path.join(__dirname, 'bibleshow.xml');
+let currentVerse = null;
 
-let currentVerseIndex = 4; // Start with verse 1:5
+// XML parser
+const parser = new xml2js.Parser({ explicitArray: false });
 
-function getVerseGroup(centerIndex) {
-  const prevIndex = (centerIndex - 1 + verses.length) % verses.length;
-  const nextIndex = (centerIndex + 1) % verses.length;
-  return [verses[prevIndex], verses[centerIndex], verses[nextIndex]];
+async function parseXMLFile() {
+  try {
+    const xmlContent = await fs.promises.readFile(XML_PATH, 'utf-8');
+    const result = await parser.parseStringPromise(xmlContent);
+    
+    // Extract verse data
+    const data = result.BibleShowData;
+    return {
+      text: data.Scripture.replace(/&lt;/g, '<').replace(/&gt;/g, '>'),
+      reference: data.Reference,
+      book: data.BookName,
+      chapter: data.ChapterNumber,
+      verse: data.VerseNumber
+    };
+  } catch (error) {
+    console.error('Error parsing XML:', error);
+    return null;
+  }
 }
 
-wss.on('connection', (ws) => {
+// Watch for XML file changes
+const watcher = chokidar.watch(XML_PATH, {
+  persistent: true,
+  usePolling: true,
+  interval: 100
+});
+
+watcher.on('change', async () => {
+  const newVerse = await parseXMLFile();
+  if (newVerse) {
+    currentVerse = newVerse;
+    // Broadcast to all clients
+    wss.clients.forEach(client => {
+      client.send(JSON.stringify({
+        type: 'verses',
+        data: {
+          currentBook: currentVerse.book,
+          verses: [currentVerse, currentVerse, currentVerse] // Same verse for all positions
+        }
+      }));
+    });
+  }
+});
+
+wss.on('connection', async (ws) => {
   console.log('Client connected');
   
-  // Send initial verses
-  const sendVerses = () => {
+  // Send initial verse if available
+  if (currentVerse) {
     ws.send(JSON.stringify({
       type: 'verses',
       data: {
-        currentBook: 'Ioan',
-        verses: getVerseGroup(currentVerseIndex)
+        currentBook: currentVerse.book,
+        verses: [currentVerse, currentVerse, currentVerse]
       }
     }));
-  };
-
-  // Send verses immediately and schedule a retry if needed
-  sendVerses();
-  const initialRetry = setTimeout(sendVerses, 1000);
-
-  // Clear the retry timeout when we receive any message
-  ws.once('message', () => {
-    clearTimeout(initialRetry);
-  });
+  }
 
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
-      if (data.type === 'refresh') {
-        // Broadcast current verses to all clients
-        wss.clients.forEach(client => {
-          client.send(JSON.stringify({
-            type: 'verses',
-            data: {
-              currentBook: 'Ioan',
-              verses: getVerseGroup(currentVerseIndex)
-            }
-          }));
-        });
-      } else if (data.type === 'setReference') {
-        const newIndex = verses.findIndex(v => v.reference === data.reference);
-        if (newIndex !== -1) {
-          currentVerseIndex = newIndex;
-          // Broadcast to all clients
-          wss.clients.forEach(client => {
-            client.send(JSON.stringify({
-              type: 'verses',
-              data: {
-                currentBook: 'Ioan',
-                verses: getVerseGroup(currentVerseIndex)
-              }
-            }));
-          });
-        }
+      if (data.type === 'refresh' && currentVerse) {
+        ws.send(JSON.stringify({
+          type: 'verses',
+          data: {
+            currentBook: currentVerse.book,
+            verses: [currentVerse, currentVerse, currentVerse]
+          }
+        }));
       }
     } catch (error) {
       console.error('Error processing message:', error);
