@@ -14,6 +14,7 @@ type SettingsContextType = {
   powerSaveTimeout: number;
   setPowerSaveTimeout: (minutes: number) => void;
   testPowerSave: () => void;
+  isPowerSaving: boolean;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -26,6 +27,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [powerSaveEnabled, setPowerSaveEnabled] = useState(false);
   const [powerSaveTimeout, setPowerSaveTimeout] = useState(5); // 5 minutes default
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(null);
+  const [isPowerSaving, setIsPowerSaving] = useState(false);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -128,17 +130,21 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   // Power save effect
   useEffect(() => {
-    if (!powerSaveEnabled || isConnected || !disconnectedTime) return;
+    if (!powerSaveEnabled || isConnected) {
+      setIsPowerSaving(false);
+      return;
+    }
+
+    if (!disconnectedTime) return;
 
     const checkPowerSave = setInterval(() => {
       const now = new Date();
       const disconnectedMinutes = (now.getTime() - disconnectedTime.getTime()) / (1000 * 60);
       
       if (disconnectedMinutes >= powerSaveTimeout) {
-        // Implement screen dimming here
-        console.log('Screen should be dimmed now');
+        setIsPowerSaving(true);
       }
-    }, 10000); // Check every 10 seconds
+    }, 1000); // Check every second
 
     return () => clearInterval(checkPowerSave);
   }, [powerSaveEnabled, isConnected, disconnectedTime, powerSaveTimeout]);
@@ -180,7 +186,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       testPowerSave: () => {
         setIsConnected(false);
         setDisconnectedTime(new Date(Date.now() - powerSaveTimeout * 60 * 1000));
-      }
+        setIsPowerSaving(true);
+      },
+      isPowerSaving
     }}>
       {children}
     </SettingsContext.Provider>

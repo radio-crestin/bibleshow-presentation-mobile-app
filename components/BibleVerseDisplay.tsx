@@ -1,4 +1,5 @@
 import { View, Animated, useWindowDimensions } from 'react-native';
+import { PowerSaveOverlay } from './PowerSaveOverlay';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,7 +10,7 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws } = useSettings();
+  const { fontSize, isConnected, ws, isPowerSaving } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -22,7 +23,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
     }
   };
   return (
-    <View style={[styles.container, {
+    <View style={[styles.container, { 
       paddingBottom: insets.bottom,
       paddingLeft: insets.left,
       paddingRight: insets.right,
@@ -102,6 +103,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
           </>
         )}
       </View>
+      <PowerSaveOverlay active={isPowerSaving} />
     </View>
   );
 }
