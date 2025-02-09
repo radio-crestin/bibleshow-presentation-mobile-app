@@ -19,9 +19,9 @@ const RootLayoutContent: FC<{ colorScheme: 'light' | 'dark' | null }> = ({ color
     <>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)/index" />
+          <Stack.Screen name="(tabs)" />
           <Stack.Screen 
-            name="(tabs)/settings" 
+            name="settings" 
             options={{
               presentation: 'modal',
               animation: 'slide_from_bottom',
