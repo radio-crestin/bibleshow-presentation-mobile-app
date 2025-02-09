@@ -1,5 +1,6 @@
 import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useState } from 'react';
 import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconSymbol } from './ui/IconSymbol';
@@ -17,7 +18,16 @@ type Props = {
 
 export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected } = useSettings();
+  const { fontSize, isConnected, ws } = useSettings();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    if (ws && isConnected) {
+      setIsRefreshing(true);
+      ws.send(JSON.stringify({ type: 'refresh' }));
+      setTimeout(() => setIsRefreshing(false), 1000);
+    }
+  };
   const router = useRouter();
 
   return (
@@ -38,10 +48,16 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
             <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
           </View>
         </View>
-        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+        <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
+          <Pressable 
+            onPress={handleRefresh}
+            style={[styles.iconButton, isRefreshing && styles.rotating]}
+          >
+            <IconSymbol name="arrow.clockwise" size={24} />
+          </Pressable>
           <Pressable 
             onPress={() => router.push('/settings')}
-            style={styles.settingsButton}
+            style={styles.iconButton}
           >
             <IconSymbol name="gear" size={24} />
           </Pressable>
@@ -146,7 +162,10 @@ const styles = StyleSheet.create({
   referenceText: {
     fontWeight: 'bold',
   },
-  settingsButton: {
+  iconButton: {
     padding: 8,
+  },
+  rotating: {
+    opacity: 0.5,
   },
 });

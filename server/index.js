@@ -42,7 +42,18 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
-      if (data.type === 'setReference') {
+      if (data.type === 'refresh') {
+        // Broadcast current verses to all clients
+        wss.clients.forEach(client => {
+          client.send(JSON.stringify({
+            type: 'verses',
+            data: {
+              currentBook: 'Ioan',
+              verses: getVerseGroup(currentVerseIndex)
+            }
+          }));
+        });
+      } else if (data.type === 'setReference') {
         const newIndex = verses.findIndex(v => v.reference === data.reference);
         if (newIndex !== -1) {
           currentVerseIndex = newIndex;
