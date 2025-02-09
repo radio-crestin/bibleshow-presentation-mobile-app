@@ -1,5 +1,6 @@
-import { StyleSheet, View, Animated } from 'react-native';
+import { StyleSheet, View, Animated, Pressable } from 'react-native';
 import { useEffect, useRef } from 'react';
+import { useSettings } from '@/contexts/SettingsContext';
 
 type PowerSaveOverlayProps = {
   active: boolean;
@@ -17,14 +18,16 @@ export function PowerSaveOverlay({ active }: PowerSaveOverlayProps) {
   }, [active]);
 
   return (
-    <Animated.View 
-      style={[
-        styles.overlay,
-        { opacity },
-        active && styles.active
-      ]} 
-      pointerEvents={active ? 'auto' : 'none'}
-    />
+    <Pressable onPress={() => active && setIsPowerSaving(false)}>
+      <Animated.View 
+        style={[
+          styles.overlay,
+          { opacity },
+          active && styles.active
+        ]} 
+        pointerEvents={active ? 'auto' : 'none'}
+      />
+    </Pressable>
   );
 }
 

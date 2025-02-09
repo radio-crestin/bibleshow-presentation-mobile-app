@@ -15,6 +15,7 @@ type SettingsContextType = {
   setPowerSaveTimeout: (minutes: number) => void;
   testPowerSave: () => void;
   isPowerSaving: boolean;
+  setIsPowerSaving: (value: boolean) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -188,7 +189,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         setDisconnectedTime(new Date(Date.now() - powerSaveTimeout * 60 * 1000));
         setIsPowerSaving(true);
       },
-      isPowerSaving
+      isPowerSaving,
+      setIsPowerSaving
     }}>
       {children}
     </SettingsContext.Provider>
