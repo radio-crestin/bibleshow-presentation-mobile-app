@@ -33,14 +33,20 @@ async function parseXMLFile() {
     const xmlContent = await fs.promises.readFile(XML_PATH, 'utf-8');
     const result = await parser.parseStringPromise(xmlContent);
     
-    // Extract verse data
+    // Extract verse data and render HTML
     const data = result.BibleShowData;
+    const renderedText = data.Scripture
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/\[([^\]]+)\]/g, '<i>$1</i>'); // Convert [text] to <i>text</i>
+    
     return {
-      text: data.Scripture.replace(/&lt;/g, '<').replace(/&gt;/g, '>'),
+      text: renderedText,
       reference: data.Reference,
       book: data.BookName,
       chapter: data.ChapterNumber,
-      verse: data.VerseNumber
+      verse: data.VerseNumber,
+      html: `<p>${renderedText}</p>`
     };
   } catch (error) {
     console.error('Error parsing XML:', error);
@@ -65,7 +71,7 @@ watcher.on('change', async () => {
         type: 'verses',
         data: {
           currentBook: currentVerse.book,
-          verses: [currentVerse, currentVerse, currentVerse] // Same verse for all positions
+          verses: [currentVerse] // Only send the current verse
         }
       }));
     });
@@ -81,7 +87,7 @@ wss.on('connection', async (ws) => {
       type: 'verses',
       data: {
         currentBook: currentVerse.book,
-        verses: [currentVerse, currentVerse, currentVerse]
+        verses: [currentVerse]
       }
     }));
   }
