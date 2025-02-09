@@ -51,29 +51,18 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
         <ThemedText style={[styles.referenceText, { fontSize }]}>{currentVerse.reference}</ThemedText>
         <RenderHtml
           contentWidth={width}
-          source={{ html: currentVerse.html || currentVerse.text }}
-          tagsStyles={{
-            p: {
-              fontSize,
-              color: textColor,
-              margin: 0,
-              padding: 0
-            },
-            span: {
-              fontSize
-            }
-          }}
-          classesStyles={{
-            'Isus': {
-              color: '#ff0000'
-            }
-          }}
-          defaultTextProps={{}}
-          renderersProps={{
-            img: {
-              enableExperimentalPercentWidth: true
-            }
-          }}
+          source={{ html: currentVerse.text }}
+          // tagsStyles={{
+          //   p: {
+          //     fontSize,
+          //     color: textColor,
+          //     margin: 0,
+          //     padding: 0
+          //   },
+          //   span: {
+          //     fontSize
+          //   }
+          // }}
         />
       </View>
     </Pressable>
