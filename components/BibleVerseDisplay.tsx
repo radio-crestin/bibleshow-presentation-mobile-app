@@ -11,22 +11,6 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws } = useSettings();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-
-  const animateTransition = () => {
-    Animated.sequence([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 150,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: true,
-      })
-    ]).start();
-  };
 
   const handleRefresh = () => {
     if (ws && isConnected) {
@@ -49,20 +33,13 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
         onRefresh={handleRefresh}
         paddingTop={insets.top}
       />
-      <Animated.View 
-        style={[
-          styles.versesContainer,
-          {
-            opacity: fadeAnim
-          }
-        ]}>
+      <View style={styles.versesContainer}>
         <View style={styles.topSection}>
           <VerseSection
             verse={verses[0]}
             fontSize={fontSize}
             onPress={() => {
               if (ws && isConnected) {
-                animateTransition();
                 ws.send(JSON.stringify({
                   type: 'setReference',
                   reference: verses[0].reference
@@ -103,7 +80,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
             }}
           />
         </View>
-      </Animated.View>
+      </View>
     </View>
   );
 }

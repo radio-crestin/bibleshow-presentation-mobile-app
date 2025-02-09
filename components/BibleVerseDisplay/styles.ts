@@ -78,4 +78,16 @@ export const styles = StyleSheet.create({
   rotating: {
     opacity: 0.5,
   },
+  skeletonContainer: {
+    backgroundColor: '#f5f5f5',
+  },
+  skeletonLine: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    marginVertical: 4,
+  },
+  skeletonTitle: {
+    width: '40%',
+    marginBottom: 8,
+  },
 });
