@@ -2,10 +2,10 @@ import { View, Animated } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BibleVerseDisplayProps } from './types';
-import { styles } from './styles';
-import { Header } from './Header';
-import { VerseSection } from './VerseSection';
+import { BibleVerseDisplayProps } from './BibleVerseDisplay/types';
+import { styles } from './BibleVerseDisplay/styles';
+import { Header } from './BibleVerseDisplay/Header';
+import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
