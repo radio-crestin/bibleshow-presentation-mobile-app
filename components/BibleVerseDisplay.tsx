@@ -9,7 +9,7 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws, isPowerSaving, isDisconnectedTimeout } = useSettings();
+  const { fontSize, isConnected, ws } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -35,85 +35,84 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
         onRefresh={handleRefresh}
         paddingTop={insets.top}
       />
-      {isDisconnectedTimeout ? (
-        <View style={[styles.disconnectedMessage, { flex: 1, justifyContent: 'center' }]}>
-          <Text style={[styles.disconnectedText, { 
-            fontSize: fontSize * 0.9,
-            color: '#999999',
-            textAlign: 'center'
-          }]}>
-            Dispozitivul a pierdut conexiunea
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.versesContainer}>
+      <View style={styles.versesContainer}>
         {verses.length === 1 ? (
-          <View style={styles.topSection}>
-            <VerseSection
-              verse={verses[0]}
-              fontSize={fontSize}
-              isHighlighted
-              onPress={() => {
-                if (ws && isConnected) {
-                  ws.send(JSON.stringify({
-                    type: 'setReference',
-                    reference: verses[0].reference
-                  }));
-                }
-              }}
-            />
-          </View>
-        ) : (
-          <>
             <View style={styles.topSection}>
               <VerseSection
-                verse={verses[0]}
-                fontSize={fontSize}
-                onPress={() => {
-                  if (ws && isConnected) {
-                    ws.send(JSON.stringify({
-                      type: 'setReference',
-                      reference: verses[0].reference
-                    }));
-                  }
-                }}
+                  verse={verses[0]}
+                  fontSize={fontSize}
+                  isHighlighted
+                  onPress={() => {
+                    if (ws && isConnected) {
+                      ws.send(JSON.stringify({
+                        type: 'setReference',
+                        reference: verses[0].reference
+                      }));
+                    }
+                  }}
               />
             </View>
+        ) : (
+            <>
+              <View style={styles.topSection}>
+                <VerseSection
+                    verse={verses[0]}
+                    fontSize={fontSize}
+                    onPress={() => {
+                      if (ws && isConnected) {
+                        ws.send(JSON.stringify({
+                          type: 'setReference',
+                          reference: verses[0].reference
+                        }));
+                      }
+                    }}
+                />
+              </View>
 
-            <View style={styles.middleSection}>
-              <VerseSection
-                verse={verses[1]}
-                fontSize={fontSize}
-                isHighlighted
-                onPress={() => {
-                  if (ws && isConnected) {
-                    ws.send(JSON.stringify({
-                      type: 'setReference',
-                      reference: verses[1].reference
-                    }));
-                  }
-                }}
-              />
-            </View>
+              <View style={styles.middleSection}>
+                <VerseSection
+                    verse={verses[1]}
+                    fontSize={fontSize}
+                    isHighlighted
+                    onPress={() => {
+                      if (ws && isConnected) {
+                        ws.send(JSON.stringify({
+                          type: 'setReference',
+                          reference: verses[1].reference
+                        }));
+                      }
+                    }}
+                />
+              </View>
 
-            <View style={styles.bottomSection}>
-              <VerseSection
-                verse={verses[2]}
-                fontSize={fontSize}
-                onPress={() => {
-                  if (ws && isConnected) {
-                    ws.send(JSON.stringify({
-                      type: 'setReference',
-                      reference: verses[2].reference
-                    }));
-                  }
-                }}
-              />
-            </View>
-          </>
+              <View style={styles.bottomSection}>
+                <VerseSection
+                    verse={verses[2]}
+                    fontSize={fontSize}
+                    onPress={() => {
+                      if (ws && isConnected) {
+                        ws.send(JSON.stringify({
+                          type: 'setReference',
+                          reference: verses[2].reference
+                        }));
+                      }
+                    }}
+                />
+              </View>
+
+
+              <View style={[styles.disconnectedMessage, { flex: 1, justifyContent: 'center' }]}>
+                <Text style={[styles.disconnectedText, {
+                  fontSize: fontSize * 0.9,
+                  color: '#999999',
+                  textAlign: 'center'
+                }]}>
+                  Dispozitivul a pierdut conexiunea
+                </Text>
+              </View>
+            </>
         )}
       </View>
-      )}
     </View>
   );
 }
