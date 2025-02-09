@@ -5,12 +5,31 @@ type SettingsContextType = {
   fontSize: number;
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
+  ws: WebSocket | null;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [fontSize, setFontSize] = useState(18);
+  const [ws, setWs] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    const websocket = new WebSocket('ws://localhost:3000');
+    
+    websocket.onopen = () => {
+      console.log('Connected to server');
+      setWs(websocket);
+    };
+
+    websocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    return () => {
+      websocket.close();
+    };
+  }, []);
 
   // Load saved font size on mount
   useEffect(() => {
@@ -48,7 +67,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <SettingsContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize }}>
+    <SettingsContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize, ws }}>
       {children}
     </SettingsContext.Provider>
   );
