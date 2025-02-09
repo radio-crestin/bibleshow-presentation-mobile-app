@@ -21,19 +21,21 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const router = useRouter();
 
   return (
-    <ScrollView style={[styles.container, { 
-      paddingTop: insets.top,
+    <View style={[styles.container, {
       paddingBottom: insets.bottom,
-      paddingLeft: insets.left + 16,
-      paddingRight: insets.right + 16,
+      paddingLeft: insets.left,
+      paddingRight: insets.right,
     }]}>
-      <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
-      <Pressable 
-        onPress={() => router.push('/settings')}
-        style={styles.settingsButton}
-      >
-        <IconSymbol name="gear" size={24} />
-      </Pressable>
+      <View style={[styles.header, { paddingTop: insets.top }]}>
+        <ThemedText style={styles.currentReference}>{currentBook} {verses[1].reference}</ThemedText>
+        <Pressable 
+          onPress={() => router.push('/settings')}
+          style={styles.settingsButton}
+        >
+          <IconSymbol name="gear" size={24} />
+        </Pressable>
+      </View>
+      <ScrollView style={styles.scrollContent}>
       {verses.map((verse, index) => (
         <View
           key={verse.reference}
@@ -55,7 +57,8 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           </View>
         </View>
       ))}
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -63,12 +66,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: 'white',
+  },
   currentReference: {
     fontSize: 20,
     fontWeight: 'bold',
-    position: 'absolute',
-    top: 60,
-    left: 16,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
   verseContainer: {
     marginVertical: 10,
@@ -103,9 +115,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   settingsButton: {
-    position: 'absolute',
-    top: 60,
-    right: 16,
     padding: 8,
   },
 });
