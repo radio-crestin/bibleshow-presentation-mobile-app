@@ -19,7 +19,7 @@ export function PowerSaveOverlay({ active }: PowerSaveOverlayProps) {
   }, [active]);
 
   return (
-    <Pressable onPress={() => active && setIsPowerSaving(false)}>
+    <Pressable >
       <Animated.View 
         style={[
           styles.overlay,
