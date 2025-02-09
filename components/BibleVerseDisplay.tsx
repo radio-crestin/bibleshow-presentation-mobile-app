@@ -1,6 +1,6 @@
-import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Pressable, ScrollView, ActivityIndicator, Animated } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ThemedText } from './ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconSymbol } from './ui/IconSymbol';
@@ -20,6 +20,21 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws } = useSettings();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [transitionDirection, setTransitionDirection] = useState<'up' | 'down' | null>(null);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+
+  const animateTransition = (direction: 'up' | 'down') => {
+    setTransitionDirection(direction);
+    slideAnim.setValue(direction === 'up' ? 300 : -300);
+    
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setTransitionDirection(null);
+    });
+  };
 
   const handleRefresh = () => {
     if (ws && isConnected) {
@@ -55,12 +70,19 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
             <IconSymbol name="gear" size={24} />
           </Pressable>
         </View>
-      </View>
-      <View style={styles.versesContainer}>
+      </Animated.View>
+      <Animated.View 
+        style={[
+          styles.versesContainer,
+          transitionDirection && {
+            transform: [{ translateY: slideAnim }]
+          }
+        ]}>
         <View style={styles.topSection}>
           <Pressable 
             onPress={() => {
               if (ws && isConnected) {
+                animateTransition('down');
                 ws.send(JSON.stringify({
                   type: 'setReference',
                   reference: verses[0].reference
@@ -106,6 +128,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
           <Pressable 
             onPress={() => {
               if (ws && isConnected) {
+                animateTransition('up');
                 ws.send(JSON.stringify({
                   type: 'setReference',
                   reference: verses[2].reference
