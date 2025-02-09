@@ -7,6 +7,7 @@ type PowerSaveOverlayProps = {
 };
 
 export function PowerSaveOverlay({ active }: PowerSaveOverlayProps) {
+  const { setIsPowerSaving } = useSettings();
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
