@@ -34,7 +34,7 @@ export function Header({
   return (
     <View style={[styles.header, { paddingTop }]}>
       <View style={{ flex: 1, paddingRight: 16 }}>
-        <ThemedText style={[styles.currentReference, { fontSize: 32, textAlign: 'right' }]}>
+        <ThemedText style={[styles.currentReference, { fontSize: 32, textAlign: 'left' }]}>
           {currentTime.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit',
