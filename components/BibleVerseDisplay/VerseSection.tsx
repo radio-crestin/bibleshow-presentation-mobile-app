@@ -1,9 +1,11 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, useWindowDimensions } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { styles } from './styles';
 import { BibleVerse } from './types';
 import { useState, useEffect } from 'react';
 import { SkeletonLoader } from './SkeletonLoader';
+import RenderHtml from 'react-native-render-html';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 type VerseSectionProps = {
   verse: BibleVerse;
@@ -43,7 +45,24 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
     >
       <View style={styles.verseWrapper}>
         <ThemedText style={[styles.referenceText, { fontSize }]}>{currentVerse.reference}</ThemedText>
-        <ThemedText style={[styles.verseText, { fontSize }]}>{currentVerse.text}</ThemedText>
+        <RenderHtml
+          contentWidth={useWindowDimensions().width}
+          source={{ html: currentVerse.html || currentVerse.text }}
+          tagsStyles={{
+            p: {
+              fontSize,
+              color: useColorScheme() === 'dark' ? '#fff' : '#000',
+              margin: 0,
+              padding: 0
+            },
+            span: {
+              fontSize
+            },
+            '.Isus': {
+              color: '#ff0000'
+            }
+          }}
+        />
       </View>
     </Pressable>
   );
