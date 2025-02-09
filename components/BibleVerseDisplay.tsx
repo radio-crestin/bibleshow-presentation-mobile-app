@@ -1,4 +1,4 @@
-import { View, Animated } from 'react-native';
+import { View, Animated, useWindowDimensions } from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,8 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws } = useSettings();
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = () => {
@@ -24,6 +26,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
       paddingBottom: insets.bottom,
       paddingLeft: insets.left,
       paddingRight: insets.right,
+      paddingTop: isLandscape ? 20 : 0,
     }]}>
       <Header
         currentReference={verses.length === 1 ? verses[0].reference : verses[1].reference}
