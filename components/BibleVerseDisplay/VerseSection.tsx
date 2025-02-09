@@ -23,7 +23,7 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
       const timer = setTimeout(() => {
         setCurrentVerse(verse);
         setIsLoading(false);
-      }, 100);
+      }, 250);
       return () => clearTimeout(timer);
     }
   }, [verse.text, verse.reference]);
