@@ -46,7 +46,7 @@ export function BibleVerseDisplay({ verses, currentBook }: Props) {
               {isConnected ? 'Conectat' : 'Deconectat'}
             </ThemedText>
             <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
-          </Pressable>
+          </View>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'flex-end', gap: 8 }}>
           <Pressable 
