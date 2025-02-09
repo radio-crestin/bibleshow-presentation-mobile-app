@@ -13,6 +13,7 @@ type SettingsContextType = {
   setPowerSaveEnabled: (enabled: boolean) => void;
   powerSaveTimeout: number;
   setPowerSaveTimeout: (minutes: number) => void;
+  testPowerSave: () => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
