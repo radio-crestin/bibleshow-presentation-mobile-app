@@ -31,13 +31,24 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
   
   // Send initial verses
-  ws.send(JSON.stringify({
-    type: 'verses',
-    data: {
-      currentBook: 'Ioan',
-      verses: getVerseGroup(currentVerseIndex)
-    }
-  }));
+  const sendVerses = () => {
+    ws.send(JSON.stringify({
+      type: 'verses',
+      data: {
+        currentBook: 'Ioan',
+        verses: getVerseGroup(currentVerseIndex)
+      }
+    }));
+  };
+
+  // Send verses immediately and schedule a retry if needed
+  sendVerses();
+  const initialRetry = setTimeout(sendVerses, 1000);
+
+  // Clear the retry timeout when we receive any message
+  ws.once('message', () => {
+    clearTimeout(initialRetry);
+  });
 
   ws.on('message', (message) => {
     try {

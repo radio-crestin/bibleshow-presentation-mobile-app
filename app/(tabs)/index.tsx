@@ -15,7 +15,7 @@ export default function HomeScreen() {
   useEffect(() => {
     if (!ws) return;
 
-    ws.onmessage = (event) => {
+    const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'verses') {
@@ -25,6 +25,24 @@ export default function HomeScreen() {
       } catch (error) {
         console.error('Error processing message:', error);
       }
+    };
+
+    ws.addEventListener('message', handleMessage);
+
+    // Request verses on connection
+    const requestVerses = () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'refresh' }));
+      }
+    };
+
+    // Try to request verses immediately and retry after a delay
+    requestVerses();
+    const retryTimeout = setTimeout(requestVerses, 1000);
+
+    return () => {
+      ws.removeEventListener('message', handleMessage);
+      clearTimeout(retryTimeout);
     };
   }, [ws]);
 
