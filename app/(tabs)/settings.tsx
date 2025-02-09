@@ -19,14 +19,14 @@ export default function SettingsScreen() {
           onPress={() => router.back()}
           style={styles.closeButton}
         >
-          <IconSymbol name="xmark.circle.fill" size={28} />
+          <IconSymbol name="xmark.circle.fill" size={28} color={''} />
         </Pressable>
       </View>
 
       <View style={styles.content}>
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="textformat.size" size={24} />
+            <IconSymbol name="textformat.size" size={24} color={''} />
             <ThemedText style={styles.sectionTitle}>Mărime Text</ThemedText>
           </View>
           
@@ -35,14 +35,14 @@ export default function SettingsScreen() {
               onPress={decreaseFontSize}
               style={styles.button}
             >
-              <IconSymbol name="minus.circle.fill" size={32} />
+              <IconSymbol name="minus.circle.fill" size={32} color={''} />
             </Pressable>
             <ThemedText style={styles.fontSize}>{fontSize}</ThemedText>
             <Pressable 
               onPress={increaseFontSize}
               style={styles.button}
             >
-              <IconSymbol name="plus.circle.fill" size={32} />
+              <IconSymbol name="plus.circle.fill" size={32} color={''} />
             </Pressable>
           </View>
           <View style={[styles.previewContainer, { minHeight: fontSize * 4 }]}>
@@ -54,7 +54,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="network" size={24} />
+            <IconSymbol name="network" size={24} color={''} />
             <ThemedText style={styles.sectionTitle}>Conexiune Server</ThemedText>
           </View>
           
