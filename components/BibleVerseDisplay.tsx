@@ -31,6 +31,7 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
       paddingLeft: insets.left,
       paddingRight: insets.right,
       paddingTop: isLandscape ? 20 : 0,
+      backgroundColor: colorScheme === 'dark' ? '#000000' : '#f5f5f5'
     }]}>
       <Header
         currentReference={currentVerse?.reference || ''}
