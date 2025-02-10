@@ -19,6 +19,8 @@ type SettingsContextType = {
   setDisconnectedTime: (date: Date) => void;
   showSeconds: boolean;
   setShowSeconds: (show: boolean) => void;
+  clockSize: number;
+  setClockSize: (size: number) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -33,6 +35,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
+  const [clockSize, setClockSize] = useState(32);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -71,17 +74,19 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds] = await Promise.all([
+        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize] = await Promise.all([
           AsyncStorage.getItem('wsUrl'),
           AsyncStorage.getItem('powerSaveEnabled'),
           AsyncStorage.getItem('powerSaveTimeout'),
-          AsyncStorage.getItem('showSeconds')
+          AsyncStorage.getItem('showSeconds'),
+          AsyncStorage.getItem('clockSize')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
         if (savedPowerSave) setPowerSaveEnabled(savedPowerSave === 'true');
         if (savedTimeout) setPowerSaveTimeout(Number(savedTimeout));
         if (savedShowSeconds) setShowSeconds(savedShowSeconds === 'true');
+        if (savedClockSize) setClockSize(Number(savedClockSize));
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -211,6 +216,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('showSeconds', show.toString());
         } catch (error) {
           console.error('Error saving show seconds setting:', error);
+        }
+      },
+      clockSize,
+      setClockSize: async (size: number) => {
+        setClockSize(size);
+        try {
+          await AsyncStorage.setItem('clockSize', size.toString());
+        } catch (error) {
+          console.error('Error saving clock size:', error);
         }
       },
     }}>
