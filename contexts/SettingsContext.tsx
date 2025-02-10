@@ -32,7 +32,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [wsUrl, setWsUrl] = useState('ws://localhost:3000');
   const [isConnected, setIsConnected] = useState(false);
-  const [powerSaveEnabled, setPowerSaveEnabled] = useState(false);
+  const [powerSaveEnabled, setPowerSaveEnabled] = useState(true);
   const [powerSaveTimeout, setPowerSaveTimeout] = useState(30); // 5 minutes default
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
