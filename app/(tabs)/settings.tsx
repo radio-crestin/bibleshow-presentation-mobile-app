@@ -251,13 +251,6 @@ export default function SettingsScreen() {
                 onSelect: setNormalVerseTextColor
               })}
             />
-            <View style={styles.switchRow}>
-              <ThemedText style={styles.switchLabel}>Text îngroșat</ThemedText>
-              <Switch
-                value={highlightedTextBold}
-                onValueChange={setHighlightedTextBold}
-              />
-            </View>
             <View style={styles.previewContainer}>
               <VerseSection
                 verse={{
@@ -306,6 +299,13 @@ export default function SettingsScreen() {
                 onSelect: setVerseTextColor
               })}
             />
+            <View style={styles.switchRow}>
+              <ThemedText style={styles.switchLabel}>Text îngroșat</ThemedText>
+              <Switch
+                  value={highlightedTextBold}
+                  onValueChange={setHighlightedTextBold}
+              />
+            </View>
             <View style={styles.previewContainer}>
               <VerseSection
                 verse={{
