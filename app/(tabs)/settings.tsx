@@ -29,7 +29,9 @@ export default function SettingsScreen() {
     colorScheme,
     setColorScheme,
     clockColor,
-      setClockColor
+      setClockColor,
+      highlightColor,
+      setHighlightColor
   } = useSettings();
   const router = useRouter();
 
