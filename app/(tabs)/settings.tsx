@@ -201,7 +201,29 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+export default function SettingsScreen() {
+  const { 
+    fontSize, 
+    increaseFontSize, 
+    decreaseFontSize, 
+    wsUrl, 
+    setWsUrl,
+    powerSaveEnabled,
+    setPowerSaveEnabled,
+    powerSaveTimeout,
+    setPowerSaveTimeout,
+    testPowerSave,
+    showSeconds,
+    setShowSeconds,
+    clockSize,
+    setClockSize,
+    showClock,
+    setShowClock,
+    colorScheme,
+    setColorScheme
+  } = useSettings();
+
+  const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -344,4 +366,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: '600',
   },
-});
+  });
+
+  return (
+    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.header}>
