@@ -56,15 +56,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [disconnectedTime, setDisconnectedTime] = useState<Date | null>(new Date());
   const [isPowerSaving, setIsPowerSaving] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
-  const [clockSize, setClockSize] = useState(32);
+  const [clockSize, setClockSize] = useState(40);
   const [showClock, setShowClock] = useState(true);
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
   const [clockColor, setClockColor] = useState('#FF0000'); // Default red
-  const [highlightColor, setHighlightColor] = useState('#FFA500'); // Default orange
+  const [highlightColor, setHighlightColor] = useState('#21F900'); // Default orange
   const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
-  const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
-  const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
-  const [highlightedTextBold, setHighlightedTextBold] = useState(false);
+  const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#000000'); // Default white
+  const [normalVerseTextColor, setNormalVerseTextColor] = useState('#21F900'); // Default black
+  const [highlightedTextBold, setHighlightedTextBold] = useState(true);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -124,7 +124,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const loadSettings = async () => {
       try {
         const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock, savedColorScheme, savedClockColor,
-            savedHighlightColor, savedVerseTextColor, savedNormalVerseBackgroundColor, savedNormalVerseTextColor
+            savedHighlightColor, savedVerseTextColor, savedNormalVerseBackgroundColor, savedNormalVerseTextColor,
+          savedHighlightedTextBold
         ] = await Promise.all([
           AsyncStorage.getItem('wsUrl'),
           AsyncStorage.getItem('powerSaveEnabled'),
