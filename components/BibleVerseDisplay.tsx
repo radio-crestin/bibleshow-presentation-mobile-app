@@ -14,6 +14,8 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const verseMeasurements = useRef<{ [key: string]: number }>({});
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
 
   const handleRefresh = () => {
     if (ws && isConnected) {
@@ -43,15 +45,12 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
           </View>
         ) : (
           <Animated.ScrollView 
-            ref={(scrollView) => {
-              if (scrollView && currentVerse) {
-                const index = verses.findIndex(v => v.reference === currentVerse.reference);
-                if (index !== -1) {
-                  scrollView.scrollTo({ y: index * 120, animated: true });
-                }
-              }
-            }}
+            ref={scrollViewRef}
             style={styles.versesList}
+            contentContainerStyle={{
+              paddingTop: height / 2 - 50,
+              paddingBottom: height / 2 - 50,
+            }}
           >
             {verses.map((verse) => (
               <View 
@@ -60,6 +59,19 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
                   styles.verseSection,
                   verse.reference === currentVerse?.reference && styles.currentVerseSection
                 ]}
+                onLayout={(event) => {
+                  const { height } = event.nativeEvent.layout;
+                  verseMeasurements.current[verse.reference] = height;
+                  
+                  if (verse.reference === currentVerse?.reference && scrollViewRef.current) {
+                    let totalHeight = 0;
+                    for (const v of verses) {
+                      if (v.reference === currentVerse.reference) break;
+                      totalHeight += verseMeasurements.current[v.reference] || 0;
+                    }
+                    scrollViewRef.current.scrollTo({ y: totalHeight, animated: true });
+                  }
+                }}
               >
                 <VerseSection
                   verse={verse}
