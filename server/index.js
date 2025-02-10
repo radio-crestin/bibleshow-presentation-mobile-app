@@ -5,6 +5,39 @@ const https = require('https');
 const fs = require('fs');
 const cheerio = require('cheerio');
 
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM. Performing graceful shutdown...');
+  shutdown();
+});
+
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Performing graceful shutdown...');
+  shutdown();
+});
+
+function shutdown() {
+  // Close the watcher
+  if (watcher) {
+    watcher.close();
+  }
+  
+  // Close all WebSocket connections
+  wss.clients.forEach(client => {
+    client.close();
+  });
+  
+  // Close the WebSocket server
+  wss.close(() => {
+    console.log('WebSocket server closed');
+    // Close the HTTP server
+    server.close(() => {
+      console.log('HTTP server closed');
+      process.exit(0);
+    });
+  });
+}
+
 async function handleVerseUpdate() {
   try {
     // Parse local XML file
