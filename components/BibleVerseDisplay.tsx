@@ -1,4 +1,5 @@
 import {View, Animated, useWindowDimensions, Text, ScrollView} from 'react-native';
+import { activateKeepAwakeAsync, deactivateKeepAwakeAsync } from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,6 +18,15 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    // Keep the screen awake
+    activateKeepAwakeAsync();
+    return () => {
+      // Allow the screen to sleep when component unmounts
+      deactivateKeepAwakeAsync();
+    };
+  }, []);
 
   const handleRefresh = () => {
     if (ws && isConnected) {
