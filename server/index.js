@@ -1,8 +1,8 @@
 const express = require('express');
 const { WebSocketServer } = require('ws');
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
-const axios = require('axios');
 const cheerio = require('cheerio');
 
 async function handleVerseUpdate() {
@@ -13,8 +13,15 @@ async function handleVerseUpdate() {
     // Fetch from remote endpoint if configured
     if (config.bibleShowRemoteEndpoint && currentVerse) {
       try {
-        const response = await axios.get(config.bibleShowRemoteEndpoint);
-        verses = await parseHtmlResponse(response.data);
+        const response = await new Promise((resolve, reject) => {
+          https.get(config.bibleShowRemoteEndpoint, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => resolve(data));
+            res.on('error', reject);
+          }).on('error', reject);
+        });
+        verses = await parseHtmlResponse(response);
       } catch (fetchError) {
         console.error('Error fetching remote endpoint:', fetchError.message);
       }
