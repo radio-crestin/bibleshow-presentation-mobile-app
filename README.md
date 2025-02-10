@@ -1,6 +1,6 @@
 # BibleShow Presentation Mobile App
 
-A React Native application built with Expo for displaying Bible verses in real-time sync with BibleShow software.
+A React Native application built with Expo for displaying Bible verses in real-time sync with BibleShow software. This app was specifically designed for preachers to have a mobile view of the currently displayed Bible verse during their sermon, ensuring they stay in sync with what the congregation sees on the main presentation screen.
 
 ## Features
 
