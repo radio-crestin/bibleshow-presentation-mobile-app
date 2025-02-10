@@ -32,7 +32,9 @@ export default function SettingsScreen() {
     clockColor,
       setClockColor,
       highlightColor,
-      setHighlightColor
+      setHighlightColor,
+      verseTextColor,
+      setVerseTextColor
   } = useSettings();
   const router = useRouter();
 
