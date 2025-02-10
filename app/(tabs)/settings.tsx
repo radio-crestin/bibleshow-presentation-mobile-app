@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { Stack } from 'expo-router';
@@ -10,6 +10,7 @@ import { useRouter } from 'expo-router';
 import {useState} from "react";
 
 export default function SettingsScreen() {
+  const [isColorPickerActive, setIsColorPickerActive] = useState(false);
   const { 
     fontSize, 
     increaseFontSize, 
@@ -55,7 +56,11 @@ export default function SettingsScreen() {
         }} 
       />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={!isColorPickerActive}
+      >
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <IconSymbol name="moon.fill" size={24} color={''} />
@@ -206,6 +211,8 @@ export default function SettingsScreen() {
                         <ColorPicker
                           color={clockColor}
                           onColorChange={setClockColor}
+                          onInteractionStart={() => setIsColorPickerActive(true)}
+                          onInteractionEnd={() => setIsColorPickerActive(false)}
                           thumbSize={30}
                           sliderSize={30}
                           noSnap={true}
@@ -237,6 +244,8 @@ export default function SettingsScreen() {
               <ColorPicker
                 color={highlightColor}
                 onColorChange={setHighlightColor}
+                onInteractionStart={() => setIsColorPickerActive(true)}
+                onInteractionEnd={() => setIsColorPickerActive(false)}
                 thumbSize={30}
                 sliderSize={30}
                 noSnap={true}
@@ -248,6 +257,8 @@ export default function SettingsScreen() {
               <ColorPicker
                 color={verseTextColor}
                 onColorChange={setVerseTextColor}
+                onInteractionStart={() => setIsColorPickerActive(true)}
+                onInteractionEnd={() => setIsColorPickerActive(false)}
                 thumbSize={30}
                 sliderSize={30}
                 noSnap={true}
