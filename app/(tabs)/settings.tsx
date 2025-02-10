@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 16,
     padding: 8,
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
   },
   fontSize: {
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   previewContainer: {
     marginTop: 16,
     padding: 16,
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
   },
   previewText: {
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   wsUrlContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
     padding: 16,
   },
@@ -277,13 +277,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   wsUrlInput: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    color: '#000000',
   },
   powerSaveContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
     padding: 16,
     gap: 16,
@@ -304,10 +305,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   timeoutInput: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    color: '#000000',
   },
   testButton: {
     backgroundColor: '#007AFF',

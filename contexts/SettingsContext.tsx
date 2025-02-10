@@ -77,6 +77,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Load saved settings
+  // Apply color scheme to app
+  useEffect(() => {
+    // Here you would apply the color scheme to the app's appearance
+    // This might involve setting the status bar style and other system UI elements
+  }, [colorScheme]);
+
   useEffect(() => {
     const loadSettings = async () => {
       try {
