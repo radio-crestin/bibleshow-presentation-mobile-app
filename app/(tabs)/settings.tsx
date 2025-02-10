@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useSettings } from '@/contexts/SettingsContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {useState} from "react";
 
 export default function SettingsScreen() {
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -297,11 +297,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  closeButton: {
-    position: 'absolute',
-    right: 16,
-    padding: 8,
   },
   content: {
     flex: 1,
