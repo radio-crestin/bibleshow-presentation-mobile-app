@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 16,
     textAlign: 'center',
-    color: '#000',
   },
   colorPickerContainer: {
     height: 280,
