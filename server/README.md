@@ -9,10 +9,10 @@ To install the server as a Windows service:
 1. Open Command Prompt as Administrator
 
 2. Navigate to the directory containing the executable:
-```cd C:\path\to\server```
+```cd %~dp0```
 
 3. Install the service:
-```sc create "BibleAmvonServer" binPath= "C:\path\to\server\bible-amvon-server-win-x64.exe"```
+```sc create "BibleAmvonServer" binPath= "%CD%\bible-amvon-server-win-x64.exe"```
 
 4. Configure the service to restart on failure:
 ```sc failure "BibleAmvonServer" reset= 0 actions= restart/60000/restart/60000/restart/60000```
