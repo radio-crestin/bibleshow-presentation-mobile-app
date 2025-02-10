@@ -196,43 +196,33 @@ export default function SettingsScreen() {
                   </View>
                   <View style={styles.clockColorContainer}>
                     <ThemedText style={styles.clockColorLabel}>Culoare ceas:</ThemedText>
+                    <View style={styles.colorInputContainer}>
+                      <View style={[styles.colorPreview, { backgroundColor: clockColor }]} />
+                      <TextInput
+                        style={styles.customColorInput}
+                        value={clockColor}
+                        onChangeText={(text) => {
+                          // Ensure the text starts with #
+                          const color = text.startsWith('#') ? text : '#' + text;
+                          // Only update if it's a valid hex color
+                          if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
+                            setClockColor(color);
+                          }
+                        }}
+                        placeholder="#FF0000"
+                        maxLength={7}
+                        autoCapitalize="characters"
+                      />
+                    </View>
                     <View style={styles.colorPickerContainer}>
-                      <View style={styles.colorButtons}>
-                        {['#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#FFA500'].map((color) => (
-                          <Pressable
-                            key={color}
-                            style={[
-                              styles.colorButton,
-                              { backgroundColor: color },
-                              clockColor === color && styles.selectedColorButton
-                            ]}
-                            onPress={() => setClockColor(color)}
-                          />
-                        ))}
-                      </View>
-                      <View style={styles.customColorContainer}>
-                        <View style={styles.colorInputContainer}>
-                          <Pressable
-                            style={[styles.colorPreview, { backgroundColor: clockColor }]}
-                            onPress={() => setShowColorPicker(true)}
-                          />
-                          <TextInput
-                            style={styles.customColorInput}
-                            value={clockColor}
-                            onChangeText={(text) => {
-                              // Ensure the text starts with #
-                              const color = text.startsWith('#') ? text : '#' + text;
-                              // Only update if it's a valid hex color
-                              if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-                                setClockColor(color);
-                              }
-                            }}
-                            placeholder="#FF0000"
-                            maxLength={7}
-                            autoCapitalize="characters"
-                          />
-                        </View>
-                      </View>
+                      <ColorPicker
+                        color={clockColor}
+                        onColorChange={setClockColor}
+                        thumbSize={30}
+                        sliderSize={30}
+                        noSnap={true}
+                        row={false}
+                      />
                     </View>
                   </View>
                   <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
