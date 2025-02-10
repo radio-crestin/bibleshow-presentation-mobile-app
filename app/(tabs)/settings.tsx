@@ -26,10 +26,11 @@ export default function SettingsScreen() {
     showClock,
     setShowClock,
     colorScheme,
-    setColorScheme
+    setColorScheme,
+    clockColor,
+      setClockColor
   } = useSettings();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
 
   return (
     <ThemedView style={styles.container}>
