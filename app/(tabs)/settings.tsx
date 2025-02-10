@@ -211,21 +211,24 @@ export default function SettingsScreen() {
                       </View>
                       <View style={styles.customColorContainer}>
                         <ThemedText style={styles.customColorLabel}>Sau introdu un cod hex:</ThemedText>
-                        <TextInput
-                          style={styles.customColorInput}
-                          value={clockColor}
-                          onChangeText={(text) => {
-                            // Ensure the text starts with #
-                            const color = text.startsWith('#') ? text : '#' + text;
-                            // Only update if it's a valid hex color
-                            if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
-                              setClockColor(color);
-                            }
-                          }}
-                          placeholder="#FF0000"
-                          maxLength={7}
-                          autoCapitalize="characters"
-                        />
+                        <View style={styles.colorInputContainer}>
+                          <TextInput
+                            style={styles.customColorInput}
+                            value={clockColor}
+                            onChangeText={(text) => {
+                              // Ensure the text starts with #
+                              const color = text.startsWith('#') ? text : '#' + text;
+                              // Only update if it's a valid hex color
+                              if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color)) {
+                                setClockColor(color);
+                              }
+                            }}
+                            placeholder="#FF0000"
+                            maxLength={7}
+                            autoCapitalize="characters"
+                          />
+                          <View style={[styles.colorPreview, { backgroundColor: clockColor }]} />
+                        </View>
                       </View>
                     </View>
                   </View>
@@ -399,13 +402,26 @@ const styles = StyleSheet.create({
   customColorLabel: {
     marginBottom: 8,
   },
+  colorInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   customColorInput: {
+    flex: 1,
     backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
     color: '#000000',
     textTransform: 'uppercase',
+  },
+  colorPreview: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#666',
   },
   colorButton: {
     width: 32,
