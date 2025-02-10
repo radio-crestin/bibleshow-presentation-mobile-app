@@ -10,7 +10,7 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws, colorScheme, normalVerseBackgroundColor } = useSettings();
+  const { normalFontSize, highlightedFontSize, isConnected, ws, colorScheme, normalVerseBackgroundColor } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -135,7 +135,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
               >
                 <VerseSection
                   verse={verse}
-                  fontSize={fontSize}
+                  fontSize={verse.reference === currentVerse?.reference ? highlightedFontSize : normalFontSize}
                   isHighlighted={verse.reference === currentVerse?.reference}
                   colorScheme={colorScheme}
                   onPress={() => {

@@ -19,9 +19,12 @@ export default function SettingsScreen() {
     onSelect: (color: string) => void;
   } | null>(null);
   const { 
-    fontSize, 
-    increaseFontSize, 
-    decreaseFontSize, 
+    normalFontSize,
+    increaseNormalFontSize,
+    decreaseNormalFontSize,
+    highlightedFontSize,
+    increaseHighlightedFontSize,
+    decreaseHighlightedFontSize,
     wsUrl, 
     setWsUrl,
     powerSaveEnabled,
@@ -93,25 +96,42 @@ export default function SettingsScreen() {
             <ThemedText style={styles.sectionTitle}>Mărime Text</ThemedText>
           </View>
           
-          <View style={styles.fontSizeControl}>
-            <Pressable 
-              onPress={decreaseFontSize}
-              style={styles.button}
-            >
-              <IconSymbol name="minus.circle.fill" size={32} color={''} />
-            </Pressable>
-            <ThemedText style={styles.fontSize}>{fontSize}</ThemedText>
-            <Pressable 
-              onPress={increaseFontSize}
-              style={styles.button}
-            >
-              <IconSymbol name="plus.circle.fill" size={32} color={''} />
-            </Pressable>
+          <View style={styles.fontSizeSection}>
+            <ThemedText style={styles.fontSizeLabel}>Mărime text normal:</ThemedText>
+            <View style={styles.fontSizeControl}>
+              <Pressable 
+                onPress={decreaseNormalFontSize}
+                style={styles.button}
+              >
+                <IconSymbol name="minus.circle.fill" size={32} color={''} />
+              </Pressable>
+              <ThemedText style={styles.fontSize}>{normalFontSize}</ThemedText>
+              <Pressable 
+                onPress={increaseNormalFontSize}
+                style={styles.button}
+              >
+                <IconSymbol name="plus.circle.fill" size={32} color={''} />
+              </Pressable>
+            </View>
           </View>
-          <View style={[styles.previewContainer, { minHeight: fontSize * 4 }]}>
-            <ThemedText style={[styles.previewText, { fontSize }]}>
-              The quick brown fox jumps over the lazy dog
-            </ThemedText>
+          
+          <View style={styles.fontSizeSection}>
+            <ThemedText style={styles.fontSizeLabel}>Mărime text evidențiat:</ThemedText>
+            <View style={styles.fontSizeControl}>
+              <Pressable 
+                onPress={decreaseHighlightedFontSize}
+                style={styles.button}
+              >
+                <IconSymbol name="minus.circle.fill" size={32} color={''} />
+              </Pressable>
+              <ThemedText style={styles.fontSize}>{highlightedFontSize}</ThemedText>
+              <Pressable 
+                onPress={increaseHighlightedFontSize}
+                style={styles.button}
+              >
+                <IconSymbol name="plus.circle.fill" size={32} color={''} />
+              </Pressable>
+            </View>
           </View>
         </View>
 
@@ -272,7 +292,7 @@ export default function SettingsScreen() {
                   reference: "Ioan 3:16",
                   text: "Fiindcă atât de mult a iubit Dumnezeu lumea, că a dat pe singurul Lui Fiu..."
                 }}
-                fontSize={18}
+                fontSize={isHighlighted ? highlightedFontSize : normalFontSize}
                 isHighlighted={false}
                 onPress={() => {}}
                 colorScheme={colorScheme}
@@ -386,6 +406,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     width: 40,
     textAlign: 'center',
+  },
+  fontSizeSection: {
+    marginBottom: 16,
+  },
+  fontSizeLabel: {
+    marginBottom: 8,
+    fontWeight: '600',
   },
   button: {
     padding: 8,

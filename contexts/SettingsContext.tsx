@@ -3,9 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Appearance } from 'react-native';
 
 type SettingsContextType = {
-  fontSize: number;
-  increaseFontSize: () => void;
-  decreaseFontSize: () => void;
+  normalFontSize: number;
+  increaseNormalFontSize: () => void;
+  decreaseNormalFontSize: () => void;
+  highlightedFontSize: number;
+  increaseHighlightedFontSize: () => void;
+  decreaseHighlightedFontSize: () => void;
   ws: WebSocket | null;
   wsUrl: string;
   setWsUrl: (url: string) => void;
@@ -41,7 +44,8 @@ type SettingsContextType = {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [fontSize, setFontSize] = useState(18);
+  const [normalFontSize, setNormalFontSize] = useState(18);
+  const [highlightedFontSize, setHighlightedFontSize] = useState(24);
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [wsUrl, setWsUrl] = useState('ws://localhost:3000');
   const [isConnected, setIsConnected] = useState(false);
@@ -181,23 +185,43 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     loadFontSize();
   }, []);
 
-  const increaseFontSize = async () => {
-    const newSize = Math.min(fontSize + 2, 64);
-    setFontSize(newSize);
+  const increaseNormalFontSize = async () => {
+    const newSize = Math.min(normalFontSize + 2, 64);
+    setNormalFontSize(newSize);
     try {
-      await AsyncStorage.setItem('fontSize', newSize.toString());
+      await AsyncStorage.setItem('normalFontSize', newSize.toString());
     } catch (error) {
-      console.error('Error saving font size:', error);
+      console.error('Error saving normal font size:', error);
     }
   };
 
-  const decreaseFontSize = async () => {
-    const newSize = Math.max(fontSize - 2, 12);
-    setFontSize(newSize);
+  const decreaseNormalFontSize = async () => {
+    const newSize = Math.max(normalFontSize - 2, 12);
+    setNormalFontSize(newSize);
     try {
-      await AsyncStorage.setItem('fontSize', newSize.toString());
+      await AsyncStorage.setItem('normalFontSize', newSize.toString());
     } catch (error) {
-      console.error('Error saving font size:', error);
+      console.error('Error saving normal font size:', error);
+    }
+  };
+
+  const increaseHighlightedFontSize = async () => {
+    const newSize = Math.min(highlightedFontSize + 2, 64);
+    setHighlightedFontSize(newSize);
+    try {
+      await AsyncStorage.setItem('highlightedFontSize', newSize.toString());
+    } catch (error) {
+      console.error('Error saving highlighted font size:', error);
+    }
+  };
+
+  const decreaseHighlightedFontSize = async () => {
+    const newSize = Math.max(highlightedFontSize - 2, 12);
+    setHighlightedFontSize(newSize);
+    try {
+      await AsyncStorage.setItem('highlightedFontSize', newSize.toString());
+    } catch (error) {
+      console.error('Error saving highlighted font size:', error);
     }
   };
 
