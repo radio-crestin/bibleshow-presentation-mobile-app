@@ -4,6 +4,44 @@ const http = require('http');
 const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
+
+async function handleVerseUpdate() {
+  try {
+    // Parse local XML file
+    const verse = await parseXMLFile();
+    
+    // Fetch from remote endpoint if configured
+    if (config.bibleShowRemoteEndpoint) {
+      try {
+        const response = await axios.get(config.bibleShowRemoteEndpoint);
+        const verses = await parseHtmlResponse(response.data);
+        
+        if (verses.length > 0) {
+          // Use the first verse as current verse for compatibility
+          currentVerse = verses[0];
+          console.log(`Parsed ${verses.length} verses from remote endpoint`);
+          
+          // Broadcast all verses
+          broadcastVerse({
+            currentBook: verses[0].book,
+            verses: verses
+          });
+        }
+      } catch (fetchError) {
+        console.error('Error fetching remote endpoint:', fetchError.message);
+      }
+    } else if (verse) {
+      currentVerse = verse;
+      console.log('Verse updated to:', verse.reference);
+      broadcastVerse({
+        currentBook: verse.book,
+        verses: [verse]
+      });
+    }
+  } catch (error) {
+    console.error('Error updating verse:', error);
+  }
+}
 const xml2js = require('xml2js');
 const chokidar = require('chokidar');
 const path = require('path');
@@ -144,41 +182,7 @@ watcher
   })
   .on('change', async (path) => {
     console.log('File changed:', path);
-    try {
-      // Parse local XML file
-      const verse = await parseXMLFile();
-      
-      // Fetch from remote endpoint if configured
-      if (config.bibleShowRemoteEndpoint) {
-        try {
-          const response = await axios.get(config.bibleShowRemoteEndpoint);
-          const verses = await parseHtmlResponse(response.data);
-          
-          if (verses.length > 0) {
-            // Use the first verse as current verse for compatibility
-            currentVerse = verses[0];
-            console.log(`Parsed ${verses.length} verses from remote endpoint`);
-            
-            // Broadcast all verses
-            broadcastVerse({
-              currentBook: verses[0].book,
-              verses: verses
-            });
-          }
-        } catch (fetchError) {
-          console.error('Error fetching remote endpoint:', fetchError.message);
-        }
-      } else if (verse) {
-        currentVerse = verse;
-        console.log('Verse updated to:', verse.reference);
-        broadcastVerse({
-          currentBook: verse.book,
-          verses: [verse]
-        });
-      }
-    } catch (error) {
-      console.error('Error updating verse:', error);
-    }
+    await handleVerseUpdate();
   })
   .on('unlink', () => {
     console.log('File removed:', XML_PATH);
@@ -202,18 +206,12 @@ wss.on('connection', async (ws) => {
     }));
   }
 
-  ws.on('message', (message) => {
+  ws.on('message', async (message) => {
     try {
       const data = JSON.parse(message);
       console.log('Received message:', {data});
-      if (data.type === 'refresh' && currentVerse) {
-        ws.send(JSON.stringify({
-          type: 'verses',
-          data: {
-            currentBook: currentVerse.book,
-            verses: [currentVerse]
-          }
-        }));
+      if (data.type === 'refresh') {
+        await handleVerseUpdate();
       }
     } catch (error) {
       console.error('Error processing message:', error);
