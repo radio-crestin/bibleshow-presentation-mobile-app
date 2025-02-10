@@ -1,4 +1,5 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, Modal } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
+import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import ColorPicker from 'react-native-wheel-color-picker';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
@@ -229,7 +230,7 @@ export default function SettingsScreen() {
           </View>
           
           <View style={styles.colorSection}>
-            <ThemedText style={styles.colorLabel}>Culoare evidențiere:</ThemedText>
+            <ThemedText style={styles.colorLabel}>Background verset evidențiat:</ThemedText>
             <View style={styles.colorPickerContainer}>
               <ColorPicker
                 color={highlightColor}
@@ -238,6 +239,18 @@ export default function SettingsScreen() {
                 sliderSize={30}
                 noSnap={true}
                 row={false}
+              />
+            </View>
+            <View style={styles.previewContainer}>
+              <VerseSection
+                verse={{
+                  reference: "Ioan 3:16",
+                  text: "Fiindcă atât de mult a iubit Dumnezeu lumea, că a dat pe singurul Lui Fiu..."
+                }}
+                fontSize={18}
+                isHighlighted={true}
+                onPress={() => {}}
+                colorScheme={colorScheme}
               />
             </View>
           </View>
