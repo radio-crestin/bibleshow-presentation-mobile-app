@@ -69,7 +69,7 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
                       if (v.reference === currentVerse.reference) break;
                       totalHeight += verseMeasurements.current[v.reference] || 0;
                     }
-                    scrollViewRef.current.scrollTo({ y: totalHeight, animated: true });
+                    scrollViewRef.current.scrollTo({ y: totalHeight + 350, animated: true });
                   }
                 }}
               >
