@@ -26,7 +26,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
       scrollViewRef.current.scrollTo({ 
         y: totalHeight + (isLandscape ? 250 : 350),
-        animated: true 
+        animated: true
       });
     }
   };
@@ -125,6 +125,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
                   verse={verse}
                   fontSize={fontSize}
                   isHighlighted={verse.reference === currentVerse?.reference}
+                  colorScheme={colorScheme}
                   onPress={() => {
                     if (ws && isConnected) {
                       ws.send(JSON.stringify({
