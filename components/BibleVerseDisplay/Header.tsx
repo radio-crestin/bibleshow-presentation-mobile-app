@@ -22,7 +22,7 @@ export function Header({
   paddingTop 
 }: HeaderProps) {
   const router = useRouter();
-  const { showSeconds } = useSettings();
+  const { showSeconds, clockSize } = useSettings();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -34,9 +34,9 @@ export function Header({
   }, []);
 
   return (
-    <View style={[styles.header, { paddingTop }]}>
-      <View style={{ flex: 1, paddingRight: 16 }}>
-        <ThemedText style={[styles.currentReference, { fontSize: 32, textAlign: 'left' }]}>
+    <View style={[styles.header, { paddingTop, height: clockSize * 2 }]}>
+      <View style={{ flex: 1, paddingRight: 16, justifyContent: 'center' }}>
+        <ThemedText style={[styles.currentReference, { fontSize: clockSize, textAlign: 'left' }]}>
           {currentTime.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit',
@@ -45,7 +45,7 @@ export function Header({
           })}
         </ThemedText>
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, height: clockSize }}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
         <Pressable 
           onPress={onRefresh}
