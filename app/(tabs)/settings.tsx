@@ -210,19 +210,6 @@ export default function SettingsScreen() {
                         />
                       </View>
                     </View>
-                    <View style={styles.colorSection}>
-                      <ThemedText style={styles.colorLabel}>Culoare evidențiere:</ThemedText>
-                      <View style={styles.colorPickerContainer}>
-                        <ColorPicker
-                          color={highlightColor}
-                          onColorChange={setHighlightColor}
-                          thumbSize={30}
-                          sliderSize={30}
-                          noSnap={true}
-                          row={false}
-                        />
-                      </View>
-                    </View>
                   </View>
                   <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
                     <ThemedText style={[styles.previewText, { fontSize: clockSize, color: clockColor }]}>
@@ -232,6 +219,27 @@ export default function SettingsScreen() {
                 </View>
               </>
             )}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="text.badge.checkmark" size={24} color={''} />
+            <ThemedText style={styles.sectionTitle}>Verset evidențiat</ThemedText>
+          </View>
+          
+          <View style={styles.colorSection}>
+            <ThemedText style={styles.colorLabel}>Culoare evidențiere:</ThemedText>
+            <View style={styles.colorPickerContainer}>
+              <ColorPicker
+                color={highlightColor}
+                onColorChange={setHighlightColor}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
