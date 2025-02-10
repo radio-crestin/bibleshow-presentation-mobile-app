@@ -9,7 +9,6 @@ import { useRouter } from 'expo-router';
 import {useState} from "react";
 
 export default function SettingsScreen() {
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const { 
     fontSize, 
     increaseFontSize, 
@@ -248,36 +247,6 @@ export default function SettingsScreen() {
         </View>
       </ScrollView>
 
-      <Modal
-        visible={showColorPicker}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setShowColorPicker(false)}
-      >
-        <Pressable 
-          style={styles.modalOverlay}
-          onPress={() => setShowColorPicker(false)}
-        >
-          <View style={styles.colorPickerModal}>
-            <View style={styles.colorPickerContainer}>
-              <ColorPicker
-                color={clockColor}
-                onColorChange={setClockColor}
-                thumbSize={30}
-                sliderSize={30}
-                noSnap={true}
-                row={false}
-              />
-              <Pressable
-                style={styles.closeButton}
-                onPress={() => setShowColorPicker(false)}
-              >
-                <ThemedText style={styles.closeButtonText}>Done</ThemedText>
-              </Pressable>
-            </View>
-          </View>
-        </Pressable>
-      </Modal>
     </ThemedView>
   );
 }
@@ -452,40 +421,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 2,
     borderColor: '#666',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  colorPickerModal: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    width: '80%',
-    maxWidth: 400,
-  },
-  closeButton: {
-    backgroundColor: '#007AFF',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  colorButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#666',
-  },
-  selectedColorButton: {
-    borderColor: '#007AFF',
-    borderWidth: 3,
   },
 });
