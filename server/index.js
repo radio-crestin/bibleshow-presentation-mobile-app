@@ -169,16 +169,7 @@ watcher
   })
   .on('add', async (path) => {
     console.log('File added:', path);
-    try {
-      const verse = await parseXMLFile();
-      if (verse) {
-        currentVerse = verse;
-        console.log('Initial verse loaded:', verse.reference);
-        broadcastVerse(verse);
-      }
-    } catch (error) {
-      console.error('Error loading initial verse:', error);
-    }
+    await handleVerseUpdate();
   })
   .on('change', async (path) => {
     console.log('File changed:', path);
