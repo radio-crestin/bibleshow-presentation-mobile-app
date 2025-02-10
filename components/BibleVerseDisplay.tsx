@@ -10,7 +10,7 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws, colorScheme } = useSettings();
+  const { fontSize, isConnected, ws, colorScheme, normalVerseBackgroundColor } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -99,7 +99,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       paddingLeft: insets.left,
       paddingRight: insets.right,
       paddingTop: isLandscape ? 20 : 0,
-      backgroundColor: colorScheme === 'dark' ? '#000000' : '#f5f5f5'
+      backgroundColor: normalVerseBackgroundColor
     }]}>
       <Header
         currentReference={currentVerse?.reference || ''}

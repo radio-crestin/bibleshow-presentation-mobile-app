@@ -31,11 +31,15 @@ export default function SettingsScreen() {
     colorScheme,
     setColorScheme,
     clockColor,
-      setClockColor,
-      highlightColor,
-      setHighlightColor,
-      verseTextColor,
-      setVerseTextColor
+    setClockColor,
+    highlightColor,
+    setHighlightColor,
+    verseTextColor,
+    setVerseTextColor,
+    normalVerseBackgroundColor,
+    setNormalVerseBackgroundColor,
+    normalVerseTextColor,
+    setNormalVerseTextColor
   } = useSettings();
   const router = useRouter();
 
@@ -229,6 +233,54 @@ export default function SettingsScreen() {
                 </View>
               </>
             )}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="text.alignleft" size={24} color={''} />
+            <ThemedText style={styles.sectionTitle}>Versete normale</ThemedText>
+          </View>
+          
+          <View style={styles.colorSection}>
+            <ThemedText style={styles.colorLabel}>Background versete:</ThemedText>
+            <View style={styles.colorPickerContainer}>
+              <ColorPicker
+                color={normalVerseBackgroundColor}
+                onColorChange={setNormalVerseBackgroundColor}
+                onInteractionStart={() => setIsColorPickerActive(true)}
+                onInteractionEnd={() => setIsColorPickerActive(false)}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
+            <ThemedText style={styles.colorLabel}>Culoare text:</ThemedText>
+            <View style={styles.colorPickerContainer}>
+              <ColorPicker
+                color={normalVerseTextColor}
+                onColorChange={setNormalVerseTextColor}
+                onInteractionStart={() => setIsColorPickerActive(true)}
+                onInteractionEnd={() => setIsColorPickerActive(false)}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
+            <View style={styles.previewContainer}>
+              <VerseSection
+                verse={{
+                  reference: "Ioan 3:16",
+                  text: "Fiindcă atât de mult a iubit Dumnezeu lumea, că a dat pe singurul Lui Fiu..."
+                }}
+                fontSize={18}
+                isHighlighted={false}
+                onPress={() => {}}
+                colorScheme={colorScheme}
+              />
+            </View>
           </View>
         </View>
 

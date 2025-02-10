@@ -32,6 +32,10 @@ type SettingsContextType = {
   setHighlightColor: (color: string) => void;
   verseTextColor: string;
   setVerseTextColor: (color: string) => void;
+  normalVerseBackgroundColor: string;
+  setNormalVerseBackgroundColor: (color: string) => void;
+  normalVerseTextColor: string;
+  setNormalVerseTextColor: (color: string) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -52,6 +56,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [clockColor, setClockColor] = useState('#FF0000'); // Default red
   const [highlightColor, setHighlightColor] = useState('#FFA500'); // Default orange
   const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
+  const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
+  const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
 
   const connectWebSocket = () => {
     if (ws) {
@@ -120,7 +126,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           AsyncStorage.getItem('colorScheme'),
           AsyncStorage.getItem('clockColor'),
           AsyncStorage.getItem('highlightColor'),
-          AsyncStorage.getItem('verseTextColor')
+          AsyncStorage.getItem('verseTextColor'),
+          AsyncStorage.getItem('normalVerseBackgroundColor'),
+          AsyncStorage.getItem('normalVerseTextColor')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
@@ -133,6 +141,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (savedClockColor) setClockColor(savedClockColor);
         if (savedHighlightColor) setHighlightColor(savedHighlightColor);
         if (savedVerseTextColor) setVerseTextColor(savedVerseTextColor);
+        if (savedNormalVerseBackgroundColor) setNormalVerseBackgroundColor(savedNormalVerseBackgroundColor);
+        if (savedNormalVerseTextColor) setNormalVerseTextColor(savedNormalVerseTextColor);
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -316,6 +326,24 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('verseTextColor', color);
         } catch (error) {
           console.error('Error saving verse text color:', error);
+        }
+      },
+      normalVerseBackgroundColor,
+      setNormalVerseBackgroundColor: async (color: string) => {
+        setNormalVerseBackgroundColor(color);
+        try {
+          await AsyncStorage.setItem('normalVerseBackgroundColor', color);
+        } catch (error) {
+          console.error('Error saving normal verse background color:', error);
+        }
+      },
+      normalVerseTextColor,
+      setNormalVerseTextColor: async (color: string) => {
+        setNormalVerseTextColor(color);
+        try {
+          await AsyncStorage.setItem('normalVerseTextColor', color);
+        } catch (error) {
+          console.error('Error saving normal verse text color:', error);
         }
       },
     }}>
