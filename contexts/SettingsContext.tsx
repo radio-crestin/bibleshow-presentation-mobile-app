@@ -28,6 +28,8 @@ type SettingsContextType = {
   setColorScheme: (scheme: 'light' | 'dark') => void;
   clockColor: string;
   setClockColor: (color: string) => void;
+  highlightColor: string;
+  setHighlightColor: (color: string) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -46,6 +48,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [showClock, setShowClock] = useState(true);
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
   const [clockColor, setClockColor] = useState('#FF0000'); // Default red
+  const [highlightColor, setHighlightColor] = useState('#FFA500'); // Default orange
 
   const connectWebSocket = () => {
     if (ws) {
@@ -112,7 +115,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           AsyncStorage.getItem('clockSize'),
           AsyncStorage.getItem('showClock'),
           AsyncStorage.getItem('colorScheme'),
-          AsyncStorage.getItem('clockColor')
+          AsyncStorage.getItem('clockColor'),
+          AsyncStorage.getItem('highlightColor')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
@@ -123,6 +127,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (savedShowClock) setShowClock(savedShowClock === 'true');
         if (savedColorScheme) setColorScheme(savedColorScheme as 'light' | 'dark');
         if (savedClockColor) setClockColor(savedClockColor);
+        if (savedHighlightColor) setHighlightColor(savedHighlightColor);
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -288,6 +293,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('clockColor', color);
         } catch (error) {
           console.error('Error saving clock color:', error);
+        }
+      },
+      highlightColor,
+      setHighlightColor: async (color: string) => {
+        setHighlightColor(color);
+        try {
+          await AsyncStorage.setItem('highlightColor', color);
+        } catch (error) {
+          console.error('Error saving highlight color:', error);
         }
       },
     }}>

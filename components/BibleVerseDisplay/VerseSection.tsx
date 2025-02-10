@@ -2,6 +2,7 @@ import {View, Pressable} from 'react-native';
 import {ThemedText} from '../ThemedText';
 import {styles} from './styles';
 import {BibleVerse} from './types';
+import {useSettings} from '@/contexts/SettingsContext';
 
 type VerseSectionProps = {
     verse: BibleVerse,
@@ -12,6 +13,7 @@ type VerseSectionProps = {
 };
 
 export function VerseSection({verse, fontSize, isHighlighted, onPress, colorScheme}: VerseSectionProps) {
+    const { highlightColor } = useSettings();
 
     return (
         <Pressable
@@ -20,7 +22,7 @@ export function VerseSection({verse, fontSize, isHighlighted, onPress, colorSche
                 styles.verseContent,
                 isHighlighted && {
                     ...styles.highlightedVerse,
-                    backgroundColor: colorScheme == 'light'? '#FFA500': '#d96500',
+                    backgroundColor: highlightColor,
                 },
                 {minHeight: Math.max(60, fontSize * 2.5)}
             ]}

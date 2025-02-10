@@ -194,17 +194,32 @@ export default function SettingsScreen() {
                       <IconSymbol name="plus.circle.fill" size={32} color={''} />
                     </Pressable>
                   </View>
-                  <View style={styles.clockColorContainer}>
-                    <ThemedText style={styles.clockColorLabel}>Culoare ceas:</ThemedText>
-                    <View style={styles.colorPickerContainer}>
-                      <ColorPicker
-                        color={clockColor}
-                        onColorChange={setClockColor}
-                        thumbSize={30}
-                        sliderSize={30}
-                        noSnap={true}
-                        row={false}
-                      />
+                  <View style={styles.colorSettingsContainer}>
+                    <View style={styles.colorSection}>
+                      <ThemedText style={styles.colorLabel}>Culoare ceas:</ThemedText>
+                      <View style={styles.colorPickerContainer}>
+                        <ColorPicker
+                          color={clockColor}
+                          onColorChange={setClockColor}
+                          thumbSize={30}
+                          sliderSize={30}
+                          noSnap={true}
+                          row={false}
+                        />
+                      </View>
+                    </View>
+                    <View style={styles.colorSection}>
+                      <ThemedText style={styles.colorLabel}>Culoare evidențiere:</ThemedText>
+                      <View style={styles.colorPickerContainer}>
+                        <ColorPicker
+                          color={highlightColor}
+                          onColorChange={setHighlightColor}
+                          thumbSize={30}
+                          sliderSize={30}
+                          noSnap={true}
+                          row={false}
+                        />
+                      </View>
                     </View>
                   </View>
                   <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
@@ -353,11 +368,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: '600',
   },
-  clockColorContainer: {
+  colorSettingsContainer: {
     marginTop: 16,
+    gap: 24,
   },
-  clockColorLabel: {
-    marginBottom: 8,
+  colorSection: {
+    gap: 8,
+  },
+  colorLabel: {
     fontWeight: '600',
   },
   colorPickerContainer: {
