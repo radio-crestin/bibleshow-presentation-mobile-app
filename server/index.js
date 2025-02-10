@@ -3,6 +3,7 @@ const { WebSocketServer } = require('ws');
 const http = require('http');
 const fs = require('fs');
 const axios = require('axios');
+const cheerio = require('cheerio');
 const xml2js = require('xml2js');
 const chokidar = require('chokidar');
 const path = require('path');
@@ -29,6 +30,34 @@ let currentVerse = null;
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
+
+async function parseHtmlResponse(html) {
+  const $ = cheerio.load(html);
+  const verses = [];
+  
+  $('.bibrow').each((i, element) => {
+    const $row = $(element);
+    const link = $row.find('a').attr('href');
+    
+    if (link) {
+      // Parse reference from href="/VDCC:27:4:19:"
+      const [version, bookId, chapter, verse] = link.replace(/[/":]|:$/g, '').split(':').slice(1);
+      
+      const text = $row.find('.txtver').text();
+      
+      verses.push({
+        text,
+        reference: `${bookId} ${chapter}:${verse}`,
+        book: bookId,
+        chapter,
+        verse,
+        html: text // Since the sample doesn't have HTML formatting, using text as HTML
+      });
+    }
+  });
+  
+  return verses;
+}
 
 async function parseXMLFile() {
   try {
@@ -122,21 +151,30 @@ watcher
       // Fetch from remote endpoint if configured
       if (config.bibleShowRemoteEndpoint) {
         try {
-          await axios.get(config.bibleShowRemoteEndpoint);
-          console.log('Remote endpoint notified successfully');
+          const response = await axios.get(config.bibleShowRemoteEndpoint);
+          const verses = await parseHtmlResponse(response.data);
+          
+          if (verses.length > 0) {
+            // Use the first verse as current verse for compatibility
+            currentVerse = verses[0];
+            console.log(`Parsed ${verses.length} verses from remote endpoint`);
+            
+            // Broadcast all verses
+            broadcastVerse({
+              currentBook: verses[0].book,
+              verses: verses
+            });
+          }
         } catch (fetchError) {
           console.error('Error fetching remote endpoint:', fetchError.message);
         }
-      }
-
-      if (verse && (
-        !currentVerse || 
-        verse.reference !== currentVerse.reference || 
-        verse.text !== currentVerse.text
-      )) {
+      } else if (verse) {
         currentVerse = verse;
         console.log('Verse updated to:', verse.reference);
-        broadcastVerse(verse);
+        broadcastVerse({
+          currentBook: verse.book,
+          verses: [verse]
+        });
       }
     } catch (error) {
       console.error('Error updating verse:', error);
