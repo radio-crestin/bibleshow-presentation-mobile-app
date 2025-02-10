@@ -12,18 +12,16 @@ const MAX_RETRIES = 3;
 async function withRetry(operation, operationName) {
   let lastError;
   
-  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+  for (let attempt = 0; ; attempt++) {
     try {
       return await operation();
     } catch (error) {
       lastError = error;
       console.error(`Attempt ${attempt + 1}/${MAX_RETRIES} failed for ${operationName}:`, error.message);
-      
-      if (attempt < MAX_RETRIES - 1) {
-        const delay = RETRY_DELAYS[attempt];
-        console.log(`Retrying in ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
+
+      const delay = RETRY_DELAYS[attempt] || 5000;
+      console.log(`Retrying in ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   
@@ -117,48 +115,24 @@ const path = require('path');
 const ip = require('ip');
 const os = require('os');
 
-// Global variables
+// Load config from executable's directory
 let config;
-let configLoadAttempt = 1;
-let currentVerse = null;
-let verses = [];
-let server;
-let wss;
-
-async function loadConfig() {
-    while (true) {
-        try {
-            const configPath = path.join(process.cwd(), 'config.json');
-            const configData = fs.readFileSync(configPath, 'utf-8');
-            config = JSON.parse(configData);
-            console.log('Successfully loaded config.json');
-            return;
-        } catch (error) {
-            console.error(`Attempt ${configLoadAttempt} failed loading config.json:`, error);
-            if (error instanceof SyntaxError) {
-                console.error('JSON syntax error detected. Please check config.json format.');
-            } else if (error.code === 'ENOENT') {
-                console.error('Config file not found. Please ensure config.json exists in the correct location.');
-            }
-            console.error('Will retry in 1 second...');
-            configLoadAttempt++;
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-    }
+try {
+    const configPath = path.join(process.cwd(), 'config.json');
+    config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+} catch (error) {
+    console.error('Error loading config.json. Please ensure config.json exists in the same directory as the executable.');
+    console.error('Error details:', error);
+    process.exit(1);
 }
 
-// Load config before starting server
-(async () => {
-    await loadConfig();
-    startServer();
-})();
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
 
-function startServer() {
-    const app = express();
-    server = http.createServer(app);
-    wss = new WebSocketServer({ server });
-
-    const XML_PATH = config.xmlPath;
+const XML_PATH = config.xmlPath;
+let currentVerse = null;
+let verses = [];
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
@@ -219,7 +193,7 @@ async function parseXMLFile() {
 }
 
 // Function to broadcast verse to all connected clients
-function broadcastVerses() {  
+function broadcastVerses() {
   wss.clients.forEach(client => {
     if (client.readyState === 1) { // WebSocket.OPEN
       client.send(JSON.stringify({

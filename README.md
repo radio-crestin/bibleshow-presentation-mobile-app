@@ -59,4 +59,4 @@ This project uses:
 
 ## Server Component
 
-The application requires the Bible Amvon Server to be running for verse synchronization. See the `server/README.md` for server setup instructions.
+The application requires the BibleShow Presentation Server to be running for verse synchronization. See the `server/README.md` for server setup instructions.

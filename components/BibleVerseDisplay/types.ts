@@ -9,5 +9,5 @@ export type BibleVerse = {
 
 export type BibleVerseDisplayProps = {
   verses: BibleVerse[];
-  currentVerse: BibleVerse;
+  currentVerse: BibleVerse | null;
 };

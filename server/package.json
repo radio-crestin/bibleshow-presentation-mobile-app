@@ -10,11 +10,12 @@
     "build": "pkg . --targets node18-win-x64,node18-macos-arm64 --output bible-amvon-server"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "ws": "^8.16.0",
-    "xml2js": "^0.6.2",
+    "cheerio": "^1.0.0",
     "chokidar": "^3.5.3",
-    "ip": "^1.1.8"
+    "express": "^4.18.2",
+    "ip": "^1.1.8",
+    "ws": "^8.16.0",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.3",

@@ -4,12 +4,8 @@ import { BibleVerseDisplay } from '@/components/BibleVerseDisplay';
 import { useSettings } from '@/contexts/SettingsContext';
 
 export default function HomeScreen() {
-  const [currentBook, setCurrentBook] = useState("");
-  const [verses, setVerses] = useState([
-    { text: "Se încarcă...", reference: "..." },
-    // { text: "Se încarcă...", reference: "..." },
-    // { text: "Se încarcă...", reference: "..." }
-  ]);
+  const [currentVerse, setCurrentVerse] = useState(null);
+  const [verses, setVerses] = useState([]);
   const { ws } = useSettings();
 
   useEffect(() => {
@@ -20,7 +16,7 @@ export default function HomeScreen() {
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'verses') {
-          setCurrentBook(data.data.currentBook);
+          setCurrentVerse(data.data.currentVerse);
 
           setVerses(data.data.verses);
         }
@@ -50,7 +46,7 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <BibleVerseDisplay verses={verses} currentBook={currentBook} />
+      <BibleVerseDisplay verses={verses} currentVerse={currentVerse} />
     </ThemedView>
   );
 }

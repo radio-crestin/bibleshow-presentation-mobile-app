@@ -9,11 +9,8 @@ To install the server as a Windows service:
 1. Open Command Prompt as Administrator
 
 2. Remove existing service if it exists:
-```sc query "BibleAmvonServer" > nul 2>&1 && (
-    sc stop "BibleAmvonServer" > nul 2>&1
-    sc delete "BibleAmvonServer"
-    echo Removed existing service
-) || echo Service not found
+``` 
+sc delete "BibleAmvonServer"
 ```
 
 2. Navigate to the directory containing the executable:
