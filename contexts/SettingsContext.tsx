@@ -26,6 +26,8 @@ type SettingsContextType = {
   setShowClock: (show: boolean) => void;
   colorScheme: 'light' | 'dark';
   setColorScheme: (scheme: 'light' | 'dark') => void;
+  clockColor: string;
+  setClockColor: (color: string) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -43,6 +45,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [clockSize, setClockSize] = useState(32);
   const [showClock, setShowClock] = useState(true);
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
+  const [clockColor, setClockColor] = useState('#FF0000'); // Default red
 
   const connectWebSocket = () => {
     if (ws) {
@@ -101,14 +104,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock, savedColorScheme] = await Promise.all([
+        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock, savedColorScheme, savedClockColor] = await Promise.all([
           AsyncStorage.getItem('wsUrl'),
           AsyncStorage.getItem('powerSaveEnabled'),
           AsyncStorage.getItem('powerSaveTimeout'),
           AsyncStorage.getItem('showSeconds'),
           AsyncStorage.getItem('clockSize'),
           AsyncStorage.getItem('showClock'),
-          AsyncStorage.getItem('colorScheme')
+          AsyncStorage.getItem('colorScheme'),
+          AsyncStorage.getItem('clockColor')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
@@ -118,6 +122,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (savedClockSize) setClockSize(Number(savedClockSize));
         if (savedShowClock) setShowClock(savedShowClock === 'true');
         if (savedColorScheme) setColorScheme(savedColorScheme as 'light' | 'dark');
+        if (savedClockColor) setClockColor(savedClockColor);
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -274,6 +279,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('colorScheme', scheme);
         } catch (error) {
           console.error('Error saving color scheme:', error);
+        }
+      },
+      clockColor,
+      setClockColor: async (color: string) => {
+        setClockColor(color);
+        try {
+          await AsyncStorage.setItem('clockColor', color);
+        } catch (error) {
+          console.error('Error saving clock color:', error);
         }
       },
     }}>

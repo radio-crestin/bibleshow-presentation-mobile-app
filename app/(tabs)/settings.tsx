@@ -192,8 +192,24 @@ export default function SettingsScreen() {
                       <IconSymbol name="plus.circle.fill" size={32} color={''} />
                     </Pressable>
                   </View>
+                  <View style={styles.clockColorContainer}>
+                    <ThemedText style={styles.clockColorLabel}>Culoare ceas:</ThemedText>
+                    <View style={styles.colorButtons}>
+                      {['#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#FFA500'].map((color) => (
+                        <Pressable
+                          key={color}
+                          style={[
+                            styles.colorButton,
+                            { backgroundColor: color },
+                            clockColor === color && styles.selectedColorButton
+                          ]}
+                          onPress={() => setClockColor(color)}
+                        />
+                      ))}
+                    </View>
+                  </View>
                   <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
-                    <ThemedText style={[styles.previewText, { fontSize: clockSize }]}>
+                    <ThemedText style={[styles.previewText, { fontSize: clockSize, color: clockColor }]}>
                       {showSeconds ? '12:34:56' : '12:34'}
                     </ThemedText>
                   </View>
@@ -341,5 +357,28 @@ const styles = StyleSheet.create({
   clockSizeLabel: {
     marginBottom: 8,
     fontWeight: '600',
+  },
+  clockColorContainer: {
+    marginTop: 16,
+  },
+  clockColorLabel: {
+    marginBottom: 8,
+    fontWeight: '600',
+  },
+  colorButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  colorButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#666',
+  },
+  selectedColorButton: {
+    borderColor: '#007AFF',
+    borderWidth: 3,
   },
 });

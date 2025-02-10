@@ -20,7 +20,7 @@ export function Header({
   onRefresh,
 }: HeaderProps) {
   const router = useRouter();
-  const { showSeconds, clockSize, showClock, colorScheme } = useSettings();
+  const { showSeconds, clockSize, showClock, colorScheme, clockColor } = useSettings();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function Header({
     <View style={[styles.header, { backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#ffffff' }]}>
       {showClock && (
         <View style={[styles.clockContainer]}>
-          <ThemedText style={[styles.clockText, { fontSize: clockSize }]}>
+          <ThemedText style={[styles.clockText, { fontSize: clockSize, color: clockColor }]}>
             {new Date().toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit',
