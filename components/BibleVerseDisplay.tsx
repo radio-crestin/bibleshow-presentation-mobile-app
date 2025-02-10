@@ -70,7 +70,10 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
                       if (v.reference === currentVerse.reference) break;
                       totalHeight += verseMeasurements.current[v.reference] || 0;
                     }
-                    scrollViewRef.current.scrollTo({ y: totalHeight + 350, animated: true });
+                    scrollViewRef.current.scrollTo({ 
+                      y: totalHeight - (height / 2) + (verseMeasurements.current[verse.reference] / 2), 
+                      animated: true 
+                    });
                   }
                 }}
               >
