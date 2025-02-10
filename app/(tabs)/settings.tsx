@@ -51,6 +51,8 @@ export default function SettingsScreen() {
     setNormalVerseBackgroundColor,
     normalVerseTextColor,
     setNormalVerseTextColor,
+    highlightedTextBold,
+    setHighlightedTextBold,
   } = useSettings();
   const router = useRouter();
 
