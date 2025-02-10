@@ -9,7 +9,11 @@ export const persistentState = <T,>(key: string, defaultValue: T) => {
             try {
                 const savedValue = await AsyncStorage.getItem(key);
                 if (savedValue) {
-                    setValue(JSON.parse(savedValue) as T);
+                    try {
+                        setValue(JSON.parse(savedValue) as T);
+                    } catch {
+                        setValue(savedValue as T);
+                    }
                 }
             } catch (error) {
                 console.error(`Error loading ${key}:`, error);
