@@ -25,6 +25,18 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     position: 'relative',
   },
+  versesList: {
+    flex: 1,
+    paddingVertical: 16,
+  },
+  verseSection: {
+    marginBottom: 16,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  currentVerseSection: {
+    backgroundColor: '#FFA50020',
+  },
   topSection: {
     position: 'absolute',
     top: 20,
