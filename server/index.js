@@ -119,20 +119,42 @@ const os = require('os');
 
 // Load config from executable's directory
 let config;
-try {
-    const configPath = path.join(process.cwd(), 'config.json');
-    config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-} catch (error) {
-    console.error('Error loading config.json. Please ensure config.json exists in the same directory as the executable.');
-    console.error('Error details:', error);
-    process.exit(1);
+let configLoadAttempt = 1;
+
+async function loadConfig() {
+    while (true) {
+        try {
+            const configPath = path.join(process.cwd(), 'config.json');
+            const configData = fs.readFileSync(configPath, 'utf-8');
+            config = JSON.parse(configData);
+            console.log('Successfully loaded config.json');
+            return;
+        } catch (error) {
+            console.error(`Attempt ${configLoadAttempt} failed loading config.json:`, error);
+            if (error instanceof SyntaxError) {
+                console.error('JSON syntax error detected. Please check config.json format.');
+            } else if (error.code === 'ENOENT') {
+                console.error('Config file not found. Please ensure config.json exists in the correct location.');
+            }
+            console.error('Will retry in 1 second...');
+            configLoadAttempt++;
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    }
 }
 
-const app = express();
-const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
+// Load config before starting server
+(async () => {
+    await loadConfig();
+    startServer();
+})();
 
-const XML_PATH = config.xmlPath;
+function startServer() {
+    const app = express();
+    const server = http.createServer(app);
+    const wss = new WebSocketServer({ server });
+
+    const XML_PATH = config.xmlPath;
 let currentVerse = null;
 let verses = [];
 
