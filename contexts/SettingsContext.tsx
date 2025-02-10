@@ -62,10 +62,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
   const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
   const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
-  const [highlightColor, setHighlightColor] = useState('#FFA500'); // Default orange
-  const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
-  const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
-  const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
 
   const connectWebSocket = () => {
     if (ws) {
@@ -124,7 +120,9 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock, savedColorScheme, savedClockColor] = await Promise.all([
+        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock, savedColorScheme, savedClockColor,
+            savedHighlightColor, savedVerseTextColor, savedNormalVerseBackgroundColor, savedNormalVerseTextColor
+        ] = await Promise.all([
           AsyncStorage.getItem('wsUrl'),
           AsyncStorage.getItem('powerSaveEnabled'),
           AsyncStorage.getItem('powerSaveTimeout'),
@@ -179,20 +177,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   }, [wsUrl, isConnected]);
 
   // Load saved font size on mount
-  useEffect(() => {
-    const loadFontSize = async () => {
-      try {
-        const savedFontSize = await AsyncStorage.getItem('fontSize');
-        if (savedFontSize !== null) {
-          setFontSize(Number(savedFontSize));
-        }
-      } catch (error) {
-        console.error('Error loading font size:', error);
-      }
-    };
-    loadFontSize();
-  }, []);
-
   const increaseNormalFontSize = async () => {
     const newSize = Math.min(normalFontSize + 2, 64);
     setNormalFontSize(newSize);
@@ -256,10 +240,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   }, [powerSaveEnabled, isConnected, disconnectedTime, powerSaveTimeout]);
 
   return (
-    <SettingsContext.Provider value={{ 
-      fontSize, 
-      increaseFontSize, 
-      decreaseFontSize, 
+    <SettingsContext.Provider value={{
       ws, 
       wsUrl, 
       setWsUrl: async (url: string) => {
@@ -378,6 +359,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           console.error('Error saving normal verse text color:', error);
         }
       },
+        normalFontSize,
+        increaseNormalFontSize,
+        decreaseNormalFontSize,
+        highlightedFontSize,
+        increaseHighlightedFontSize,
+        decreaseHighlightedFontSize
     }}>
       {children}
     </SettingsContext.Provider>
