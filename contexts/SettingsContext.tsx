@@ -39,6 +39,8 @@ type SettingsContextType = {
   setNormalVerseBackgroundColor: (color: string) => void;
   normalVerseTextColor: string;
   setNormalVerseTextColor: (color: string) => void;
+  highlightedTextBold: boolean;
+  setHighlightedTextBold: (bold: boolean) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -62,6 +64,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
   const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
   const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
+  const [highlightedTextBold, setHighlightedTextBold] = useState(false);
 
   const connectWebSocket = () => {
     if (ws) {
@@ -138,7 +141,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           AsyncStorage.getItem('highlightColor'),
           AsyncStorage.getItem('verseTextColor'),
           AsyncStorage.getItem('normalVerseBackgroundColor'),
-          AsyncStorage.getItem('normalVerseTextColor')
+          AsyncStorage.getItem('normalVerseTextColor'),
+          AsyncStorage.getItem('highlightedTextBold')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
@@ -153,6 +157,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (savedVerseTextColor) setVerseTextColor(savedVerseTextColor);
         if (savedNormalVerseBackgroundColor) setNormalVerseBackgroundColor(savedNormalVerseBackgroundColor);
         if (savedNormalVerseTextColor) setNormalVerseTextColor(savedNormalVerseTextColor);
+        if (savedHighlightedTextBold) setHighlightedTextBold(savedHighlightedTextBold === 'true');
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -357,6 +362,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('normalVerseTextColor', color);
         } catch (error) {
           console.error('Error saving normal verse text color:', error);
+        }
+      },
+      highlightedTextBold,
+      setHighlightedTextBold: async (bold: boolean) => {
+        setHighlightedTextBold(bold);
+        try {
+          await AsyncStorage.setItem('highlightedTextBold', bold.toString());
+        } catch (error) {
+          console.error('Error saving highlighted text bold setting:', error);
         }
       },
         normalFontSize,

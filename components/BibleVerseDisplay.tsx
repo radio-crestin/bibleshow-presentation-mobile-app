@@ -10,7 +10,7 @@ import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { normalFontSize, highlightedFontSize, isConnected, ws, colorScheme, normalVerseBackgroundColor } = useSettings();
+  const { normalFontSize, highlightedFontSize, highlightedTextBold, isConnected, ws, colorScheme, normalVerseBackgroundColor } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -138,6 +138,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
                   fontSize={verse.reference === currentVerse?.reference ? highlightedFontSize : normalFontSize}
                   isHighlighted={verse.reference === currentVerse?.reference}
                   colorScheme={colorScheme}
+                  bold={verse.reference === currentVerse?.reference && highlightedTextBold}
                   onPress={() => {
                     if (ws && isConnected) {
                       ws.send(JSON.stringify({
