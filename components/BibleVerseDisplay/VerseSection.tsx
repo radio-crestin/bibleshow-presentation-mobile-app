@@ -38,7 +38,7 @@ export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseS
       style={[
         styles.verseContent,
         isHighlighted && styles.highlightedVerse,
-        { minHeight: Math.max(80, fontSize * 3) }
+        { minHeight: Math.max(60, fontSize * 2.5) }
       ]}
     >
       <View style={styles.verseWrapper}>

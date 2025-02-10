@@ -8,7 +8,7 @@ import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
 import { SkeletonLoader } from './BibleVerseDisplay/SkeletonLoader';
 
-export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProps) {
+export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws } = useSettings();
   const { width, height } = useWindowDimensions();
@@ -30,7 +30,7 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
       paddingTop: isLandscape ? 20 : 0,
     }]}>
       <Header
-        currentReference={verses.length === 1 ? verses[0].reference : verses[1].reference}
+        currentReference={currentVerse?.reference || ''}
         isConnected={isConnected}
         isRefreshing={isRefreshing}
         onRefresh={handleRefresh}
@@ -41,72 +41,32 @@ export function BibleVerseDisplay({ verses, currentBook }: BibleVerseDisplayProp
           <View style={styles.topSection}>
             <SkeletonLoader numberOfLines={4} fontSize={fontSize} />
           </View>
-        ) : verses.length === 1 ? (
-            <View style={styles.topSection}>
-              <VerseSection
-                  verse={verses[0]}
+        ) : (
+          <View style={styles.versesList}>
+            {verses.map((verse, index) => (
+              <View 
+                key={verse.reference} 
+                style={[
+                  styles.verseSection,
+                  verse.reference === currentVerse?.reference && styles.currentVerseSection
+                ]}
+              >
+                <VerseSection
+                  verse={verse}
                   fontSize={fontSize}
-                  isHighlighted
+                  isHighlighted={verse.reference === currentVerse?.reference}
                   onPress={() => {
                     if (ws && isConnected) {
                       ws.send(JSON.stringify({
                         type: 'setReference',
-                        reference: verses[0].reference
+                        reference: verse.reference
                       }));
                     }
                   }}
-              />
-            </View>
-        ) : (
-            <>
-              <View style={styles.topSection}>
-                <VerseSection
-                    verse={verses[0]}
-                    fontSize={fontSize}
-                    onPress={() => {
-                      if (ws && isConnected) {
-                        ws.send(JSON.stringify({
-                          type: 'setReference',
-                          reference: verses[0].reference
-                        }));
-                      }
-                    }}
                 />
               </View>
-
-              <View style={styles.middleSection}>
-                <VerseSection
-                    verse={verses[1]}
-                    fontSize={fontSize}
-                    isHighlighted
-                    onPress={() => {
-                      if (ws && isConnected) {
-                        ws.send(JSON.stringify({
-                          type: 'setReference',
-                          reference: verses[1].reference
-                        }));
-                      }
-                    }}
-                />
-              </View>
-
-              <View style={styles.bottomSection}>
-                <VerseSection
-                    verse={verses[2]}
-                    fontSize={fontSize}
-                    onPress={() => {
-                      if (ws && isConnected) {
-                        ws.send(JSON.stringify({
-                          type: 'setReference',
-                          reference: verses[2].reference
-                        }));
-                      }
-                    }}
-                />
-              </View>
-
-
-            </>
+            ))}
+          </View>
         )}
       </View>
       {!isConnected && (
