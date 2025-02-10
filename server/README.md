@@ -1,4 +1,4 @@
-# Bible Amvon Server
+# BibleShow Presentation Server
 
 A WebSocket server for Bible verse synchronization.
 
