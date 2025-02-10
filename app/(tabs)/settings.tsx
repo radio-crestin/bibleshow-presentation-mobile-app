@@ -1,4 +1,5 @@
 import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
+import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -31,16 +32,13 @@ export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <ThemedText style={styles.headerTitle}>Setări</ThemedText>
-        <Pressable 
-          onPress={() => router.back()}
-          style={styles.closeButton}
-        >
-          <IconSymbol name="xmark.circle.fill" size={28} color={''} />
-        </Pressable>
-      </View>
+    <ThemedView style={styles.container}>
+      <Stack.Screen 
+        options={{
+          title: "Setări",
+          headerShown: true,
+        }} 
+      />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
