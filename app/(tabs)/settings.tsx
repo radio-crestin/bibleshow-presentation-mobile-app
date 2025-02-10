@@ -151,29 +151,31 @@ export default function SettingsScreen() {
                     onValueChange={setShowSeconds}
                   />
                 </View>
-            <View style={styles.clockSizeContainer}>
-              <ThemedText style={styles.clockSizeLabel}>Mărime ceas:</ThemedText>
-              <View style={styles.fontSizeControl}>
-                <Pressable 
-                  onPress={() => setClockSize(Math.max(16, clockSize - 2))}
-                  style={styles.button}
-                >
-                  <IconSymbol name="minus.circle.fill" size={32} color={''} />
-                </Pressable>
-                <ThemedText style={styles.fontSize}>{clockSize}</ThemedText>
-                <Pressable 
-                  onPress={() => setClockSize(Math.min(72, clockSize + 2))}
-                  style={styles.button}
-                >
-                  <IconSymbol name="plus.circle.fill" size={32} color={''} />
-                </Pressable>
-              </View>
-              <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
-                <ThemedText style={[styles.previewText, { fontSize: clockSize }]}>
-                  {showSeconds ? '12:34:56' : '12:34'}
-                </ThemedText>
-              </View>
-            </View>
+                <View style={styles.clockSizeContainer}>
+                  <ThemedText style={styles.clockSizeLabel}>Mărime ceas:</ThemedText>
+                  <View style={styles.fontSizeControl}>
+                    <Pressable 
+                      onPress={() => setClockSize(Math.max(16, clockSize - 2))}
+                      style={styles.button}
+                    >
+                      <IconSymbol name="minus.circle.fill" size={32} color={''} />
+                    </Pressable>
+                    <ThemedText style={styles.fontSize}>{clockSize}</ThemedText>
+                    <Pressable 
+                      onPress={() => setClockSize(Math.min(72, clockSize + 2))}
+                      style={styles.button}
+                    >
+                      <IconSymbol name="plus.circle.fill" size={32} color={''} />
+                    </Pressable>
+                  </View>
+                  <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
+                    <ThemedText style={[styles.previewText, { fontSize: clockSize }]}>
+                      {showSeconds ? '12:34:56' : '12:34'}
+                    </ThemedText>
+                  </View>
+                </View>
+              </>
+            )}
           </View>
         </View>
       </ScrollView>
