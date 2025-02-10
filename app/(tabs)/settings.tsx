@@ -241,6 +241,17 @@ export default function SettingsScreen() {
                 row={false}
               />
             </View>
+            <ThemedText style={styles.colorLabel}>Culoare text:</ThemedText>
+            <View style={styles.colorPickerContainer}>
+              <ColorPicker
+                color={verseTextColor}
+                onColorChange={setVerseTextColor}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
             <View style={styles.previewContainer}>
               <VerseSection
                 verse={{

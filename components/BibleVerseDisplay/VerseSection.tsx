@@ -13,7 +13,7 @@ type VerseSectionProps = {
 };
 
 export function VerseSection({verse, fontSize, isHighlighted, onPress, colorScheme}: VerseSectionProps) {
-    const { highlightColor } = useSettings();
+    const { highlightColor, verseTextColor } = useSettings();
 
     return (
         <Pressable
@@ -28,8 +28,8 @@ export function VerseSection({verse, fontSize, isHighlighted, onPress, colorSche
             ]}
         >
             <View style={styles.verseWrapper}>
-                <ThemedText style={[styles.referenceText, {fontSize}]}>{verse.reference}</ThemedText>
-                <ThemedText style={[styles.verseText, {fontSize}]}>{verse.text}</ThemedText>
+                <ThemedText style={[styles.referenceText, {fontSize, color: verseTextColor}]}>{verse.reference}</ThemedText>
+                <ThemedText style={[styles.verseText, {fontSize, color: verseTextColor}]}>{verse.text}</ThemedText>
             </View>
         </Pressable>
     );

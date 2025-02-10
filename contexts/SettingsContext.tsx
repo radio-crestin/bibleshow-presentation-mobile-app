@@ -30,6 +30,8 @@ type SettingsContextType = {
   setClockColor: (color: string) => void;
   highlightColor: string;
   setHighlightColor: (color: string) => void;
+  verseTextColor: string;
+  setVerseTextColor: (color: string) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -49,6 +51,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
   const [clockColor, setClockColor] = useState('#FF0000'); // Default red
   const [highlightColor, setHighlightColor] = useState('#FFA500'); // Default orange
+  const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
 
   const connectWebSocket = () => {
     if (ws) {
@@ -116,7 +119,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           AsyncStorage.getItem('showClock'),
           AsyncStorage.getItem('colorScheme'),
           AsyncStorage.getItem('clockColor'),
-          AsyncStorage.getItem('highlightColor')
+          AsyncStorage.getItem('highlightColor'),
+          AsyncStorage.getItem('verseTextColor')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
@@ -128,6 +132,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (savedColorScheme) setColorScheme(savedColorScheme as 'light' | 'dark');
         if (savedClockColor) setClockColor(savedClockColor);
         if (savedHighlightColor) setHighlightColor(savedHighlightColor);
+        if (savedVerseTextColor) setVerseTextColor(savedVerseTextColor);
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -302,6 +307,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('highlightColor', color);
         } catch (error) {
           console.error('Error saving highlight color:', error);
+        }
+      },
+      verseTextColor,
+      setVerseTextColor: async (color: string) => {
+        setVerseTextColor(color);
+        try {
+          await AsyncStorage.setItem('verseTextColor', color);
+        } catch (error) {
+          console.error('Error saving verse text color:', error);
         }
       },
     }}>
