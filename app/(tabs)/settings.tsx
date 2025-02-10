@@ -63,7 +63,6 @@ export default function SettingsScreen() {
       <ScrollView 
         style={styles.content} 
         showsVerticalScrollIndicator={false}
-        scrollEnabled={!isColorPickerActive}
       >
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -212,16 +211,20 @@ export default function SettingsScreen() {
                     <View style={styles.colorSection}>
                       <ThemedText style={styles.colorLabel}>Culoare ceas:</ThemedText>
                       <View style={styles.colorPickerContainer}>
-                        <ColorPicker
-                          color={clockColor}
-                          onColorChange={setClockColor}
-                          onInteractionStart={() => setIsColorPickerActive(true)}
-                          onInteractionEnd={() => setIsColorPickerActive(false)}
-                          thumbSize={30}
-                          sliderSize={30}
-                          noSnap={true}
-                          row={false}
-                        />
+                        <View style={{ height: 220 }}>
+                          <ColorPicker
+                            color={clockColor}
+                            onColorChange={setClockColor}
+                            onInteractionStart={() => setIsColorPickerActive(true)}
+                            onInteractionEnd={() => setIsColorPickerActive(false)}
+                            thumbSize={30}
+                            sliderSize={30}
+                            noSnap={true}
+                            row={false}
+                            swatchesOnly={false}
+                            discrete={false}
+                          />
+                        </View>
                       </View>
                     </View>
                   </View>
@@ -479,6 +482,7 @@ const styles = StyleSheet.create({
   },
   colorPickerContainer: {
     gap: 16,
+    height: 220, // Fixed height for the color picker
   },
   colorButtons: {
     flexDirection: 'row',
