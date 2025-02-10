@@ -19,7 +19,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
-      const targetPosition = height / 2 - 100; // Position verse near vertical center
+      const targetPosition = height / 2 - 300; // Position verse near vertical center
       let totalHeight = 0;
       let allMeasurementsReady = true;
       
@@ -34,7 +34,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
 
       if (allMeasurementsReady) {
-        const scrollPosition = Math.max(0, totalHeight - targetPosition);
+        const scrollPosition = Math.max(0, totalHeight + targetPosition);
         scrollViewRef.current.scrollTo({ 
           y: scrollPosition,
           animated: true
@@ -126,7 +126,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
                 ]}
                 onLayout={(event) => {
                   const { height } = event.nativeEvent.layout;
-                  verseMeasurements.current[verse.reference] = height;
+                  verseMeasurements.current[verse.reference] = height + styles.verseSection.marginBottom;
                   
                   if (verse.reference === currentVerse?.reference) {
                     scrollToCurrentVerse();
