@@ -15,7 +15,7 @@ type VerseSectionProps = {
 export function VerseSection({ verse, fontSize, isHighlighted, onPress }: VerseSectionProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentVerse, setCurrentVerse] = useState(verse);
-  const numberOfLines = Math.ceil(verse.text.length / 40); // Rough estimate of lines based on text length
+  const numberOfLines = Math.ceil(verse.text?.length / 40); // Rough estimate of lines based on text length
 
   useEffect(() => {
     if (verse.text !== currentVerse.text || verse.reference !== currentVerse.reference) {
