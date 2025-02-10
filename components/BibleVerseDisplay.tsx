@@ -37,7 +37,6 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
         isConnected={isConnected}
         isRefreshing={isRefreshing}
         onRefresh={handleRefresh}
-        paddingTop={insets.top}
       />
       <View style={styles.versesContainer}>
         {!isConnected ? (
@@ -71,7 +70,7 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
                       totalHeight += verseMeasurements.current[v.reference] || 0;
                     }
                     scrollViewRef.current.scrollTo({ 
-                      y: totalHeight + (isLandscape ? 400 : 350), 
+                      y: totalHeight + (isLandscape ? 250 : 350),
                       animated: true 
                     });
                   }
