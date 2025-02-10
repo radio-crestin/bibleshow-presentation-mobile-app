@@ -8,7 +8,7 @@ import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
 
-export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayProps) {
+export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
   const { fontSize, isConnected, ws, colorScheme } = useSettings();
   const { width, height } = useWindowDimensions();
@@ -16,6 +16,14 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
+  
+  // Process verses to include currentVerse and remove duplicates
+  const verses = currentVerse 
+    ? [
+        ...initialVerses.filter(v => v.reference !== currentVerse.reference),
+        currentVerse
+      ]
+    : initialVerses;
 
   useEffect(() => {
     // Keep the screen awake
