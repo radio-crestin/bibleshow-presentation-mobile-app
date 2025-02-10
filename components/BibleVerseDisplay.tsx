@@ -17,13 +17,33 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
   
-  // Process verses to include currentVerse and remove duplicates
-  const verses = currentVerse 
+  // Helper function to extract chapter and verse numbers
+  const parseReference = (reference: string) => {
+    const match = reference.match(/(\d+):(\d+)/);
+    if (match) {
+      return {
+        chapter: parseInt(match[1], 10),
+        verse: parseInt(match[2], 10)
+      };
+    }
+    return { chapter: 0, verse: 0 };
+  };
+
+  // Process verses to include currentVerse, remove duplicates, and sort
+  const verses = [...(currentVerse 
     ? [
         ...initialVerses.filter(v => v.reference !== currentVerse.reference),
         currentVerse
       ]
-    : initialVerses;
+    : initialVerses)].sort((a, b) => {
+      const verseA = parseReference(a.reference);
+      const verseB = parseReference(b.reference);
+      
+      if (verseA.chapter !== verseB.chapter) {
+        return verseA.chapter - verseB.chapter;
+      }
+      return verseA.verse - verseB.verse;
+    });
 
   useEffect(() => {
     // Keep the screen awake
