@@ -216,21 +216,16 @@ export default function SettingsScreen() {
                   </View>
                   <View style={styles.colorSettingsContainer}>
                     <View style={styles.colorSection}>
-                      <ThemedText style={styles.colorLabel}>Culoare ceas:</ThemedText>
-                      <View style={styles.colorPickerContainer}>
-                        <View style={{ height: 220 }}>
-                          <ColorPicker
-                            color={clockColor}
-                            onColorChange={setClockColor}
-                            thumbSize={30}
-                            sliderSize={30}
-                            noSnap={true}
-                            row={false}
-                            swatchesOnly={false}
-                            discrete={false}
-                          />
-                        </View>
-                      </View>
+                      <ColorPreview
+                        color={clockColor}
+                        label="Culoare ceas"
+                        onPress={() => setActiveColorPicker({
+                          type: 'clock',
+                          title: 'Culoare ceas',
+                          color: clockColor,
+                          onSelect: setClockColor
+                        })}
+                      />
                     </View>
                   </View>
                   <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
@@ -251,28 +246,26 @@ export default function SettingsScreen() {
           </View>
           
           <View style={styles.colorSection}>
-            <ThemedText style={styles.colorLabel}>Background versete:</ThemedText>
-            <View style={styles.colorPickerContainer}>
-              <ColorPicker
-                color={normalVerseBackgroundColor}
-                onColorChange={setNormalVerseBackgroundColor}
-                thumbSize={30}
-                sliderSize={30}
-                noSnap={true}
-                row={false}
-              />
-            </View>
-            <ThemedText style={styles.colorLabel}>Culoare text:</ThemedText>
-            <View style={styles.colorPickerContainer}>
-              <ColorPicker
-                color={normalVerseTextColor}
-                onColorChange={setNormalVerseTextColor}
-                thumbSize={30}
-                sliderSize={30}
-                noSnap={true}
-                row={false}
-              />
-            </View>
+            <ColorPreview
+              color={normalVerseBackgroundColor}
+              label="Background versete"
+              onPress={() => setActiveColorPicker({
+                type: 'normalBackground',
+                title: 'Background versete',
+                color: normalVerseBackgroundColor,
+                onSelect: setNormalVerseBackgroundColor
+              })}
+            />
+            <ColorPreview
+              color={normalVerseTextColor}
+              label="Culoare text"
+              onPress={() => setActiveColorPicker({
+                type: 'normalText',
+                title: 'Culoare text',
+                color: normalVerseTextColor,
+                onSelect: setNormalVerseTextColor
+              })}
+            />
             <View style={styles.previewContainer}>
               <VerseSection
                 verse={{
@@ -295,28 +288,26 @@ export default function SettingsScreen() {
           </View>
           
           <View style={styles.colorSection}>
-            <ThemedText style={styles.colorLabel}>Background verset evidențiat:</ThemedText>
-            <View style={styles.colorPickerContainer}>
-              <ColorPicker
-                color={highlightColor}
-                onColorChange={setHighlightColor}
-                thumbSize={30}
-                sliderSize={30}
-                noSnap={true}
-                row={false}
-              />
-            </View>
-            <ThemedText style={styles.colorLabel}>Culoare text:</ThemedText>
-            <View style={styles.colorPickerContainer}>
-              <ColorPicker
-                color={verseTextColor}
-                onColorChange={setVerseTextColor}
-                thumbSize={30}
-                sliderSize={30}
-                noSnap={true}
-                row={false}
-              />
-            </View>
+            <ColorPreview
+              color={highlightColor}
+              label="Background verset evidențiat"
+              onPress={() => setActiveColorPicker({
+                type: 'highlightBackground',
+                title: 'Background verset evidențiat',
+                color: highlightColor,
+                onSelect: setHighlightColor
+              })}
+            />
+            <ColorPreview
+              color={verseTextColor}
+              label="Culoare text"
+              onPress={() => setActiveColorPicker({
+                type: 'highlightText',
+                title: 'Culoare text',
+                color: verseTextColor,
+                onSelect: setVerseTextColor
+              })}
+            />
             <View style={styles.previewContainer}>
               <VerseSection
                 verse={{
@@ -332,6 +323,19 @@ export default function SettingsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      <ColorPickerDialog
+        visible={activeColorPicker !== null}
+        onClose={() => setActiveColorPicker(null)}
+        onColorSelected={(color) => {
+          if (activeColorPicker) {
+            activeColorPicker.onSelect(color);
+            setActiveColorPicker(null);
+          }
+        }}
+        initialColor={activeColorPicker?.color || '#000000'}
+        title={activeColorPicker?.title || ''}
+      />
 
     </ThemedView>
   );
@@ -473,22 +477,5 @@ const styles = StyleSheet.create({
   },
   colorSection: {
     gap: 8,
-  },
-  colorLabel: {
-    fontWeight: '600',
-  },
-  colorPickerContainer: {
-    gap: 16,
-    height: 220, // Fixed height for the color picker
-  },
-  colorButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  customColorContainer: {
-    marginTop: 8,
-  },
-  customColorLabel: {
-    marginBottom: 8,
   },
 });
