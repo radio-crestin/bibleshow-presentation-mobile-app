@@ -7,7 +7,6 @@ import { BibleVerseDisplayProps } from './BibleVerseDisplay/types';
 import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
-import { SkeletonLoader } from './BibleVerseDisplay/SkeletonLoader';
 
 export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
@@ -49,11 +48,7 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
         onRefresh={handleRefresh}
       />
       <View style={styles.versesContainer}>
-        {!isConnected ? (
-          <View style={styles.topSection}>
-            <SkeletonLoader numberOfLines={4} fontSize={fontSize} />
-          </View>
-        ) : (
+        {isConnected && (
           <Animated.ScrollView 
             ref={scrollViewRef}
             style={styles.versesList}
