@@ -1,5 +1,5 @@
 {
     "xmlPath": "bibleshow.xml",
     "port": 3000,
-    "bibleShowRemoteEndpoint": "http://localhost:3000/bibleshow"
+    "bibleShowRemoteEndpoint": "http://192.168.0.147:8282"2
 }
