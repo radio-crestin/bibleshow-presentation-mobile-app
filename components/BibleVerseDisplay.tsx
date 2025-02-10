@@ -1,14 +1,13 @@
 import {View, Animated, useWindowDimensions, Text, ScrollView} from 'react-native';
 import { activateKeepAwakeAsync, deactivateKeepAwakeAsync } from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useState, useRef } from 'react';
+import {useState, useRef, useEffect} from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BibleVerseDisplayProps } from './BibleVerseDisplay/types';
 import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
 import { SkeletonLoader } from './BibleVerseDisplay/SkeletonLoader';
-import {ThemedText} from "@/components/ThemedText";
 
 export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
