@@ -11,7 +11,7 @@ import {ThemedText} from "@/components/ThemedText";
 
 export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws, clockSize, showSeconds } = useSettings();
+  const { fontSize, isConnected, ws, colorScheme } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
