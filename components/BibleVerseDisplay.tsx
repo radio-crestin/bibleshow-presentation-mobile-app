@@ -19,13 +19,20 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
+      const targetPosition = (isLandscape ? 250 : 350);
       let totalHeight = 0;
+      
+      // Find the verse position
       for (const v of verses) {
         if (v.reference === currentVerse.reference) break;
         totalHeight += verseMeasurements.current[v.reference] || 0;
       }
+
+      // Calculate scroll position to place verse at target position
+      const scrollPosition = Math.max(0, totalHeight - targetPosition);
+      
       scrollViewRef.current.scrollTo({ 
-        y: totalHeight + (isLandscape ? 250 : 350),
+        y: scrollPosition,
         animated: true
       });
     }
