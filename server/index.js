@@ -5,6 +5,31 @@ const https = require('https');
 const fs = require('fs');
 const cheerio = require('cheerio');
 
+// Retry configuration
+const RETRY_DELAYS = [1000, 2000, 5000]; // Delays in milliseconds
+const MAX_RETRIES = 3;
+
+async function withRetry(operation, operationName) {
+  let lastError;
+  
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      console.error(`Attempt ${attempt + 1}/${MAX_RETRIES} failed for ${operationName}:`, error.message);
+      
+      if (attempt < MAX_RETRIES - 1) {
+        const delay = RETRY_DELAYS[attempt];
+        console.log(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw new Error(`All ${MAX_RETRIES} attempts failed for ${operationName}. Last error: ${lastError.message}`);
+}
+
 // Handle graceful shutdown
 process.on('SIGTERM', () => {
   console.log('Received SIGTERM. Performing graceful shutdown...');
@@ -40,37 +65,50 @@ function shutdown() {
 
 async function handleVerseUpdate() {
   try {
-    // Parse local XML file
-    currentVerse = await parseXMLFile();
+    // Parse local XML file with retry
+    currentVerse = await withRetry(
+      () => parseXMLFile(),
+      'parseXMLFile'
+    );
     
     // Fetch from remote endpoint if configured
     if (config.bibleShowRemoteEndpoint && currentVerse) {
       try {
-        const response = await new Promise((resolve, reject) => {
-          const url = new URL(config.bibleShowRemoteEndpoint);
-          const requestModule = url.protocol === 'https:' ? https : http;
-          
-          requestModule.get(config.bibleShowRemoteEndpoint, (res) => {
-            let data = '';
-            res.on('data', (chunk) => data += chunk);
-            res.on('end', () => resolve(data));
-            res.on('error', reject);
-          }).on('error', reject);
-        });
-        verses = await parseHtmlResponse(response);
+        const response = await withRetry(
+          () => new Promise((resolve, reject) => {
+            const url = new URL(config.bibleShowRemoteEndpoint);
+            const requestModule = url.protocol === 'https:' ? https : http;
+            
+            requestModule.get(config.bibleShowRemoteEndpoint, (res) => {
+              let data = '';
+              res.on('data', (chunk) => data += chunk);
+              res.on('end', () => resolve(data));
+              res.on('error', reject);
+            }).on('error', reject);
+          }),
+          'fetchRemoteEndpoint'
+        );
+        
+        verses = await withRetry(
+          () => parseHtmlResponse(response),
+          'parseHtmlResponse'
+        );
       } catch (fetchError) {
-        console.error('Error fetching remote endpoint:', fetchError.message);
+        console.error('Error fetching remote endpoint after all retries:', fetchError.message);
       }
     }
 
-    // Broadcast all verses
-    broadcastVerses({
-      currentVerse,
-      verses: verses
-    });
+    // Broadcast all verses with retry
+    await withRetry(
+      () => broadcastVerses({
+        currentVerse,
+        verses: verses
+      }),
+      'broadcastVerses'
+    );
 
   } catch (error) {
-    console.error('Error updating verse:', error);
+    console.error('Error updating verse after all retries:', error);
   }
 }
 const xml2js = require('xml2js');
