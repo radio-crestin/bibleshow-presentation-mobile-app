@@ -91,26 +91,6 @@ export default function SettingsScreen() {
             </View>
           </View>
         </View>
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <IconSymbol name="textformat.size" size={24} color={''} />
-            <ThemedText style={styles.sectionTitle}>Mărime Text</ThemedText>
-          </View>
-          
-          <FontSizeControl
-            label="Mărime text normal:"
-            value={normalFontSize}
-            onDecrease={decreaseNormalFontSize}
-            onIncrease={increaseNormalFontSize}
-          />
-          
-          <FontSizeControl
-            label="Mărime text evidențiat:"
-            value={highlightedFontSize}
-            onDecrease={decreaseHighlightedFontSize}
-            onIncrease={increaseHighlightedFontSize}
-          />
-        </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -242,7 +222,13 @@ export default function SettingsScreen() {
             <ThemedText style={styles.sectionTitle}>Versete normale</ThemedText>
           </View>
           
-          <View style={styles.colorSection}>
+          <View style={styles.settingsSection}>
+            <FontSizeControl
+              label="Mărime text normal:"
+              value={normalFontSize}
+              onDecrease={decreaseNormalFontSize}
+              onIncrease={increaseNormalFontSize}
+            />
             <ColorPreview
               color={normalVerseBackgroundColor}
               label="Background versete"
@@ -284,7 +270,13 @@ export default function SettingsScreen() {
             <ThemedText style={styles.sectionTitle}>Verset evidențiat</ThemedText>
           </View>
           
-          <View style={styles.colorSection}>
+          <View style={styles.settingsSection}>
+            <FontSizeControl
+              label="Mărime text evidențiat:"
+              value={highlightedFontSize}
+              onDecrease={decreaseHighlightedFontSize}
+              onIncrease={increaseHighlightedFontSize}
+            />
             <ColorPreview
               color={highlightColor}
               label="Background verset evidențiat"
@@ -456,7 +448,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     gap: 24,
   },
-  colorSection: {
-    gap: 8,
+  settingsSection: {
+    gap: 16,
   },
 });
