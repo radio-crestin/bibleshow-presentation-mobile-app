@@ -201,29 +201,7 @@ export default function SettingsScreen() {
   );
 }
 
-export default function SettingsScreen() {
-  const { 
-    fontSize, 
-    increaseFontSize, 
-    decreaseFontSize, 
-    wsUrl, 
-    setWsUrl,
-    powerSaveEnabled,
-    setPowerSaveEnabled,
-    powerSaveTimeout,
-    setPowerSaveTimeout,
-    testPowerSave,
-    showSeconds,
-    setShowSeconds,
-    clockSize,
-    setClockSize,
-    showClock,
-    setShowClock,
-    colorScheme,
-    setColorScheme
-  } = useSettings();
-
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -267,7 +245,6 @@ export default function SettingsScreen() {
     justifyContent: 'center',
     gap: 16,
     padding: 8,
-    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
   },
   fontSize: {
@@ -281,7 +258,6 @@ export default function SettingsScreen() {
   previewContainer: {
     marginTop: 16,
     padding: 16,
-    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
   },
   previewText: {
@@ -290,7 +266,6 @@ export default function SettingsScreen() {
     flexShrink: 1,
   },
   wsUrlContainer: {
-    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
     padding: 16,
   },
@@ -306,7 +281,6 @@ export default function SettingsScreen() {
     color: '#000000',
   },
   powerSaveContainer: {
-    backgroundColor: colorScheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
     borderRadius: 12,
     padding: 16,
     gap: 16,
@@ -355,10 +329,6 @@ export default function SettingsScreen() {
     color: '#666',
     fontWeight: '500',
   },
-  disconnectedMessage: {
-    alignItems: 'center',
-    padding: 20,
-  },
   clockSizeContainer: {
     marginTop: 16,
   },
@@ -366,8 +336,4 @@ export default function SettingsScreen() {
     marginBottom: 8,
     fontWeight: '600',
   },
-  });
-
-  return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
+});
