@@ -16,6 +16,26 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const scrollToCurrentVerse = () => {
+    if (currentVerse && scrollViewRef.current) {
+      let totalHeight = 0;
+      for (const v of verses) {
+        if (v.reference === currentVerse.reference) break;
+        totalHeight += verseMeasurements.current[v.reference] || 0;
+      }
+      scrollViewRef.current.scrollTo({ 
+        y: totalHeight + (isLandscape ? 250 : 350),
+        animated: true 
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (currentVerse) {
+      scrollToCurrentVerse();
+    }
+  }, [currentVerse?.reference]);
   
   // Helper function to extract chapter and verse numbers
   const parseReference = (reference: string) => {
@@ -96,16 +116,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
                   const { height } = event.nativeEvent.layout;
                   verseMeasurements.current[verse.reference] = height;
                   
-                  if (verse.reference === currentVerse?.reference && scrollViewRef.current) {
-                    let totalHeight = 0;
-                    for (const v of verses) {
-                      if (v.reference === currentVerse.reference) break;
-                      totalHeight += verseMeasurements.current[v.reference] || 0;
-                    }
-                    scrollViewRef.current.scrollTo({ 
-                      y: totalHeight + (isLandscape ? 250 : 350),
-                      animated: true 
-                    });
+                  if (verse.reference === currentVerse?.reference) {
+                    scrollToCurrentVerse();
                   }
                 }}
               >
