@@ -1,4 +1,5 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, Modal } from 'react-native';
+import ColorPicker from 'react-native-wheel-color-picker';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -8,6 +9,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const { 
     fontSize, 
     increaseFontSize, 
@@ -210,8 +212,11 @@ export default function SettingsScreen() {
                         ))}
                       </View>
                       <View style={styles.customColorContainer}>
-                        <ThemedText style={styles.customColorLabel}>Sau introdu un cod hex:</ThemedText>
                         <View style={styles.colorInputContainer}>
+                          <Pressable
+                            style={[styles.colorPreview, { backgroundColor: clockColor }]}
+                            onPress={() => setShowColorPicker(true)}
+                          />
                           <TextInput
                             style={styles.customColorInput}
                             value={clockColor}
@@ -227,7 +232,6 @@ export default function SettingsScreen() {
                             maxLength={7}
                             autoCapitalize="characters"
                           />
-                          <View style={[styles.colorPreview, { backgroundColor: clockColor }]} />
                         </View>
                       </View>
                     </View>
@@ -243,6 +247,37 @@ export default function SettingsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={showColorPicker}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowColorPicker(false)}
+      >
+        <Pressable 
+          style={styles.modalOverlay}
+          onPress={() => setShowColorPicker(false)}
+        >
+          <View style={styles.colorPickerModal}>
+            <View style={styles.colorPickerContainer}>
+              <ColorPicker
+                color={clockColor}
+                onColorChange={setClockColor}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => setShowColorPicker(false)}
+              >
+                <ThemedText style={styles.closeButtonText}>Done</ThemedText>
+              </Pressable>
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
     </ThemedView>
   );
 }
@@ -422,6 +457,30 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 2,
     borderColor: '#666',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  colorPickerModal: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    width: '80%',
+    maxWidth: 400,
+  },
+  closeButton: {
+    backgroundColor: '#007AFF',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
   colorButton: {
     width: 32,
