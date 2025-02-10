@@ -14,7 +14,10 @@ async function handleVerseUpdate() {
     if (config.bibleShowRemoteEndpoint && currentVerse) {
       try {
         const response = await new Promise((resolve, reject) => {
-          https.get(config.bibleShowRemoteEndpoint, (res) => {
+          const url = new URL(config.bibleShowRemoteEndpoint);
+          const requestModule = url.protocol === 'https:' ? https : http;
+          
+          requestModule.get(config.bibleShowRemoteEndpoint, (res) => {
             let data = '';
             res.on('data', (chunk) => data += chunk);
             res.on('end', () => resolve(data));
