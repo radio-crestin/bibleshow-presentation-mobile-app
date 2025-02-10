@@ -460,4 +460,20 @@ const styles = StyleSheet.create({
   settingsSection: {
     gap: 16,
   },
+  fontSizeControl: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    padding: 8,
+    borderRadius: 12,
+  },
+  fontSize: {
+    fontSize: 24,
+    width: 40,
+    textAlign: 'center',
+  },
+  button: {
+    padding: 8,
+  },
 });
