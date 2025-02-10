@@ -9,10 +9,11 @@ type VerseSectionProps = {
     fontSize: number,
     isHighlighted?: boolean,
     onPress: () => void,
-    colorScheme?: "light" | "dark"
+    colorScheme?: "light" | "dark",
+    bold?: boolean
 };
 
-export function VerseSection({verse, fontSize, isHighlighted, onPress, colorScheme}: VerseSectionProps) {
+export function VerseSection({verse, fontSize, isHighlighted, onPress, colorScheme, bold}: VerseSectionProps) {
     const { highlightColor, verseTextColor, normalVerseBackgroundColor, normalVerseTextColor } = useSettings();
 
     return (
@@ -29,8 +30,30 @@ export function VerseSection({verse, fontSize, isHighlighted, onPress, colorSche
             ]}
         >
             <View style={styles.verseWrapper}>
-                <ThemedText style={[styles.referenceText, {fontSize, color: isHighlighted ? verseTextColor : normalVerseTextColor}]}>{verse.reference}</ThemedText>
-                <ThemedText style={[styles.verseText, {fontSize, color: isHighlighted ? verseTextColor : normalVerseTextColor}]}>{verse.text}</ThemedText>
+                <ThemedText 
+                    style={[
+                        styles.referenceText, 
+                        {
+                            fontSize, 
+                            color: isHighlighted ? verseTextColor : normalVerseTextColor,
+                            fontWeight: bold ? 'bold' : 'normal'
+                        }
+                    ]}
+                >
+                    {verse.reference}
+                </ThemedText>
+                <ThemedText 
+                    style={[
+                        styles.verseText, 
+                        {
+                            fontSize, 
+                            color: isHighlighted ? verseTextColor : normalVerseTextColor,
+                            fontWeight: bold ? 'bold' : 'normal'
+                        }
+                    ]}
+                >
+                    {verse.text}
+                </ThemedText>
             </View>
         </Pressable>
     );
