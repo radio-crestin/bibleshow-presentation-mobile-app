@@ -11,6 +11,14 @@ A React Native application built with Expo for displaying Bible verses in real-t
 - Offline capability
 - iOS and Android support
 
+## Requirements
+
+- BibleShow 5 Beta or newer is required for the web server functionality
+
+## Support
+
+If you need help or have any questions, please email us at contact@radiocrestin.ro
+
 ## Screenshots
 
 ![Main Screen](screenshots/img.png)
