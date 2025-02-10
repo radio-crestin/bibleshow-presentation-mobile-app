@@ -42,31 +42,57 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
             <SkeletonLoader numberOfLines={4} fontSize={fontSize} />
           </View>
         ) : (
-          <View style={styles.versesList}>
-            {verses.map((verse, index) => (
-              <View 
-                key={verse.reference} 
-                style={[
-                  styles.verseSection,
-                  verse.reference === currentVerse?.reference && styles.currentVerseSection
-                ]}
-              >
-                <VerseSection
-                  verse={verse}
-                  fontSize={fontSize}
-                  isHighlighted={verse.reference === currentVerse?.reference}
-                  onPress={() => {
-                    if (ws && isConnected) {
-                      ws.send(JSON.stringify({
-                        type: 'setReference',
-                        reference: verse.reference
-                      }));
-                    }
-                  }}
-                />
-              </View>
-            ))}
-          </View>
+          <Animated.ScrollView 
+            style={styles.versesList}
+            contentContainerStyle={{ paddingTop: 200 }}
+          >
+            {verses.map((verse, index) => {
+              const isCurrentVerse = verse.reference === currentVerse?.reference;
+              return isCurrentVerse ? (
+                <View 
+                  key={verse.reference}
+                  style={[
+                    styles.verseSection,
+                    styles.currentVerseSection,
+                    { position: 'absolute', top: 200, left: 0, right: 0, zIndex: 1 }
+                  ]}
+                >
+                  <VerseSection
+                    verse={verse}
+                    fontSize={fontSize}
+                    isHighlighted={true}
+                    onPress={() => {
+                      if (ws && isConnected) {
+                        ws.send(JSON.stringify({
+                          type: 'setReference',
+                          reference: verse.reference
+                        }));
+                      }
+                    }}
+                  />
+                </View>
+              ) : (
+                <View 
+                  key={verse.reference} 
+                  style={styles.verseSection}
+                >
+                  <VerseSection
+                    verse={verse}
+                    fontSize={fontSize}
+                    isHighlighted={false}
+                    onPress={() => {
+                      if (ws && isConnected) {
+                        ws.send(JSON.stringify({
+                          type: 'setReference',
+                          reference: verse.reference
+                        }));
+                      }
+                    }}
+                  />
+                </View>
+              );
+            })}
+          </Animated.ScrollView>
         )}
       </View>
       {!isConnected && (
