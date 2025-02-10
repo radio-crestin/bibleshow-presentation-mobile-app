@@ -1,6 +1,8 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 type ColorPreviewProps = {
   color: string;
@@ -10,13 +12,19 @@ type ColorPreviewProps = {
 
 export function ColorPreview({ color, label, onPress }: ColorPreviewProps) {
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ThemedText style={styles.label}>{label}</ThemedText>
-      <Pressable onPress={onPress} style={styles.previewContainer}>
+      <Pressable 
+        onPress={onPress} 
+        style={[
+          styles.previewContainer,
+          { backgroundColor: useColorScheme() === 'dark' ? '#2c2c2e' : '#f5f5f5' }
+        ]}
+      >
         <View style={[styles.colorPreview, { backgroundColor: color }]} />
         <ThemedText style={styles.colorText}>{color}</ThemedText>
       </Pressable>
-    </View>
+    </ThemedView>
   );
 }
 
@@ -32,7 +40,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: '#f5f5f5',
     padding: 8,
     borderRadius: 8,
   },
