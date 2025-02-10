@@ -1,5 +1,5 @@
 import {View, Animated, useWindowDimensions, Text, ScrollView} from 'react-native';
-import { activateKeepAwakeAsync, deactivateKeepAwakeAsync } from 'expo-keep-awake';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
 import {useState, useRef, useEffect} from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,7 +22,7 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
     activateKeepAwakeAsync();
     return () => {
       // Allow the screen to sleep when component unmounts
-      deactivateKeepAwakeAsync();
+      deactivateKeepAwake();
     };
   }, []);
 
