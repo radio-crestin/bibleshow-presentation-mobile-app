@@ -37,6 +37,14 @@ export default function SettingsScreen() {
         options={{
           title: "Setări",
           headerShown: true,
+          headerRight: () => (
+            <Pressable 
+              onPress={() => router.back()}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, padding: 8 })}
+            >
+              <IconSymbol name="xmark.circle.fill" size={24} color={''} />
+            </Pressable>
+          ),
         }} 
       />
 
