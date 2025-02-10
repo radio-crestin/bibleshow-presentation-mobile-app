@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, View, StyleSheet, Pressable } from 'react-native';
+import { Modal, StyleSheet, Pressable } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import ColorPicker from 'react-native-wheel-color-picker';
 
 type ColorPickerDialogProps = {
@@ -27,8 +29,12 @@ export function ColorPickerDialog({
       animationType="fade"
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
+      <ThemedView style={styles.modalOverlay}>
+        <ThemedView 
+          style={styles.modalContent}
+          lightColor="#ffffff"
+          darkColor="#1c1c1e"
+        >
           <ThemedText style={styles.title}>{title}</ThemedText>
           <View style={styles.colorPickerContainer}>
             <ColorPicker
@@ -57,8 +63,8 @@ export function ColorPickerDialog({
               <ThemedText style={styles.buttonText}>Selectează</ThemedText>
             </Pressable>
           </View>
-        </View>
-      </View>
+        </ThemedView>
+      </ThemedView>
     </Modal>
   );
 }
@@ -71,17 +77,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 20,
     width: '90%',
     maxWidth: 400,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 16,
     textAlign: 'center',
+    color: '#000',
   },
   colorPickerContainer: {
     height: 280,
@@ -110,5 +124,6 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: '#000',
+    opacity: 0.8,
   },
 });
