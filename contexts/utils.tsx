@@ -9,12 +9,7 @@ export const persistentState = <T,>(key: string, defaultValue: T) => {
             try {
                 const savedValue = await AsyncStorage.getItem(key);
                 if (savedValue) {
-                    // Handle color values that might contain #
-                    if (typeof defaultValue === 'string' && defaultValue.startsWith('#')) {
-                        setValue(savedValue.replace(/"/g, '') as T);
-                    } else {
-                        setValue(JSON.parse(savedValue) as T);
-                    }
+                    setValue(JSON.parse(savedValue) as T);
                 }
             } catch (error) {
                 console.error(`Error loading ${key}:`, error);
@@ -26,12 +21,7 @@ export const persistentState = <T,>(key: string, defaultValue: T) => {
     const setValueAndStore = async (newValue: T) => {
         setValue(newValue);
         try {
-            // Handle color values that might contain #
-            if (typeof newValue === 'string' && newValue.startsWith('#')) {
-                await AsyncStorage.setItem(key, newValue);
-            } else {
-                await AsyncStorage.setItem(key, JSON.stringify(newValue));
-            }
+            await AsyncStorage.setItem(key, JSON.stringify(newValue));
         } catch (error) {
             console.error(`Error saving ${key}:`, error);
         }
