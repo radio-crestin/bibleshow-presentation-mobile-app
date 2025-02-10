@@ -316,6 +316,7 @@ export default function SettingsScreen() {
                 isHighlighted={true}
                 onPress={() => {}}
                 colorScheme={colorScheme}
+                bold={highlightedTextBold}
               />
             </View>
           </View>
