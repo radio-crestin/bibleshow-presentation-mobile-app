@@ -23,6 +23,8 @@ type SettingsContextType = {
   setClockSize: (size: number) => void;
   showClock: boolean;
   setShowClock: (show: boolean) => void;
+  colorScheme: 'light' | 'dark';
+  setColorScheme: (scheme: 'light' | 'dark') => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -39,6 +41,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [showSeconds, setShowSeconds] = useState(true);
   const [clockSize, setClockSize] = useState(32);
   const [showClock, setShowClock] = useState(true);
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
 
   const connectWebSocket = () => {
     if (ws) {
@@ -77,13 +80,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock] = await Promise.all([
+        const [savedWsUrl, savedPowerSave, savedTimeout, savedShowSeconds, savedClockSize, savedShowClock, savedColorScheme] = await Promise.all([
           AsyncStorage.getItem('wsUrl'),
           AsyncStorage.getItem('powerSaveEnabled'),
           AsyncStorage.getItem('powerSaveTimeout'),
           AsyncStorage.getItem('showSeconds'),
           AsyncStorage.getItem('clockSize'),
-          AsyncStorage.getItem('showClock')
+          AsyncStorage.getItem('showClock'),
+          AsyncStorage.getItem('colorScheme')
         ]);
 
         if (savedWsUrl) setWsUrl(savedWsUrl);
@@ -92,6 +96,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (savedShowSeconds) setShowSeconds(savedShowSeconds === 'true');
         if (savedClockSize) setClockSize(Number(savedClockSize));
         if (savedShowClock) setShowClock(savedShowClock === 'true');
+        if (savedColorScheme) setColorScheme(savedColorScheme as 'light' | 'dark');
       } catch (error) {
         console.error('Error loading WebSocket URL:', error);
       }
@@ -239,6 +244,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           await AsyncStorage.setItem('showClock', show.toString());
         } catch (error) {
           console.error('Error saving show clock setting:', error);
+        }
+      },
+      colorScheme,
+      setColorScheme: async (scheme: 'light' | 'dark') => {
+        setColorScheme(scheme);
+        try {
+          await AsyncStorage.setItem('colorScheme', scheme);
+        } catch (error) {
+          console.error('Error saving color scheme:', error);
         }
       },
     }}>

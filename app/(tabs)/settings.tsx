@@ -23,7 +23,9 @@ export default function SettingsScreen() {
     clockSize,
     setClockSize,
     showClock,
-    setShowClock
+    setShowClock,
+    colorScheme,
+    setColorScheme
   } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -41,6 +43,22 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="moon.fill" size={24} color={''} />
+            <ThemedText style={styles.sectionTitle}>Aspect</ThemedText>
+          </View>
+          
+          <View style={styles.powerSaveContainer}>
+            <View style={styles.switchRow}>
+              <ThemedText style={styles.switchLabel}>Mod întunecat</ThemedText>
+              <Switch
+                value={colorScheme === 'dark'}
+                onValueChange={(enabled) => setColorScheme(enabled ? 'dark' : 'light')}
+              />
+            </View>
+          </View>
+        </View>
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <IconSymbol name="textformat.size" size={24} color={''} />
