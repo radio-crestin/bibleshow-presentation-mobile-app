@@ -2,6 +2,7 @@ const express = require('express');
 const { WebSocketServer } = require('ws');
 const http = require('http');
 const fs = require('fs');
+const axios = require('axios');
 const xml2js = require('xml2js');
 const chokidar = require('chokidar');
 const path = require('path');
@@ -115,7 +116,19 @@ watcher
   .on('change', async (path) => {
     console.log('File changed:', path);
     try {
+      // Parse local XML file
       const verse = await parseXMLFile();
+      
+      // Fetch from remote endpoint if configured
+      if (config.bibleShowRemoteEndpoint) {
+        try {
+          await axios.get(config.bibleShowRemoteEndpoint);
+          console.log('Remote endpoint notified successfully');
+        } catch (fetchError) {
+          console.error('Error fetching remote endpoint:', fetchError.message);
+        }
+      }
+
       if (verse && (
         !currentVerse || 
         verse.reference !== currentVerse.reference || 
