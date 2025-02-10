@@ -20,7 +20,7 @@ export function Header({
   onRefresh,
 }: HeaderProps) {
   const router = useRouter();
-  const { showSeconds, clockSize } = useSettings();
+  const { showSeconds, clockSize, showClock } = useSettings();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -33,16 +33,18 @@ export function Header({
 
   return (
     <View style={[styles.header]}>
-      <View style={[styles.clockContainer]}>
-        <ThemedText style={[styles.clockText, { fontSize: clockSize }]}>
-          {new Date().toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: showSeconds ? '2-digit' : undefined,
-            hour12: false
-          })}
-        </ThemedText>
-      </View>
+      {showClock && (
+        <View style={[styles.clockContainer]}>
+          <ThemedText style={[styles.clockText, { fontSize: clockSize }]}>
+            {new Date().toLocaleTimeString('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: showSeconds ? '2-digit' : undefined,
+              hour12: false
+            })}
+          </ThemedText>
+        </View>
+      )}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 16, marginLeft: 'auto' }}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
         <Pressable 
