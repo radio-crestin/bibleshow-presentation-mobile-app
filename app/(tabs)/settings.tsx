@@ -2,6 +2,7 @@ import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'reac
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import { ColorPickerDialog } from '@/components/ColorPickerDialog';
 import { ColorPreview } from '@/components/ColorPreview';
+import { FontSizeControl } from '@/components/FontSizeControl';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -96,43 +97,19 @@ export default function SettingsScreen() {
             <ThemedText style={styles.sectionTitle}>Mărime Text</ThemedText>
           </View>
           
-          <View style={styles.fontSizeSection}>
-            <ThemedText style={styles.fontSizeLabel}>Mărime text normal:</ThemedText>
-            <View style={styles.fontSizeControl}>
-              <Pressable 
-                onPress={decreaseNormalFontSize}
-                style={styles.button}
-              >
-                <IconSymbol name="minus.circle.fill" size={32} color={''} />
-              </Pressable>
-              <ThemedText style={styles.fontSize}>{normalFontSize}</ThemedText>
-              <Pressable 
-                onPress={increaseNormalFontSize}
-                style={styles.button}
-              >
-                <IconSymbol name="plus.circle.fill" size={32} color={''} />
-              </Pressable>
-            </View>
-          </View>
+          <FontSizeControl
+            label="Mărime text normal:"
+            value={normalFontSize}
+            onDecrease={decreaseNormalFontSize}
+            onIncrease={increaseNormalFontSize}
+          />
           
-          <View style={styles.fontSizeSection}>
-            <ThemedText style={styles.fontSizeLabel}>Mărime text evidențiat:</ThemedText>
-            <View style={styles.fontSizeControl}>
-              <Pressable 
-                onPress={decreaseHighlightedFontSize}
-                style={styles.button}
-              >
-                <IconSymbol name="minus.circle.fill" size={32} color={''} />
-              </Pressable>
-              <ThemedText style={styles.fontSize}>{highlightedFontSize}</ThemedText>
-              <Pressable 
-                onPress={increaseHighlightedFontSize}
-                style={styles.button}
-              >
-                <IconSymbol name="plus.circle.fill" size={32} color={''} />
-              </Pressable>
-            </View>
-          </View>
+          <FontSizeControl
+            label="Mărime text evidențiat:"
+            value={highlightedFontSize}
+            onDecrease={decreaseHighlightedFontSize}
+            onIncrease={increaseHighlightedFontSize}
+          />
         </View>
 
         <View style={styles.section}>
@@ -393,29 +370,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-  },
-  fontSizeControl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 16,
-    padding: 8,
-    borderRadius: 12,
-  },
-  fontSize: {
-    fontSize: 24,
-    width: 40,
-    textAlign: 'center',
-  },
-  fontSizeSection: {
-    marginBottom: 16,
-  },
-  fontSizeLabel: {
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-  button: {
-    padding: 8,
   },
   previewContainer: {
     marginTop: 16,
