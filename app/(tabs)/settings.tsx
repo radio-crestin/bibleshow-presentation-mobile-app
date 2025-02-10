@@ -303,7 +303,7 @@ export default function SettingsScreen() {
                   reference: "Ioan 3:16",
                   text: "Fiindcă atât de mult a iubit Dumnezeu lumea, că a dat pe singurul Lui Fiu..."
                 }}
-                fontSize={18}
+                fontSize={highlightedFontSize}
                 isHighlighted={true}
                 onPress={() => {}}
                 colorScheme={colorScheme}
