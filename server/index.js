@@ -8,36 +8,24 @@ const cheerio = require('cheerio');
 async function handleVerseUpdate() {
   try {
     // Parse local XML file
-    const verse = await parseXMLFile();
+    currentVerse = await parseXMLFile();
     
     // Fetch from remote endpoint if configured
-    if (config.bibleShowRemoteEndpoint) {
+    if (config.bibleShowRemoteEndpoint && currentVerse) {
       try {
         const response = await axios.get(config.bibleShowRemoteEndpoint);
-        const verses = await parseHtmlResponse(response.data);
-        
-        if (verses.length > 0) {
-          // Use the first verse as current verse for compatibility
-          currentVerse = verses[0];
-          console.log(`Parsed ${verses.length} verses from remote endpoint`);
-          
-          // Broadcast all verses
-          broadcastVerse({
-            currentBook: verses[0].book,
-            verses: verses
-          });
-        }
+        verses = await parseHtmlResponse(response.data);
       } catch (fetchError) {
         console.error('Error fetching remote endpoint:', fetchError.message);
       }
-    } else if (verse) {
-      currentVerse = verse;
-      console.log('Verse updated to:', verse.reference);
-      broadcastVerse({
-        currentBook: verse.book,
-        verses: [verse]
-      });
     }
+
+    // Broadcast all verses
+    broadcastVerses({
+      currentVerse,
+      verses: verses
+    });
+
   } catch (error) {
     console.error('Error updating verse:', error);
   }
@@ -65,6 +53,7 @@ const wss = new WebSocketServer({ server });
 
 const XML_PATH = config.xmlPath;
 let currentVerse = null;
+let verses = [];
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
@@ -76,20 +65,20 @@ async function parseHtmlResponse(html) {
   $('.bibrow').each((i, element) => {
     const $row = $(element);
     const link = $row.find('a').attr('href');
-    
+
     if (link) {
       // Parse reference from href="/VDCC:27:4:19:"
-      const [version, bookId, chapter, verse] = link.replace(/[/":]|:$/g, '').split(':').slice(1);
-      
+      const [version, bookId, chapter, verse] = link.replace("/", "").split(':');
+
       const text = $row.find('.txtver').text();
       
       verses.push({
         text,
-        reference: `${bookId} ${chapter}:${verse}`,
-        book: bookId,
-        chapter,
+        reference: `${currentVerse.book} ${chapter}:${verse}`,
+        version: version,
+        book: currentVerse.book,
+        chapter: currentVerse.chapter,
         verse,
-        html: text // Since the sample doesn't have HTML formatting, using text as HTML
       });
     }
   });
@@ -117,7 +106,6 @@ async function parseXMLFile() {
       book: data.BookName,
       chapter: data.ChapterNumber,
       verse: data.VerseNumber,
-      html: data.Scripture
     };
   } catch (error) {
     console.error('Error parsing XML:', error);
@@ -125,25 +113,15 @@ async function parseXMLFile() {
   }
 }
 
-// Initialize currentVerse
-parseXMLFile().then(verse => {
-  if (verse) {
-    currentVerse = verse;
-    console.log('Initial verse loaded:', currentVerse.reference);
-  }
-});
-
 // Function to broadcast verse to all connected clients
-function broadcastVerse(verse) {
-  if (!verse) return;
-  
+function broadcastVerses() {  
   wss.clients.forEach(client => {
     if (client.readyState === 1) { // WebSocket.OPEN
       client.send(JSON.stringify({
         type: 'verses',
         data: {
-          currentBook: verse.book,
-          verses: [verse]
+          currentVerse,
+          verses,
         }
       }));
     }
@@ -187,15 +165,13 @@ wss.on('connection', async (ws) => {
   console.log('Client connected');
   
   // Send initial verse if available
-  if (currentVerse) {
-    ws.send(JSON.stringify({
-      type: 'verses',
-      data: {
-        currentBook: currentVerse.book,
-        verses: [currentVerse]
-      }
-    }));
-  }
+  ws.send(JSON.stringify({
+    type: 'verses',
+    data: {
+      currentVerse,
+      verses
+    }
+  }));
 
   ws.on('message', async (message) => {
     try {
