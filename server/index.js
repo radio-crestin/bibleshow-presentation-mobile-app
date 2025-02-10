@@ -117,9 +117,13 @@ const path = require('path');
 const ip = require('ip');
 const os = require('os');
 
-// Load config from executable's directory
+// Global variables
 let config;
 let configLoadAttempt = 1;
+let currentVerse = null;
+let verses = [];
+let server;
+let wss;
 
 async function loadConfig() {
     while (true) {
@@ -151,12 +155,10 @@ async function loadConfig() {
 
 function startServer() {
     const app = express();
-    const server = http.createServer(app);
-    const wss = new WebSocketServer({ server });
+    server = http.createServer(app);
+    wss = new WebSocketServer({ server });
 
     const XML_PATH = config.xmlPath;
-let currentVerse = null;
-let verses = [];
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
