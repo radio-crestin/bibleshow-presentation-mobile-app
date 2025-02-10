@@ -9,6 +9,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useRouter } from 'expo-router';
 import {useState} from "react";
+import ColorPicker from "react-native-wheel-color-picker";
 
 export default function SettingsScreen() {
   const [activeColorPicker, setActiveColorPicker] = useState<{
@@ -45,7 +46,7 @@ export default function SettingsScreen() {
     normalVerseBackgroundColor,
     setNormalVerseBackgroundColor,
     normalVerseTextColor,
-    setNormalVerseTextColor
+    setNormalVerseTextColor,
   } = useSettings();
   const router = useRouter();
 
@@ -221,8 +222,6 @@ export default function SettingsScreen() {
                           <ColorPicker
                             color={clockColor}
                             onColorChange={setClockColor}
-                            onInteractionStart={() => setIsColorPickerActive(true)}
-                            onInteractionEnd={() => setIsColorPickerActive(false)}
                             thumbSize={30}
                             sliderSize={30}
                             noSnap={true}
@@ -257,8 +256,6 @@ export default function SettingsScreen() {
               <ColorPicker
                 color={normalVerseBackgroundColor}
                 onColorChange={setNormalVerseBackgroundColor}
-                onInteractionStart={() => setIsColorPickerActive(true)}
-                onInteractionEnd={() => setIsColorPickerActive(false)}
                 thumbSize={30}
                 sliderSize={30}
                 noSnap={true}
@@ -270,8 +267,6 @@ export default function SettingsScreen() {
               <ColorPicker
                 color={normalVerseTextColor}
                 onColorChange={setNormalVerseTextColor}
-                onInteractionStart={() => setIsColorPickerActive(true)}
-                onInteractionEnd={() => setIsColorPickerActive(false)}
                 thumbSize={30}
                 sliderSize={30}
                 noSnap={true}
@@ -305,8 +300,6 @@ export default function SettingsScreen() {
               <ColorPicker
                 color={highlightColor}
                 onColorChange={setHighlightColor}
-                onInteractionStart={() => setIsColorPickerActive(true)}
-                onInteractionEnd={() => setIsColorPickerActive(false)}
                 thumbSize={30}
                 sliderSize={30}
                 noSnap={true}
@@ -318,8 +311,6 @@ export default function SettingsScreen() {
               <ColorPicker
                 color={verseTextColor}
                 onColorChange={setVerseTextColor}
-                onInteractionStart={() => setIsColorPickerActive(true)}
-                onInteractionEnd={() => setIsColorPickerActive(false)}
                 thumbSize={30}
                 sliderSize={30}
                 noSnap={true}
