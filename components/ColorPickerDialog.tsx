@@ -45,7 +45,7 @@ export function ColorPickerDialog({
               style={[styles.button, styles.cancelButton]} 
               onPress={onClose}
             >
-              <ThemedText style={styles.buttonText}>Anulează</ThemedText>
+              <ThemedText style={[styles.buttonText, styles.cancelButtonText]}>Anulează</ThemedText>
             </Pressable>
             <Pressable 
               style={[styles.button, styles.selectButton]}
@@ -107,5 +107,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: '600',
     color: '#fff',
+  },
+  cancelButtonText: {
+    color: '#000',
   },
 });
