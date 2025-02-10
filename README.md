@@ -1,4 +1,4 @@
-# Biblie Amvon
+# BibleShow Presentation Mobile App
 
 A React Native application built with Expo for displaying Bible verses in real-time sync with BibleShow software.
 
