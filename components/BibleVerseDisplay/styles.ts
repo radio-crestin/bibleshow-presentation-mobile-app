@@ -109,4 +109,19 @@ export const styles = StyleSheet.create({
     width: '40%',
     marginBottom: 8,
   },
+  clockContainer: {
+    position: 'absolute',
+    left: 16,
+    zIndex: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 8,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  clockText: {
+    fontWeight: 'bold',
+  },
 });

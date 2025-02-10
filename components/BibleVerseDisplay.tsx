@@ -31,6 +31,16 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
       paddingRight: insets.right,
       paddingTop: isLandscape ? 20 : 0,
     }]}>
+      <View style={[styles.clockContainer, { top: insets.top + 16 }]}>
+        <ThemedText style={[styles.clockText, { fontSize: clockSize }]}>
+          {new Date().toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            second: showSeconds ? '2-digit' : undefined,
+            hour12: false 
+          })}
+        </ThemedText>
+      </View>
       <Header
         currentReference={currentVerse?.reference || ''}
         isConnected={isConnected}

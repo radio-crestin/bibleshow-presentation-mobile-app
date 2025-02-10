@@ -35,17 +35,7 @@ export function Header({
 
   return (
     <View style={[styles.header, { paddingTop }]}>
-      <View style={{ flex: 1, paddingLeft: 16 }}>
-        <ThemedText style={[styles.currentReference, { fontSize: clockSize, textAlign: 'left' }]}>
-          {currentTime.toLocaleTimeString('en-US', { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            second: showSeconds ? '2-digit' : undefined,
-            hour12: false 
-          })}
-        </ThemedText>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 16 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 16, marginLeft: 'auto' }}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
         <Pressable 
           onPress={onRefresh}
