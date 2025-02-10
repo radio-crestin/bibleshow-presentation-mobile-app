@@ -62,6 +62,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
   const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
   const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
+  const [highlightColor, setHighlightColor] = useState('#FFA500'); // Default orange
+  const [verseTextColor, setVerseTextColor] = useState('#000000'); // Default black
+  const [normalVerseBackgroundColor, setNormalVerseBackgroundColor] = useState('#FFFFFF'); // Default white
+  const [normalVerseTextColor, setNormalVerseTextColor] = useState('#000000'); // Default black
 
   const connectWebSocket = () => {
     if (ws) {
@@ -129,6 +133,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           AsyncStorage.getItem('showClock'),
           AsyncStorage.getItem('colorScheme'),
           AsyncStorage.getItem('clockColor'),
+          AsyncStorage.getItem('highlightColor'),
+          AsyncStorage.getItem('verseTextColor'),
+          AsyncStorage.getItem('normalVerseBackgroundColor'),
+          AsyncStorage.getItem('normalVerseTextColor'),
           AsyncStorage.getItem('highlightColor'),
           AsyncStorage.getItem('verseTextColor'),
           AsyncStorage.getItem('normalVerseBackgroundColor'),
