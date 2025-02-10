@@ -19,22 +19,27 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
-      const targetPosition = (isLandscape ? -250 : -520);
+      const targetPosition = height / 2 - 100; // Position verse near vertical center
       let totalHeight = 0;
+      let allMeasurementsReady = true;
       
-      // Find the verse position
+      // Check if we have all measurements
       for (const v of verses) {
+        if (!verseMeasurements.current[v.reference]) {
+          allMeasurementsReady = false;
+          break;
+        }
         if (v.reference === currentVerse.reference) break;
-        totalHeight += verseMeasurements.current[v.reference] || 0;
+        totalHeight += verseMeasurements.current[v.reference];
       }
 
-      // Calculate scroll position to place verse at target position
-      const scrollPosition = Math.max(0, totalHeight - targetPosition);
-      
-      scrollViewRef.current.scrollTo({ 
-        y: scrollPosition,
-        animated: true
-      });
+      if (allMeasurementsReady) {
+        const scrollPosition = Math.max(0, totalHeight - targetPosition);
+        scrollViewRef.current.scrollTo({ 
+          y: scrollPosition,
+          animated: true
+        });
+      }
     }
   };
 
@@ -108,8 +113,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             ref={scrollViewRef}
             style={styles.versesList}
             contentContainerStyle={{
-              paddingTop: height / 2 - 50,
-              paddingBottom: height / 2 - 50,
+              paddingTop: height / 2,
+              paddingBottom: height / 2,
             }}
           >
             {verses.map((verse) => (
