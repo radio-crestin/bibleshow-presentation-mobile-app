@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Appearance } from 'react-native';
 
 type SettingsContextType = {
   fontSize: number;
@@ -41,7 +42,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [showSeconds, setShowSeconds] = useState(true);
   const [clockSize, setClockSize] = useState(32);
   const [showClock, setShowClock] = useState(true);
-  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>(Appearance.getColorScheme() || 'light');
 
   const connectWebSocket = () => {
     if (ws) {
@@ -77,10 +78,24 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Load saved settings
+  // Listen for system color scheme changes
+  useEffect(() => {
+    const subscription = Appearance.addChangeListener(({ colorScheme: newColorScheme }) => {
+      // Only update if we're not overriding the system setting
+      const savedScheme = AsyncStorage.getItem('colorScheme');
+      if (!savedScheme) {
+        setColorScheme(newColorScheme || 'light');
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   // Apply color scheme to app
   useEffect(() => {
-    // Here you would apply the color scheme to the app's appearance
-    // This might involve setting the status bar style and other system UI elements
+    Appearance.setColorScheme(colorScheme);
   }, [colorScheme]);
 
   useEffect(() => {
