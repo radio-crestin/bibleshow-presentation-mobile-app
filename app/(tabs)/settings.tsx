@@ -1,6 +1,7 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
-import ColorPicker from 'react-native-wheel-color-picker';
+import { ColorPickerDialog } from '@/components/ColorPickerDialog';
+import { ColorPreview } from '@/components/ColorPreview';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -10,7 +11,12 @@ import { useRouter } from 'expo-router';
 import {useState} from "react";
 
 export default function SettingsScreen() {
-  const [isColorPickerActive, setIsColorPickerActive] = useState(false);
+  const [activeColorPicker, setActiveColorPicker] = useState<{
+    type: 'clock' | 'normalBackground' | 'normalText' | 'highlightBackground' | 'highlightText' | null;
+    title: string;
+    color: string;
+    onSelect: (color: string) => void;
+  } | null>(null);
   const { 
     fontSize, 
     increaseFontSize, 
