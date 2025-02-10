@@ -21,7 +21,9 @@ export default function SettingsScreen() {
     showSeconds,
     setShowSeconds,
     clockSize,
-    setClockSize
+    setClockSize,
+    showClock,
+    setShowClock
   } = useSettings();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -134,12 +136,21 @@ export default function SettingsScreen() {
           
           <View style={styles.powerSaveContainer}>
             <View style={styles.switchRow}>
-              <ThemedText style={styles.switchLabel}>Arată secunde</ThemedText>
+              <ThemedText style={styles.switchLabel}>Arată ceas</ThemedText>
               <Switch
-                value={showSeconds}
-                onValueChange={setShowSeconds}
+                value={showClock}
+                onValueChange={setShowClock}
               />
             </View>
+            {showClock && (
+              <>
+                <View style={styles.switchRow}>
+                  <ThemedText style={styles.switchLabel}>Arată secunde</ThemedText>
+                  <Switch
+                    value={showSeconds}
+                    onValueChange={setShowSeconds}
+                  />
+                </View>
             <View style={styles.clockSizeContainer}>
               <ThemedText style={styles.clockSizeLabel}>Mărime ceas:</ThemedText>
               <View style={styles.fontSizeControl}>
@@ -159,7 +170,7 @@ export default function SettingsScreen() {
               </View>
               <View style={[styles.previewContainer, { minHeight: clockSize * 1.5 }]}>
                 <ThemedText style={[styles.previewText, { fontSize: clockSize }]}>
-                  12:34:56
+                  {showSeconds ? '12:34:56' : '12:34'}
                 </ThemedText>
               </View>
             </View>
