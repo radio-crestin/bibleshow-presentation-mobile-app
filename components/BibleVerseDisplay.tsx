@@ -1,4 +1,4 @@
-import { View, Animated, useWindowDimensions, Text } from 'react-native';
+import {View, Animated, useWindowDimensions, Text, ScrollView} from 'react-native';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useState, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,15 +7,16 @@ import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
 import { SkeletonLoader } from './BibleVerseDisplay/SkeletonLoader';
+import {ThemedText} from "@/components/ThemedText";
 
 export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayProps) {
   const insets = useSafeAreaInsets();
-  const { fontSize, isConnected, ws } = useSettings();
+  const { fontSize, isConnected, ws, clockSize, showSeconds } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
-  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const handleRefresh = () => {
     if (ws && isConnected) {
@@ -31,16 +32,6 @@ export function BibleVerseDisplay({ verses, currentVerse }: BibleVerseDisplayPro
       paddingRight: insets.right,
       paddingTop: isLandscape ? 20 : 0,
     }]}>
-      <View style={[styles.clockContainer, { top: insets.top + 16 }]}>
-        <ThemedText style={[styles.clockText, { fontSize: clockSize }]}>
-          {new Date().toLocaleTimeString('en-US', { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            second: showSeconds ? '2-digit' : undefined,
-            hour12: false 
-          })}
-        </ThemedText>
-      </View>
       <Header
         currentReference={currentVerse?.reference || ''}
         isConnected={isConnected}
