@@ -12,20 +12,26 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {ColorSchemeName} from "react-native/Libraries/Utilities/Appearance";
+import { useState } from 'react';
 
 const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }) => {
   const { isPowerSaving } = useSettings();
+  const [originalBrightness, setOriginalBrightness] = useState<number | null>(null);
   const manageBrightness = async () => {
     try {
       const { status } = await Brightness.requestPermissionsAsync();
       if (status === 'granted') {
         if (isPowerSaving) {
-          // Save current brightness before dimming
-          const currentBrightness = await Brightness.getBrightnessAsync();
-          await Brightness.setBrightnessAsync(Math.max(currentBrightness * 0.5, 0.1));
-        } else {
-          // Restore system brightness
-          await Brightness.useSystemBrightnessAsync();
+          // Save current brightness before dimming if not already saved
+          if (originalBrightness === null) {
+            const currentBrightness = await Brightness.getBrightnessAsync();
+            setOriginalBrightness(currentBrightness);
+          }
+          await Brightness.setBrightnessAsync(Math.max((originalBrightness || 0.5) * 0.5, 0.1));
+        } else if (originalBrightness !== null) {
+          // Restore original brightness
+          await Brightness.setBrightnessAsync(originalBrightness);
+          setOriginalBrightness(null);
         }
       }
     } catch (error) {
