@@ -35,5 +35,9 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Native directories for Prebuild
+/android
+/ios
+
 app-example
 .aider*
