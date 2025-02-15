@@ -15,6 +15,15 @@ const MAPPING = {
   'chevron.right': 'chevron-right',
   'arrow.clockwise': 'refresh',
   'gear': 'settings',
+  'xmark.circle.fill': 'cancel',
+  'moon.fill': 'dark-mode',
+  'network': 'wifi',
+  'powersleep': 'power-settings-new',
+  'clock': 'schedule',
+  'minus.circle.fill': 'remove-circle',
+  'plus.circle.fill': 'add-circle',
+  'text.alignleft': 'format-align-left',
+  'text.badge.checkmark': 'verified',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],
