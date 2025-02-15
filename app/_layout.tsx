@@ -1,5 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { FC } from 'react';
+import {FC, useEffect} from 'react';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -15,6 +15,15 @@ import {ColorSchemeName} from "react-native/Libraries/Utilities/Appearance";
 
 const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }) => {
   const { isPowerSaving } = useSettings();
+
+  useEffect(() => {
+    if(isPowerSaving) {
+      // dim the screen
+
+    } else {
+        // restore the screen
+    }
+  }, [isPowerSaving]);
   
   return (
     <>
