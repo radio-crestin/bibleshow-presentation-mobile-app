@@ -1,4 +1,5 @@
-import {View, Animated, useWindowDimensions, Text, ScrollView} from 'react-native';
+import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable} from 'react-native';
+import { router } from 'expo-router';
 import {useKeepAwake} from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
 import {useState, useRef, useEffect} from 'react';
@@ -148,13 +149,27 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       </View>
       {!isConnected && (
         <View style={{ 
-          position: 'absolute', 
-          bottom: insets.bottom + 10, 
-          left: 0, 
-          right: 0, 
-          alignItems: 'center' 
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 20
         }}>
           <Text style={{ color: '#888888', fontSize: 16 }}>Disconnected from server</Text>
+          <Pressable
+            onPress={() => router.push('/settings')}
+            style={({ pressed }) => ({
+              opacity: pressed ? 0.7 : 1,
+              backgroundColor: colorScheme === 'dark' ? '#333' : '#ddd',
+              padding: 10,
+              borderRadius: 8
+            })}
+          >
+            <Text style={{ color: colorScheme === 'dark' ? '#fff' : '#000' }}>Open Settings</Text>
+          </Pressable>
         </View>
       )}
     </View>
