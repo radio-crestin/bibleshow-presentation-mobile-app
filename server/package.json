@@ -1,5 +1,5 @@
 {
-  "name": "biblie-amvon-server",
+  "name": "bibleshow-remote-server",
   "version": "1.0.0",
   "description": "WebSocket server for Bible verse synchronization",
   "main": "index.js",

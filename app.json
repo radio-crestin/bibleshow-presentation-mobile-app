@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BibleShow Remote",
-    "slug": "bibleshow-remote",
+    "slug": "bibleshowremote",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
@@ -10,11 +10,11 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.iosifnicolae2.biblieamvon",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "appleTeamId": "2KNY2RZVGC"
+      "appleTeamId": "2KNY2RZVGC",
+      "bundleIdentifier": "com.iosifnicolae2.bibleshowremote"
     },
     "android": {
       "adaptiveIcon": {
@@ -42,18 +42,12 @@
     "experiments": {
       "typedRoutes": true
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/2d4b44e1-1fb9-456a-ad4c-9735621f2985"
-    },
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "2d4b44e1-1fb9-456a-ad4c-9735621f2985"
+        "projectId": "edc3d58a-49f0-487d-8991-caae295d612f"
       }
     }
   }

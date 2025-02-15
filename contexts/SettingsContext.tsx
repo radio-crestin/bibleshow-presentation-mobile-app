@@ -140,7 +140,11 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
 
     // Apply color scheme to app
     useEffect(() => {
-        Appearance.setColorScheme(colorScheme);
+        try {
+            Appearance.setColorScheme(colorScheme);
+        } catch (e) {
+            console.error('Error setting color scheme:', e);
+        }
     }, [colorScheme]);
 
     useEffect(() => {
