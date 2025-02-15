@@ -57,13 +57,13 @@ export function Header({
           onPress={onRefresh}
           style={[styles.iconButton, isRefreshing && styles.rotating]}
         >
-          <IconSymbol name="arrow.clockwise" size={24} color={""}/>
+          <IconSymbol name="arrow.clockwise" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'}/>
         </Pressable>
         <Pressable 
           onPress={() => router.push('/settings')}
           style={styles.iconButton}
         >
-          <IconSymbol name="gear" size={24} color={""} />
+          <IconSymbol name="gear" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
         </Pressable>
       </View>
     </View>
