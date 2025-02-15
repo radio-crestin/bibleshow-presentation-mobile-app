@@ -11,18 +11,32 @@ import { useSettings } from '@/contexts/SettingsContext';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import {ColorSchemeName} from "react-native/Libraries/Utilities/Appearance";
+import {ColorSchemeName} from "react-native/Libraries/Appearance";
+import * as Brightness from 'expo-brightness';
 
 const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }) => {
   const { isPowerSaving } = useSettings();
 
   useEffect(() => {
-    if(isPowerSaving) {
-      // dim the screen
-
-    } else {
-        // restore the screen
-    }
+    const manageBrightness = async () => {
+      try {
+        const { status } = await Brightness.requestPermissionsAsync();
+        if (status === 'granted') {
+          if (isPowerSaving) {
+            // Save current brightness before dimming
+            const currentBrightness = await Brightness.getBrightnessAsync();
+            await Brightness.setBrightnessAsync(Math.max(currentBrightness * 0.5, 0.1));
+          } else {
+            // Restore system brightness
+            await Brightness.useSystemBrightnessAsync();
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to manage brightness:', error);
+      }
+    };
+    
+    manageBrightness();
   }, [isPowerSaving]);
   
   return (
