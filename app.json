@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "biblie-amvon",
-    "slug": "biblie-amvon",
+    "name": "BibleShow Remote",
+    "slug": "bibleshow-remote",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
@@ -47,7 +47,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d7ab9467-1234-4d65-895e-9d08277a74d4"
+        "projectId": "2d4b44e1-1fb9-456a-ad4c-9735621f2985"
       }
     }
   }
