@@ -1,4 +1,4 @@
-import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable} from 'react-native';
+import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button} from 'react-native';
 import { router } from 'expo-router';
 import {useKeepAwake} from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -8,6 +8,7 @@ import { BibleVerseDisplayProps } from './BibleVerseDisplay/types';
 import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
+import {captureException} from "@sentry/core";
 
 export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: BibleVerseDisplayProps) {
   useKeepAwake();
@@ -158,7 +159,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           alignItems: 'center',
           gap: 20
         }}>
-          <Text style={{ color: '#888888', fontSize: 16 }}>Disconnected from server</Text>
+          <Text style={{ color: '#888888', fontSize: 16 }}>Deconectat de la server</Text>
           <Pressable
             onPress={() => router.push('/settings')}
             style={({ pressed }) => ({
@@ -168,7 +169,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
               borderRadius: 8
             })}
           >
-            <Text style={{ color: colorScheme === 'dark' ? '#fff' : '#000' }}>Open Settings</Text>
+            <Text style={{ color: colorScheme === 'dark' ? '#fff' : '#000' }}>Deschide Setările</Text>
           </Pressable>
         </View>
       )}

@@ -134,7 +134,7 @@ export default function SettingsScreen() {
                 style={styles.timeoutInput}
                 value={powerSaveTimeout.toString()}
                 onChangeText={(text) => {
-                  const number = parseInt(text) || 1;
+                  const number = parseFloat(text) || 1;
                   setPowerSaveTimeout(Math.max(1, number));
                 }}
                 keyboardType="number-pad"

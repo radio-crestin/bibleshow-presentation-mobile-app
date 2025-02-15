@@ -36,7 +36,7 @@ export function Header({
       styles.header, 
       { 
         backgroundColor: normalVerseBackgroundColor,
-        paddingTop: Platform.OS === 'web' ? 0 : undefined 
+        paddingTop: Platform.OS === 'web' ? 0 : 60
       }
     ]}>
       {showClock && (

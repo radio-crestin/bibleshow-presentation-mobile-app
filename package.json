@@ -10,8 +10,9 @@
     "ios": "expo run:ios",
     "ios:device": "expo run:ios --device",
     "build:ios-remote": "eas build --platform ios",
+    "build:ios-remote-development": "eas build --platform ios --profile preview",
     "submit-to-appstore:ios": "eas submit --platform ios ",
-    "build:ios-locally": "eas build --platform ios --local --output ./builds/ios/app.ipa",
+    "build:ios-locally": "eas build --platform ios --profile preview --local --output ./builds/ios/app.ipa",
     "web": "expo start --web",
     "doctor": "npx expo-doctor",
     "test": "jest --watchAll",
@@ -26,10 +27,13 @@
     "@react-native-community/cli": "^15.1.3",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
+    "@sentry/react-native": "^6.7.0",
     "eas-cli": "^15.0.9",
     "expo": "~52.0.35",
     "expo-blur": "~14.0.3",
+    "expo-brightness": "~13.0.3",
     "expo-constants": "~17.0.5",
+    "expo-dev-client": "~5.0.12",
     "expo-font": "~13.0.3",
     "expo-haptics": "~14.0.1",
     "expo-image": "^2.0.5",
@@ -50,8 +54,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-    "react-native-wheel-color-picker": "^1.3.1",
-    "expo-dev-client": "~5.0.12"
+    "react-native-wheel-color-picker": "^1.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -70,5 +73,6 @@
         "listUnknownPackages": false
       }
     }
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

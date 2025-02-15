@@ -178,7 +178,11 @@ async function parseXMLFile() {
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&amp;/g, '&');
-    
+
+    if(!data.VerseNumber || !data.ChapterNumber || !data.BookName) {
+        console.error('Verse data is missing:', data);
+        return null;
+    }
     return {
       text: plainText,
       reference: `${data.BookName} ${data.ChapterNumber}:${data.VerseNumber}`,

@@ -13,34 +13,18 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {ColorSchemeName} from "react-native/Libraries/Utilities/Appearance";
 import { useState } from 'react';
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://74f7dc639a13d5f67792d37731e5e346@o4508825689325568.ingest.de.sentry.io/4508825691095120',
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }) => {
   const { isPowerSaving } = useSettings();
-  const [originalBrightness, setOriginalBrightness] = useState<number | null>(null);
-  const manageBrightness = async () => {
-    try {
-      const { status } = await Brightness.requestPermissionsAsync();
-      if (status === 'granted') {
-        if (isPowerSaving) {
-          // Save current brightness before dimming if not already saved
-          if (originalBrightness === null) {
-            const currentBrightness = await Brightness.getBrightnessAsync();
-            setOriginalBrightness(currentBrightness);
-          }
-          await Brightness.setBrightnessAsync(Math.max((originalBrightness || 0.5) * 0.5, 0.1));
-        } else if (originalBrightness !== null) {
-          // Restore original brightness
-          await Brightness.setBrightnessAsync(originalBrightness);
-          setOriginalBrightness(null);
-        }
-      }
-    } catch (error) {
-      console.warn('Failed to manage brightness:', error);
-    }
-  };
 
-  manageBrightness();
-  
   return (
     <>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -57,7 +41,7 @@ const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }
         </Stack>
         <StatusBar style="auto" backgroundColor="white" />
       </ThemeProvider>
-      <PowerSaveOverlay isPowerSaving={isPowerSaving} />
+      <PowerSaveOverlay  />
     </>
   );
 };
