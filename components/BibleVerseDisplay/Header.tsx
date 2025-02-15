@@ -36,7 +36,7 @@ export function Header({
       {showClock && (
         <View style={[styles.clockContainer]}>
           <ThemedText style={[styles.clockText, { fontSize: clockSize, color: clockColor }]}>
-            {new Date().toLocaleTimeString('en-US', {
+            {currentTime.toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit',
               second: showSeconds ? '2-digit' : undefined,
