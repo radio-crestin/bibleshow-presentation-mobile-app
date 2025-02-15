@@ -67,7 +67,7 @@ export default function SettingsScreen() {
               onPress={() => router.back()}
               style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, padding: 8 })}
             >
-              <IconSymbol name="xmark.circle.fill" size={24} color={''} />
+              <IconSymbol name="xmark.circle.fill" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             </Pressable>
           ),
         }} 
@@ -79,7 +79,7 @@ export default function SettingsScreen() {
       >
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="moon.fill" size={24} color={''} />
+            <IconSymbol name="moon.fill" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             <ThemedText style={styles.sectionTitle}>Aspect</ThemedText>
           </View>
           
@@ -96,7 +96,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="network" size={24} color={''} />
+            <IconSymbol name="network" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             <ThemedText style={styles.sectionTitle}>Conexiune Server</ThemedText>
           </View>
           
@@ -115,7 +115,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="powersleep" size={24} color={''} />
+            <IconSymbol name="powersleep" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             <ThemedText style={styles.sectionTitle}>Economisire Energie</ThemedText>
           </View>
           
@@ -155,7 +155,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="clock" size={24} color={''} />
+            <IconSymbol name="clock" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             <ThemedText style={styles.sectionTitle}>Afișare Ceas</ThemedText>
           </View>
           
@@ -183,14 +183,14 @@ export default function SettingsScreen() {
                       onPress={() => setClockSize(Math.max(16, clockSize - 2))}
                       style={styles.button}
                     >
-                      <IconSymbol name="minus.circle.fill" size={32} color={''} />
+                      <IconSymbol name="minus.circle.fill" size={32} color={colorScheme === 'dark' ? '#fff' : '#000'} />
                     </Pressable>
                     <ThemedText style={styles.fontSize}>{clockSize}</ThemedText>
                     <Pressable 
                       onPress={() => setClockSize(Math.min(72, clockSize + 2))}
                       style={styles.button}
                     >
-                      <IconSymbol name="plus.circle.fill" size={32} color={''} />
+                      <IconSymbol name="plus.circle.fill" size={32} color={colorScheme === 'dark' ? '#fff' : '#000'} />
                     </Pressable>
                   </View>
                   <View style={styles.colorSettingsContainer}>
@@ -220,7 +220,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="text.alignleft" size={24} color={''} />
+            <IconSymbol name="text.alignleft" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             <ThemedText style={styles.sectionTitle}>Versete normale</ThemedText>
           </View>
           
@@ -268,7 +268,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <IconSymbol name="text.badge.checkmark" size={24} color={''} />
+            <IconSymbol name="text.badge.checkmark" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
             <ThemedText style={styles.sectionTitle}>Verset evidențiat</ThemedText>
           </View>
           
