@@ -5,39 +5,35 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import { PowerSaveOverlay } from '@/components/PowerSaveOverlay';
 import { useSettings } from '@/contexts/SettingsContext';
+import * as Brightness from 'expo-brightness';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import {ColorSchemeName} from "react-native/Libraries/Appearance";
-import * as Brightness from 'expo-brightness';
+import {ColorSchemeName} from "react-native/Libraries/Utilities/Appearance";
 
 const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }) => {
   const { isPowerSaving } = useSettings();
-
-  useEffect(() => {
-    const manageBrightness = async () => {
-      try {
-        const { status } = await Brightness.requestPermissionsAsync();
-        if (status === 'granted') {
-          if (isPowerSaving) {
-            // Save current brightness before dimming
-            const currentBrightness = await Brightness.getBrightnessAsync();
-            await Brightness.setBrightnessAsync(Math.max(currentBrightness * 0.5, 0.1));
-          } else {
-            // Restore system brightness
-            await Brightness.useSystemBrightnessAsync();
-          }
+  const manageBrightness = async () => {
+    try {
+      const { status } = await Brightness.requestPermissionsAsync();
+      if (status === 'granted') {
+        if (isPowerSaving) {
+          // Save current brightness before dimming
+          const currentBrightness = await Brightness.getBrightnessAsync();
+          await Brightness.setBrightnessAsync(Math.max(currentBrightness * 0.5, 0.1));
+        } else {
+          // Restore system brightness
+          await Brightness.useSystemBrightnessAsync();
         }
-      } catch (error) {
-        console.warn('Failed to manage brightness:', error);
       }
-    };
-    
-    manageBrightness();
-  }, [isPowerSaving]);
+    } catch (error) {
+      console.warn('Failed to manage brightness:', error);
+    }
+  };
+
+  manageBrightness();
   
   return (
     <>
@@ -55,7 +51,7 @@ const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }
         </Stack>
         <StatusBar style="auto" backgroundColor="white" />
       </ThemeProvider>
-      <PowerSaveOverlay active={isPowerSaving} />
+      <PowerSaveOverlay isPowerSaving={isPowerSaving} />
     </>
   );
 };
