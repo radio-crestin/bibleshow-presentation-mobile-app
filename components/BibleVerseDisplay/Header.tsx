@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Platform } from 'react-native';
 import { useState, useEffect } from 'react';
 import { ThemedText } from '../ThemedText';
 import { IconSymbol } from '../ui/IconSymbol';
@@ -32,7 +32,13 @@ export function Header({
   }, []);
 
   return (
-    <View style={[styles.header, { backgroundColor: normalVerseBackgroundColor }]}>
+    <View style={[
+      styles.header, 
+      { 
+        backgroundColor: normalVerseBackgroundColor,
+        paddingTop: Platform.OS === 'web' ? 0 : undefined 
+      }
+    ]}>
       {showClock && (
         <View style={[styles.clockContainer]}>
           <ThemedText style={[styles.clockText, { fontSize: clockSize, color: clockColor }]}>
