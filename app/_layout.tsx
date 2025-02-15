@@ -39,7 +39,7 @@ const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }
           />
           <Stack.Screen name="+not-found" />
         </Stack>
-        <StatusBar style="auto" backgroundColor="white" />
+        <StatusBar style="auto" backgroundColor="white" hidden />
       </ThemeProvider>
       <PowerSaveOverlay  />
     </>

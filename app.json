@@ -11,7 +11,8 @@
       "icon": "./assets/images/icon.png",
       "supportsTablet": true,
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIViewControllerBasedStatusBarAppearance": true
       },
       "appleTeamId": "2KNY2RZVGC",
       "bundleIdentifier": "com.iosifnicolae2.bibleshowremote"
