@@ -1,4 +1,4 @@
-import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button, NativeSyntheticEvent, NativeScrollEvent, StyleSheet} from 'react-native';
+import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import { router } from 'expo-router';
 import {useKeepAwake} from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -19,7 +19,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
-  const scrollPosition = useRef(new Animated.Value(0));
+  const scrollPosition = useRef(0);
   const scrollViewLayout = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
   const totalHeightRef = useRef(0);
   const verseBottomRef = useRef(0);
@@ -29,7 +29,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       let totalHeight = 0;
       let allMeasurementsReady = true;
       let currentVerseHeight = 0;
-      
+
       // Calculate total height up to current verse and get current verse height
       for (const v of verses) {
         if (!verseMeasurements.current[v.reference]) {
@@ -49,15 +49,15 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
         const targetPosition = height / 2;
         const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
-        
+
         // Calculate distances from verse edges to viewport edges
         const distanceToTop = (totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y);
         const distanceToBottom = height - (scrollPosition.current - totalHeight) - currentVerseHeight;
-        
+
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
 
         if (!isVerseVisible) {
-          
+
           scrollViewRef.current?.scrollTo({
             y: targetScrollPosition,
             animated: true
@@ -72,7 +72,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       scrollToCurrentVerse();
     }
   }, [currentVerse?.reference]);
-  
+
   // Helper function to extract chapter and verse numbers
   const parseReference = (reference: string) => {
     const match = reference.match(/(\d+):(\d+)/);
@@ -86,7 +86,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   };
 
   // Process verses to include currentVerse, remove duplicates, and sort
-  const verses = [...(currentVerse 
+  const verses = [...(currentVerse
     ? [
         ...initialVerses.filter(v => v.reference !== currentVerse.reference),
         currentVerse
@@ -94,7 +94,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
     : initialVerses)].sort((a, b) => {
       const verseA = parseReference(a.reference);
       const verseB = parseReference(b.reference);
-      
+
       if (verseA.chapter !== verseB.chapter) {
         return verseA.chapter - verseB.chapter;
       }
@@ -109,7 +109,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
     }
   };
   return (
-    <View style={[styles.container, { 
+    <View style={[styles.container, {
       paddingBottom: insets.bottom,
       paddingLeft: insets.left,
       paddingRight: insets.right,
@@ -127,10 +127,9 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           <Animated.ScrollView
             ref={scrollViewRef}
             style={styles.versesList}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { y: scrollPosition.current } } }],
-              { useNativeDriver: false }
-            )}
+            onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
+              scrollPosition.current = event.nativeEvent.contentOffset.y;
+            }}
             onLayout={(event) => {
               const { x, y } = event.nativeEvent.layout;
               scrollViewLayout.current = { x, y };
@@ -142,7 +141,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             }}
           >
             {verses.map((verse) => (
-              <View 
+              <View
                 key={verse.reference}
                 style={[
                   styles.verseSection,
@@ -151,7 +150,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
                 onLayout={(event) => {
                   const { height } = event.nativeEvent.layout;
                   verseMeasurements.current[verse.reference] = height + styles.verseSection.marginBottom;
-                  
+
                   if (verse.reference === currentVerse?.reference) {
                     scrollToCurrentVerse();
                   }
@@ -176,22 +175,6 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             ))}
           </Animated.ScrollView>
         )}
-        <Animated.View
-          style={{
-            position: 'absolute',
-            right: 10,
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor: 'red',
-            transform: [{
-              translateY: scrollPosition.current.interpolate({
-                inputRange: [0, height],
-                outputRange: [0, height]
-              })
-            }]
-          }}
-        />
       </View>
       {!isConnected && (
         <View style={{ 
