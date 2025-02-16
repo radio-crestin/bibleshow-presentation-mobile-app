@@ -42,32 +42,18 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
 
       if (allMeasurementsReady && scrollViewRef.current) {
-        // Viewport boundaries (in ScrollView coordinates)
-        const viewportTop = scrollPosition.current;
-        const viewportBottom = viewportTop + height;
-
-        // Verse position (in ScrollView coordinates)
-        const verseTop = totalHeight - (height / 2); // Adjust for top padding
-        const verseBottom = verseTop + currentVerseHeight;
-
-        // Check if verse is visible in viewport
-        const isVerseVisible = (
-          (verseTop >= viewportTop && verseTop <= viewportBottom) || // Top is visible
-          (verseBottom >= viewportTop && verseBottom <= viewportBottom) || // Bottom is visible
-          (verseTop <= viewportTop && verseBottom >= viewportBottom) // Verse spans viewport
-        );
-
+        const verseTopIsVisible = (scrollPosition.current + scrollViewLayout.current.y) < totalHeight;
+        const verseBottomIsVisible = (scrollPosition.current + height) > (totalHeight + currentVerseHeight);
+        const isVerseVisible = verseTopIsVisible && verseBottomIsVisible;
         console.log({
-          viewportTop,
-          viewportBottom,
-          verseTop,
-          verseBottom,
-          isVerseVisible,
-          scrollY: scrollPosition.current,
-          height,
-          currentVerseHeight
-        });
-
+            totalHeight,
+            currentVerseHeight,
+            scrollPosition: scrollPosition.current,
+            scrollViewLayout: scrollViewLayout.current,
+            verseTopIsVisible,
+            verseBottomIsVisible,
+            isVerseVisible
+        })
         if (!isVerseVisible) {
           const targetPosition = height / 2;
           const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
