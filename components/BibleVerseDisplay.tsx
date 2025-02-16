@@ -49,6 +49,13 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
         // Check if verse is fully visible
         const isVerseVisible = verseTop >= visibleTop && verseBottom <= visibleBottom;
+        console.log({
+            verseTop,
+            verseBottom,
+            visibleTop,
+            visibleBottom,
+            isVerseVisible
+        })
 
         if (!isVerseVisible) {
           const targetPosition = height / 2;
