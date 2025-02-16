@@ -39,27 +39,25 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         totalHeight += verseMeasurements.current[v.reference];
       }
 
-      if (allMeasurementsReady && scrollViewRef.current.getScrollResponder) {
-        // Get the scroll responder to access scroll position
-        const scrollResponder = scrollViewRef.current.getScrollResponder();
-        if (scrollResponder) {
-          // @ts-ignore - measureInWindow exists but is not in types
-          scrollResponder.getScrollableNode().measureInWindow((x: number, y: number, width: number, viewHeight: number) => {
-            const scrollY = totalHeight + (height / 2);
-            const verseTop = totalHeight + (height / 2); // Account for top padding
-            const verseBottom = verseTop + currentVerseHeight;
-            const viewportTop = scrollY;
-            const viewportBottom = viewportTop + viewHeight;
+      if (allMeasurementsReady && scrollViewRef.current) {
+        // Calculate the verse position relative to scroll view
+        const verseTop = totalHeight;
+        const verseBottom = verseTop + currentVerseHeight;
+        
+        // Get current scroll position
+        scrollViewRef.current.measure((x, y, width, viewHeight, pageX, pageY) => {
+          const currentScrollY = pageY * -1;
+          const viewportTop = currentScrollY;
+          const viewportBottom = viewportTop + height;
 
-            // Only scroll if the verse is not fully visible in the viewport
-            if (verseTop < viewportTop || verseBottom > viewportBottom) {
-              scrollViewRef.current?.scrollTo({
-                y: Math.max(0, totalHeight + (height / 2)),
-                animated: false
-              });
-            }
-          });
-        }
+          // Only scroll if the verse is not fully visible in the viewport
+          if (verseTop < viewportTop || verseBottom > viewportBottom) {
+            scrollViewRef.current?.scrollTo({
+              y: Math.max(0, totalHeight - (height / 3)),
+              animated: true
+            });
+          }
+        });
       }
     }
   };
