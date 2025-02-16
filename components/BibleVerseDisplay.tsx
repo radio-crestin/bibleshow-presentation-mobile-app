@@ -19,8 +19,23 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
-  const scrollPosition = useRef(0);
-  const scrollViewLayout = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
+  const scrollInfo = useRef<{ 
+    offsetY: number,
+    layoutHeight: number,
+    contentHeight: number,
+    visibleTop: number,
+    visibleBottom: number,
+    x: number, 
+    y: number 
+  }>({
+    offsetY: 0,
+    layoutHeight: 0,
+    contentHeight: 0,
+    visibleTop: 0,
+    visibleBottom: 0,
+    x: 0,
+    y: 0
+  });
   const totalHeightRef = useRef(0);
   const verseBottomRef = useRef(0);
 
@@ -51,8 +66,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
 
         // Calculate distances from verse edges to viewport edges
-        const distanceToTop = (totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y);
-        const distanceToBottom = (scrollPosition.current) - totalHeight;
+        const distanceToTop = totalHeight - scrollInfo.current.visibleTop;
+        const distanceToBottom = scrollInfo.current.visibleBottom - (totalHeight + currentVerseHeight);
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
         console.log({
@@ -135,11 +150,23 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             ref={scrollViewRef}
             style={styles.versesList}
             onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
-              scrollPosition.current = event.nativeEvent.contentOffset.y;
+              const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+              scrollInfo.current = {
+                ...scrollInfo.current,
+                offsetY: contentOffset.y,
+                layoutHeight: layoutMeasurement.height,
+                contentHeight: contentSize.height,
+                visibleTop: contentOffset.y,
+                visibleBottom: contentOffset.y + layoutMeasurement.height
+              };
             }}
             onLayout={(event) => {
               const { x, y } = event.nativeEvent.layout;
-              scrollViewLayout.current = { x, y };
+              scrollInfo.current = {
+                ...scrollInfo.current,
+                x,
+                y
+              };
             }}
             scrollEventThrottle={16}
             contentContainerStyle={{
