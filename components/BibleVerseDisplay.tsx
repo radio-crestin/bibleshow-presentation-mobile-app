@@ -47,46 +47,21 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         totalHeightRef.current = totalHeight;
         verseBottomRef.current = totalHeight + currentVerseHeight;
 
-        // Ensure we have valid measurements
-        if (typeof scrollPosition.current !== 'number' || 
-            typeof scrollViewLayout.current.y !== 'number' ||
-            typeof totalHeight !== 'number' ||
-            typeof currentVerseHeight !== 'number' ||
-            typeof height !== 'number') {
-          console.log('Invalid measurements:', {
-            scrollPosition: scrollPosition.current,
-            layoutY: scrollViewLayout.current.y,
-            totalHeight,
-            currentVerseHeight,
-            height
-          });
-          return;
-        }
-
         const targetPosition = height / 2;
         const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
 
-        // Calculate distances with validated numbers
-        const distanceToTop = Math.round((totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y));
-        // Get absolute positions using measure
-        scrollViewRef.current?.measure((x, y, width, height, pageX, pageY) => {
-          const verseAbsoluteBottom = Math.round(pageY + totalHeight + currentVerseHeight);
-          const viewportAbsoluteBottom = Math.round(pageY + scrollPosition.current + height);
-        const distanceToBottom = Math.round(viewportAbsoluteBottom - verseAbsoluteBottom);
+        // Calculate distances from verse edges to viewport edges
+        const distanceToTop = (totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y);
+        const distanceToBottom = (scrollPosition.current) - totalHeight;
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
-        console.log('Visibility calculations:', {
-            scrollPosition: scrollPosition.current,
-            layoutY: scrollViewLayout.current.y,
-            totalHeight,
-            currentVerseHeight,
-            height,
+        console.log({
+          totalHeight,
+          currentVerseHeight,
             distanceToTop,
             distanceToBottom,
-            isVerseVisible,
-          viewportAbsoluteBottom,
-          verseAbsoluteBottom
-        });
+            isVerseVisible
+        })
 
         if (!isVerseVisible) {
 
