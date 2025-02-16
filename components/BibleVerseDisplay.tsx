@@ -161,17 +161,6 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           <Animated.ScrollView
             ref={scrollViewRef}
             style={styles.versesList}
-            onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
-              const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
-              scrollInfo.current = {
-                ...scrollInfo.current,
-                offsetY: contentOffset.y,
-                layoutHeight: layoutMeasurement.height,
-                contentHeight: contentSize.height,
-                visibleTop: contentOffset.y,
-                visibleBottom: contentOffset.y + layoutMeasurement.height
-              };
-            }}
             onLayout={(event) => {
               const { x, y } = event.nativeEvent.layout;
               scrollInfo.current = {
