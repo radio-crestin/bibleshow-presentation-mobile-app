@@ -40,17 +40,13 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
 
       if (allMeasurementsReady && scrollViewRef.current) {
-        // Calculate the verse position relative to scroll view
-        const verseTop = totalHeight;
-        const verseBottom = verseTop + currentVerseHeight;
-        
-        // Calculate scroll position to align verse with top of visible area
-        const visibleScrollViewTop = height / 2; // Account for top padding in contentContainerStyle
-        const targetScrollPosition = Math.max(0, totalHeight - visibleScrollViewTop);
+        // TODO: check if the current verse is visible and don't scroll if it is
+        const targetPosition = height / 2;
+        const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
         
         scrollViewRef.current?.scrollTo({
           y: targetScrollPosition,
-          animated: true
+          animated: false
         });
       }
     }
