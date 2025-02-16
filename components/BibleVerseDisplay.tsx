@@ -62,8 +62,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         totalHeightRef.current = totalHeightOfPreviousVerses;
         verseBottomRef.current = totalHeightOfPreviousVerses + currentVerseHeight;
 
-        const targetPosition = height / 2;
-        const targetScrollPosition = Math.max(0, totalHeightOfPreviousVerses + targetPosition);
+        const targetScrollPosition = Math.max(0, totalHeightOfPreviousVerses);
 
         // Calculate distances from verse edges to viewport edges
         const verseTop = totalHeightOfPreviousVerses;
@@ -78,7 +77,10 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           currentVerseHeight,
             distanceToTop,
             distanceToBottom,
-            isVerseVisible
+            isVerseVisible,
+          scrollInfo: scrollInfo.current,
+          verseTop,
+            verseBottom,
         })
 
         if (!isVerseVisible) {
@@ -173,8 +175,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             }}
             scrollEventThrottle={16}
             contentContainerStyle={{
-              paddingTop: height / 2,
-              paddingBottom: height / 2,
+              // paddingTop: height / 2,
+              // paddingBottom: height / 2,
             }}
           >
             {verses.map((verse) => (
