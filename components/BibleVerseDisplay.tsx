@@ -1,4 +1,4 @@
-import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
+import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button, NativeSyntheticEvent, NativeScrollEvent, StyleSheet} from 'react-native';
 import { router } from 'expo-router';
 import {useKeepAwake} from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -19,7 +19,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
-  const scrollPosition = useRef(0);
+  const scrollPosition = useRef(new Animated.Value(0));
   const scrollViewLayout = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
   const totalHeightRef = useRef(0);
   const verseBottomRef = useRef(0);
@@ -127,9 +127,10 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           <Animated.ScrollView
             ref={scrollViewRef}
             style={styles.versesList}
-            onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
-              scrollPosition.current = event.nativeEvent.contentOffset.y;
-            }}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: scrollPosition.current } } }],
+              { useNativeDriver: false }
+            )}
             onLayout={(event) => {
               const { x, y } = event.nativeEvent.layout;
               scrollViewLayout.current = { x, y };
@@ -175,6 +176,22 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             ))}
           </Animated.ScrollView>
         )}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            right: 10,
+            width: 20,
+            height: 20,
+            borderRadius: 10,
+            backgroundColor: 'red',
+            transform: [{
+              translateY: scrollPosition.current.interpolate({
+                inputRange: [0, height],
+                outputRange: [0, height]
+              })
+            }]
+          }}
+        />
       </View>
       {!isConnected && (
         <View style={{ 
