@@ -123,6 +123,27 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         onRefresh={handleRefresh}
       />
       <View style={styles.versesContainer}>
+        {/* Debug dots */}
+        <View style={{
+          position: 'absolute',
+          left: 10,
+          top: scrollPosition.current,
+          width: 10,
+          height: 10,
+          backgroundColor: 'red',
+          borderRadius: 5,
+          zIndex: 1000,
+        }} />
+        <View style={{
+          position: 'absolute',
+          right: 10,
+          top: scrollViewLayout.current.y,
+          width: 10,
+          height: 10,
+          backgroundColor: 'blue',
+          borderRadius: 5,
+          zIndex: 1000,
+        }} />
         {isConnected && (
           <Animated.ScrollView
             ref={scrollViewRef}
