@@ -21,10 +21,14 @@ export function VerseSection({verse, fontSize, isHighlighted, onPress, colorSche
             onPress={onPress}
             style={[
                 styles.verseContent,
-                { backgroundColor: normalVerseBackgroundColor },
+                {
+                    backgroundColor: normalVerseBackgroundColor,
+                    borderWidth: 1.5
+                },
                 isHighlighted && {
                     ...styles.highlightedVerse,
                     backgroundColor: highlightColor,
+                    borderColor: verseTextColor,
                 },
                 {minHeight: Math.max(60, fontSize * 2.5)}
             ]}
@@ -36,11 +40,20 @@ export function VerseSection({verse, fontSize, isHighlighted, onPress, colorSche
                         {
                             fontSize, 
                             color: isHighlighted ? verseTextColor : normalVerseTextColor,
-                            fontWeight: bold ? 'bold' : 'normal'
+                            fontWeight: bold ? 'bold' : 'normal',
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
                         }
                     ]}
                 >
                     {verse.reference}
+                {/*    <ThemedText style={{*/}
+                {/*        fontSize: fontSize * 0.6,*/}
+                {/*        marginLeft: 4,*/}
+                {/*        paddingBottom: 40*/}
+                {/*}}>{isHighlighted? "🟢": ""}</ThemedText>*/}
+
                 </ThemedText>
                 <ThemedText 
                     style={[

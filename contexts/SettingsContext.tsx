@@ -41,6 +41,7 @@ type SettingsContextType = {
     setNormalVerseTextColor: (color: string) => void;
     highlightedTextBold: boolean;
     setHighlightedTextBold: (bold: boolean) => void;
+    reConnectWebSocket: () => WebSocket;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -87,7 +88,7 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
         highlightedTextBold
     })
 
-    const connectWebSocket = () => {
+    const reConnectWebSocket = () => {
         if (ws) {
             ws.close();
         }
@@ -145,7 +146,7 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
         const reconnectInterval = setInterval(() => {
             if (!isConnected) {
                 console.log('Attempting to reconnect...');
-                connectWebSocket();
+                reConnectWebSocket();
             }
         }, 1000);
 
@@ -206,6 +207,7 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
                 setIsConnected(false);
                 setIsPowerSaving(new Date());
             },
+            reConnectWebSocket,
             isPowerSaving,
             setIsPowerSaving,
             showSeconds,
