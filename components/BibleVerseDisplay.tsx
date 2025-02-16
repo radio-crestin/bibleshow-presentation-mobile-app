@@ -44,17 +44,10 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const verseTop = totalHeight;
         const verseBottom = verseTop + currentVerseHeight;
         
-        // Get current scroll position
-        scrollViewRef.current.measure((x, y, width, viewHeight, pageX, pageY) => {
-          const currentScrollY = pageY * -1;
-          const viewportTop = currentScrollY;
-          const viewportBottom = viewportTop + height;
-
-          // Always scroll to position the verse at the top with some padding
-          scrollViewRef.current?.scrollTo({
-            y: Math.max(0, verseTop - 20), // 20px padding from top
-            animated: true
-          });
+        // Scroll to position the verse at the top with some padding
+        scrollViewRef.current?.scrollTo({
+          y: Math.max(0, verseTop - 20), // 20px padding from top
+          animated: true
         });
       }
     }
