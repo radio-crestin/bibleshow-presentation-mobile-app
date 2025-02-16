@@ -40,27 +40,24 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
 
       if (allMeasurementsReady && scrollViewRef.current) {
-        // Get the current scroll position
-        scrollViewRef.current.measure((x, y, width, scrollViewHeight, pageX, pageY) => {
-          const verseTop = totalHeight;
-          const verseBottom = totalHeight + currentVerseHeight;
-          const scrollY = scrollViewRef.current?.contentOffset?.y || 0;
-          const visibleTop = scrollY;
-          const visibleBottom = scrollY + scrollViewHeight;
+        const scrollY = scrollViewRef.current?.contentOffset?.y || 0;
+        const verseTop = totalHeight;
+        const verseBottom = totalHeight + currentVerseHeight;
+        const visibleTop = scrollY;
+        const visibleBottom = scrollY + height;
 
-          // Check if verse is fully visible
-          const isVerseVisible = verseTop >= visibleTop && verseBottom <= visibleBottom;
+        // Check if verse is fully visible
+        const isVerseVisible = verseTop >= visibleTop && verseBottom <= visibleBottom;
 
-          if (!isVerseVisible) {
-            const targetPosition = height / 2;
-            const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
-            
-            scrollViewRef.current?.scrollTo({
-              y: targetScrollPosition,
-              animated: false
-            });
-          }
-        });
+        if (!isVerseVisible) {
+          const targetPosition = height / 2;
+          const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
+          
+          scrollViewRef.current?.scrollTo({
+            y: targetScrollPosition,
+            animated: false
+          });
+        }
       }
     }
   };
