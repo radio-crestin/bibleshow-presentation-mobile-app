@@ -50,10 +50,15 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           const viewportTop = currentScrollY;
           const viewportBottom = viewportTop + height;
 
-          // Only scroll if the verse is not fully visible in the viewport
-          if (verseTop < viewportTop || verseBottom > viewportBottom) {
+          // Check if verse is fully visible (both top and bottom in view)
+          const isVerseFullyVisible = 
+            verseTop >= viewportTop && 
+            verseBottom <= viewportBottom;
+
+          // If verse is not fully visible, scroll it to top of viewport
+          if (!isVerseFullyVisible) {
             scrollViewRef.current?.scrollTo({
-              y: Math.max(0, totalHeight - (height / 3)),
+              y: Math.max(0, verseTop),
               animated: true
             });
           }
