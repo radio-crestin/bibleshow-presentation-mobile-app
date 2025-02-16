@@ -49,7 +49,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const visibleBottom = scrollY + height - scrollViewLayout.current.y;
 
         // Check if verse is fully visible
-        const isVerseVisible = verseTop >= visibleTop && verseBottom <= visibleBottom;
+        // const isVerseVisible = verseTop >= visibleTop && verseBottom <= visibleBottom;
+        const isVerseVisible =  verseBottom <= visibleBottom;
         console.log({
             verseTop,
             verseBottom,
