@@ -44,9 +44,12 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const verseTop = totalHeight;
         const verseBottom = verseTop + currentVerseHeight;
         
-        // Scroll to position the verse at the top with some padding
+        // Calculate scroll position to align verse with top of visible area
+        const visibleScrollViewTop = height / 2; // Account for top padding in contentContainerStyle
+        const targetScrollPosition = Math.max(0, totalHeight - visibleScrollViewTop);
+        
         scrollViewRef.current?.scrollTo({
-          y: Math.max(0, verseTop - 20), // 20px padding from top
+          y: targetScrollPosition,
           animated: true
         });
       }
