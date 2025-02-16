@@ -20,6 +20,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
   const scrollPosition = useRef(0);
+  const scrollViewLayout = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
@@ -44,8 +45,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const scrollY = scrollPosition.current;
         const verseTop = totalHeight;
         const verseBottom = totalHeight + currentVerseHeight;
-        const visibleTop = scrollY;
-        const visibleBottom = scrollY + height;
+        const visibleTop = scrollY + scrollViewLayout.current.y;
+        const visibleBottom = scrollY + height - scrollViewLayout.current.y;
 
         // Check if verse is fully visible
         const isVerseVisible = verseTop >= visibleTop && verseBottom <= visibleBottom;
@@ -132,6 +133,10 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             style={styles.versesList}
             onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
               scrollPosition.current = event.nativeEvent.contentOffset.y;
+            }}
+            onLayout={(event) => {
+              const { x, y } = event.nativeEvent.layout;
+              scrollViewLayout.current = { x, y };
             }}
             scrollEventThrottle={16}
             contentContainerStyle={{
