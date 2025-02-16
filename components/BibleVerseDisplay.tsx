@@ -1,4 +1,4 @@
-import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button} from 'react-native';
+import {View, Animated, useWindowDimensions, Text, ScrollView, Pressable, Button, NativeSyntheticEvent, NativeScrollEvent} from 'react-native';
 import { router } from 'expo-router';
 import {useKeepAwake} from 'expo-keep-awake';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -19,6 +19,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const [isRefreshing, setIsRefreshing] = useState(false);
   const verseMeasurements = useRef<{ [key: string]: number }>({});
   const scrollViewRef = useRef<ScrollView>(null);
+  const scrollPosition = useRef(0);
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
@@ -40,7 +41,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
 
       if (allMeasurementsReady && scrollViewRef.current) {
-        const scrollY = scrollViewRef.current?.contentOffset?.y || 0;
+        const scrollY = scrollPosition.current;
         const verseTop = totalHeight;
         const verseBottom = totalHeight + currentVerseHeight;
         const visibleTop = scrollY;
@@ -119,9 +120,13 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       />
       <View style={styles.versesContainer}>
         {isConnected && (
-          <Animated.ScrollView 
+          <Animated.ScrollView
             ref={scrollViewRef}
             style={styles.versesList}
+            onScroll={(event: NativeSyntheticEvent<NativeScrollEvent>) => {
+              scrollPosition.current = event.nativeEvent.contentOffset.y;
+            }}
+            scrollEventThrottle={16}
             contentContainerStyle={{
               paddingTop: height / 2,
               paddingBottom: height / 2,
