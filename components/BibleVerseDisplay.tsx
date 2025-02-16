@@ -47,23 +47,42 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         totalHeightRef.current = totalHeight;
         verseBottomRef.current = totalHeight + currentVerseHeight;
 
+        // Ensure we have valid measurements
+        if (typeof scrollPosition.current !== 'number' || 
+            typeof scrollViewLayout.current.y !== 'number' ||
+            typeof totalHeight !== 'number' ||
+            typeof currentVerseHeight !== 'number' ||
+            typeof height !== 'number') {
+          console.log('Invalid measurements:', {
+            scrollPosition: scrollPosition.current,
+            layoutY: scrollViewLayout.current.y,
+            totalHeight,
+            currentVerseHeight,
+            height
+          });
+          return;
+        }
+
         const targetPosition = height / 2;
         const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
 
-        // Calculate distance from verse top to viewport top
-        const distanceToTop = (totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y);
-        
-        // Calculate distance from verse bottom to viewport bottom using absolute positions
-        const verseAbsoluteBottom = totalHeight + currentVerseHeight;
-        const viewportAbsoluteBottom = scrollPosition.current + height;
-        const distanceToBottom = viewportAbsoluteBottom - verseAbsoluteBottom;
+        // Calculate distances with validated numbers
+        const distanceToTop = Math.round((totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y));
+        const verseAbsoluteBottom = Math.round(totalHeight + currentVerseHeight);
+        const viewportAbsoluteBottom = Math.round(scrollPosition.current + height);
+        const distanceToBottom = Math.round(viewportAbsoluteBottom - verseAbsoluteBottom);
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
-        console.log({
+        console.log('Visibility calculations:', {
+            scrollPosition: scrollPosition.current,
+            layoutY: scrollViewLayout.current.y,
+            totalHeight,
+            currentVerseHeight,
+            height,
             distanceToTop,
             distanceToBottom,
             isVerseVisible
-        })
+        });
 
         if (!isVerseVisible) {
 
