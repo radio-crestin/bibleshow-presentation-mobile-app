@@ -59,6 +59,11 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const distanceToBottom = viewportAbsoluteBottom - verseAbsoluteBottom;
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
+        console.log({
+            distanceToTop,
+            distanceToBottom,
+            isVerseVisible
+        })
 
         if (!isVerseVisible) {
 
