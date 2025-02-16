@@ -23,26 +23,44 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
-      const targetPosition = height / 2 ; // Position verse near vertical center
       let totalHeight = 0;
       let allMeasurementsReady = true;
+      let currentVerseHeight = 0;
       
-      // Check if we have all measurements
+      // Calculate total height up to current verse and get current verse height
       for (const v of verses) {
         if (!verseMeasurements.current[v.reference]) {
           allMeasurementsReady = false;
           break;
         }
-        if (v.reference === currentVerse.reference) break;
+        if (v.reference === currentVerse.reference) {
+          currentVerseHeight = verseMeasurements.current[v.reference];
+          break;
+        }
         totalHeight += verseMeasurements.current[v.reference];
       }
 
-      if (allMeasurementsReady) {
-        const scrollPosition = Math.max(0, totalHeight + targetPosition);
-        scrollViewRef.current.scrollTo({ 
-          y: scrollPosition,
-          animated: false
-        });
+      if (allMeasurementsReady && scrollViewRef.current.getScrollResponder) {
+        // Get the scroll responder to access scroll position
+        const scrollResponder = scrollViewRef.current.getScrollResponder();
+        if (scrollResponder) {
+          // @ts-ignore - measureInWindow exists but is not in types
+          scrollResponder.getScrollableNode().measureInWindow((x: number, y: number, width: number, viewHeight: number) => {
+            const scrollY = totalHeight + (height / 2);
+            const verseTop = totalHeight + (height / 2); // Account for top padding
+            const verseBottom = verseTop + currentVerseHeight;
+            const viewportTop = scrollY;
+            const viewportBottom = viewportTop + viewHeight;
+
+            // Only scroll if the verse is not fully visible in the viewport
+            if (verseTop < viewportTop || verseBottom > viewportBottom) {
+              scrollViewRef.current?.scrollTo({
+                y: Math.max(0, totalHeight + (height / 2)),
+                animated: false
+              });
+            }
+          });
+        }
       }
     }
   };
