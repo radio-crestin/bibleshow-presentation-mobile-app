@@ -13,7 +13,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   useKeepAwake();
 
   const insets = useSafeAreaInsets();
-  const { normalFontSize, highlightedFontSize, highlightedTextBold, isConnected, ws, colorScheme, normalVerseBackgroundColor } = useSettings();
+  const { normalFontSize, highlightedFontSize, highlightedTextBold, isConnected, ws, colorScheme, normalVerseBackgroundColor, reConnectWebSocket } = useSettings();
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -129,11 +129,9 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
     });
 
   const handleRefresh = () => {
-    if (ws && isConnected) {
-      setIsRefreshing(true);
-      ws.send(JSON.stringify({ type: 'refresh' }));
-      setTimeout(() => setIsRefreshing(false), 1000);
-    }
+    setIsRefreshing(true);
+    reConnectWebSocket();
+    setIsRefreshing(false);
   };
   return (
     <View style={[styles.container, {
@@ -174,10 +172,6 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
               };
             }}
             scrollEventThrottle={16}
-            contentContainerStyle={{
-              // paddingTop: height / 2,
-              // paddingBottom: height / 2,
-            }}
           >
             {verses.map((verse) => (
               <View
