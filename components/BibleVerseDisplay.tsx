@@ -21,6 +21,8 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
   const scrollViewRef = useRef<ScrollView>(null);
   const scrollPosition = useRef(0);
   const scrollViewLayout = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
+  const totalHeightRef = useRef(0);
+  const verseBottomRef = useRef(0);
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
@@ -42,8 +44,10 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       }
 
       if (allMeasurementsReady && scrollViewRef.current) {
-        const verseTopIsVisible = (scrollPosition.current + scrollViewLayout.current.y) < totalHeight;
-        const verseBottomIsVisible = (scrollPosition.current + height) > (totalHeight + currentVerseHeight);
+        totalHeightRef.current = totalHeight;
+        verseBottomRef.current = totalHeight + currentVerseHeight;
+        const verseTopIsVisible = (scrollPosition.current + scrollViewLayout.current.y) < totalHeightRef.current;
+        const verseBottomIsVisible = (scrollPosition.current + height) > verseBottomRef.current;
         const isVerseVisible = verseTopIsVisible && verseBottomIsVisible;
         console.log({
             totalHeight,
@@ -141,6 +145,26 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           width: 10,
           height: 10,
           backgroundColor: 'blue',
+          borderRadius: 5,
+          zIndex: 1000,
+        }} />
+        <View style={{
+          position: 'absolute',
+          left: 30,
+          top: totalHeightRef.current,
+          width: 10,
+          height: 10,
+          backgroundColor: 'green',
+          borderRadius: 5,
+          zIndex: 1000,
+        }} />
+        <View style={{
+          position: 'absolute',
+          right: 30,
+          top: verseBottomRef.current,
+          width: 10,
+          height: 10,
+          backgroundColor: 'yellow',
           borderRadius: 5,
           zIndex: 1000,
         }} />
