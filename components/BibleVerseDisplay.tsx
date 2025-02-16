@@ -46,25 +46,17 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
       if (allMeasurementsReady && scrollViewRef.current) {
         totalHeightRef.current = totalHeight;
         verseBottomRef.current = totalHeight + currentVerseHeight;
+
+        const targetPosition = height / 2;
+        const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
         
         // Calculate distances from verse edges to viewport edges
-        const distanceToTop = totalHeight - (scrollPosition.current + scrollViewLayout.current.y);
-        const distanceToBottom = (scrollPosition.current + height) - (totalHeight + currentVerseHeight);
+        const distanceToTop = (totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y);
+        const distanceToBottom = (scrollPosition.current) - totalHeight;
         
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
-        
-        console.log({
-            totalHeight,
-            currentVerseHeight,
-            scrollPosition: scrollPosition.current,
-            scrollViewLayout: scrollViewLayout.current,
-            distanceToTop,
-            distanceToBottom,
-            isVerseVisible
-        })
+
         if (!isVerseVisible) {
-          const targetPosition = height / 2;
-          const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
           
           scrollViewRef.current?.scrollTo({
             y: targetScrollPosition,
@@ -131,47 +123,6 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         onRefresh={handleRefresh}
       />
       <View style={styles.versesContainer}>
-        {/* Debug dots */}
-        <View style={{
-          position: 'absolute',
-          left: 10,
-          top: scrollPosition.current,
-          width: 10,
-          height: 10,
-          backgroundColor: 'red',
-          borderRadius: 5,
-          zIndex: 1000,
-        }} />
-        <View style={{
-          position: 'absolute',
-          right: 10,
-          top: scrollViewLayout.current.y,
-          width: 10,
-          height: 10,
-          backgroundColor: 'blue',
-          borderRadius: 5,
-          zIndex: 1000,
-        }} />
-        <View style={{
-          position: 'absolute',
-          left: 30,
-          top: totalHeightRef.current,
-          width: 10,
-          height: 10,
-          backgroundColor: 'green',
-          borderRadius: 5,
-          zIndex: 1000,
-        }} />
-        <View style={{
-          position: 'absolute',
-          right: 30,
-          top: verseBottomRef.current,
-          width: 10,
-          height: 10,
-          backgroundColor: 'yellow',
-          borderRadius: 5,
-          zIndex: 1000,
-        }} />
         {isConnected && (
           <Animated.ScrollView
             ref={scrollViewRef}
