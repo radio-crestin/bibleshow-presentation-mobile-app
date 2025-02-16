@@ -68,8 +68,10 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
         // Calculate distances with validated numbers
         const distanceToTop = Math.round((totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y));
-        const verseAbsoluteBottom = Math.round(totalHeight + currentVerseHeight + scrollViewLayout.current.y);
-        const viewportAbsoluteBottom = Math.round(scrollPosition.current + height + scrollViewLayout.current.y);
+        // Get absolute positions using measure
+        scrollViewRef.current?.measure((x, y, width, height, pageX, pageY) => {
+          const verseAbsoluteBottom = Math.round(pageY + totalHeight + currentVerseHeight);
+          const viewportAbsoluteBottom = Math.round(pageY + scrollPosition.current + height);
         const distanceToBottom = Math.round(viewportAbsoluteBottom - verseAbsoluteBottom);
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
