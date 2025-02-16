@@ -8,7 +8,6 @@ import { BibleVerseDisplayProps } from './BibleVerseDisplay/types';
 import { styles } from './BibleVerseDisplay/styles';
 import { Header } from './BibleVerseDisplay/Header';
 import { VerseSection } from './BibleVerseDisplay/VerseSection';
-import {captureException} from "@sentry/core";
 
 export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: BibleVerseDisplayProps) {
   useKeepAwake();
