@@ -81,7 +81,9 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
             height,
             distanceToTop,
             distanceToBottom,
-            isVerseVisible
+            isVerseVisible,
+          viewportAbsoluteBottom,
+          verseAbsoluteBottom
         });
 
         if (!isVerseVisible) {
