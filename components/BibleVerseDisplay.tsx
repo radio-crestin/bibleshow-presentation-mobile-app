@@ -50,9 +50,13 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
         const targetPosition = height / 2;
         const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
 
-        // Calculate distances from verse edges to viewport edges
+        // Calculate distance from verse top to viewport top
         const distanceToTop = (totalHeight + height / 2) - (scrollPosition.current + scrollViewLayout.current.y);
-        const distanceToBottom = height - (scrollPosition.current - totalHeight) - currentVerseHeight;
+        
+        // Calculate distance from verse bottom to viewport bottom using absolute positions
+        const verseAbsoluteBottom = totalHeight + currentVerseHeight;
+        const viewportAbsoluteBottom = scrollPosition.current + height;
+        const distanceToBottom = viewportAbsoluteBottom - verseAbsoluteBottom;
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
 
