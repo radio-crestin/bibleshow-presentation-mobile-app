@@ -41,7 +41,7 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
 
   const scrollToCurrentVerse = () => {
     if (currentVerse && scrollViewRef.current) {
-      let totalHeight = 0;
+      let totalHeightOfPreviousVerses = 0;
       let allMeasurementsReady = true;
       let currentVerseHeight = 0;
 
@@ -55,23 +55,23 @@ export function BibleVerseDisplay({ verses: initialVerses, currentVerse }: Bible
           currentVerseHeight = verseMeasurements.current[v.reference];
           break;
         }
-        totalHeight += verseMeasurements.current[v.reference];
+        totalHeightOfPreviousVerses += verseMeasurements.current[v.reference];
       }
 
       if (allMeasurementsReady && scrollViewRef.current) {
-        totalHeightRef.current = totalHeight;
-        verseBottomRef.current = totalHeight + currentVerseHeight;
+        totalHeightRef.current = totalHeightOfPreviousVerses;
+        verseBottomRef.current = totalHeightOfPreviousVerses + currentVerseHeight;
 
         const targetPosition = height / 2;
-        const targetScrollPosition = Math.max(0, totalHeight + targetPosition);
+        const targetScrollPosition = Math.max(0, totalHeightOfPreviousVerses + targetPosition);
 
         // Calculate distances from verse edges to viewport edges
-        const distanceToTop = totalHeight - scrollInfo.current.visibleTop;
-        const distanceToBottom = scrollInfo.current.visibleBottom - (totalHeight + currentVerseHeight);
+        const distanceToTop = totalHeightOfPreviousVerses - scrollInfo.current.visibleTop;
+        const distanceToBottom = scrollInfo.current.visibleBottom - (totalHeightOfPreviousVerses + currentVerseHeight);
 
         const isVerseVisible = distanceToTop >= 0 && distanceToBottom >= 0;
         console.log({
-          totalHeight,
+          totalHeight: totalHeightOfPreviousVerses,
           currentVerseHeight,
             distanceToTop,
             distanceToBottom,
