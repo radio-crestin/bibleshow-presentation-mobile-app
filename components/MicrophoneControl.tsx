@@ -234,12 +234,12 @@ const styles = StyleSheet.create({
     borderColor: '#666',
   },
   onButton: {
-    borderColor: '#4CAF50',
-    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+    borderColor: '#4AFF50',
+    backgroundColor: 'rgba(74, 255, 80, 0.3)',
   },
   offButton: {
-    borderColor: '#FF5252',
-    backgroundColor: 'rgba(255, 82, 82, 0.2)',
+    borderColor: '#FF3A3A',
+    backgroundColor: 'rgba(255, 58, 58, 0.3)',
   },
   activeButton: {
     borderWidth: 3,
