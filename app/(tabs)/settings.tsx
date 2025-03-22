@@ -1,4 +1,5 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity, Platform } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import { ColorPickerDialog } from '@/components/ColorPickerDialog';
 import { ColorPreview } from '@/components/ColorPreview';
@@ -87,41 +88,32 @@ export default function SettingsScreen() {
           
           <View style={styles.usageModeContainer}>
             <ThemedText style={styles.usageModeLabel}>Selectează modul de utilizare:</ThemedText>
-            <View style={styles.usageModeOptions}>
-              <TouchableOpacity 
-                style={[
-                  styles.usageModeOption, 
-                  usageMode === 'bible' && styles.usageModeOptionSelected
-                ]}
-                onPress={() => setUsageMode('bible')}
-              >
-                <ThemedText 
-                  style={[
-                    styles.usageModeOptionText,
-                    usageMode === 'bible' && styles.usageModeOptionTextSelected
-                  ]}
+            {Platform.OS === 'web' ? (
+              <View style={styles.selectContainer}>
+                <select 
+                  value={usageMode}
+                  onChange={(e) => setUsageMode(e.target.value as UsageMode)}
+                  style={styles.webSelect}
                 >
-                  Biblie amvon
-                </ThemedText>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[
-                  styles.usageModeOption, 
-                  usageMode === 'microphone' && styles.usageModeOptionSelected
-                ]}
-                onPress={() => setUsageMode('microphone')}
-              >
-                <ThemedText 
-                  style={[
-                    styles.usageModeOptionText,
-                    usageMode === 'microphone' && styles.usageModeOptionTextSelected
-                  ]}
+                  {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+              </View>
+            ) : (
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={usageMode}
+                  onValueChange={(itemValue) => setUsageMode(itemValue as UsageMode)}
+                  style={styles.picker}
+                  itemStyle={styles.pickerItem}
                 >
-                  Control microfon tineri
-                </ThemedText>
-              </TouchableOpacity>
-            </View>
+                  {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
+                    <Picker.Item key={value} label={label} value={value} />
+                  ))}
+                </Picker>
+              </View>
+            )}
           </View>
         </View>
         <View style={styles.section}>
@@ -397,30 +389,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  usageModeOptions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  usageModeOption: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 2,
+  pickerContainer: {
+    borderWidth: 1,
     borderColor: '#ccc',
-    alignItems: 'center',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
-  usageModeOptionSelected: {
-    borderColor: '#007AFF',
-    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+  picker: {
+    width: '100%',
+    backgroundColor: 'transparent',
   },
-  usageModeOptionText: {
-    fontWeight: '500',
-    textAlign: 'center',
+  pickerItem: {
+    fontSize: 16,
   },
-  usageModeOptionTextSelected: {
-    color: '#007AFF',
-    fontWeight: '600',
+  selectContainer: {
+    width: '100%',
+  },
+  webSelect: {
+    width: '100%',
+    padding: 12,
+    fontSize: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
   },
   container: {
     flex: 1,

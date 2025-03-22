@@ -66,6 +66,7 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
     const [highlightedTextBold, setHighlightedTextBold] = persistentState('highlightedTextBold', true);
     const [normalFontSize, setNormalFontSize] = persistentState('normalFontSize', 32);
     const [highlightedFontSize, setHighlightedFontSize] = persistentState('highlightedFontSize', 34);
+    const [usageMode, setUsageMode] = persistentState<UsageMode>('usageMode', 'bible');
 
     console.log({
         normalFontSize,
@@ -235,7 +236,9 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
             decreaseNormalFontSize,
             highlightedFontSize,
             increaseHighlightedFontSize,
-            decreaseHighlightedFontSize
+            decreaseHighlightedFontSize,
+            usageMode,
+            setUsageMode
         }}>
             {children}
         </SettingsContext.Provider>
