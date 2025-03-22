@@ -1,31 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform, Pressable } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { IconSymbol } from './ui/IconSymbol';
 import { useRouter } from 'expo-router';
+import { ClockDisplay } from './ClockDisplay';
 
 export function MicrophoneControl() {
   const [isOn, setIsOn] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
   const { 
     colorScheme, 
     normalVerseBackgroundColor, 
-    showClock, 
-    clockSize, 
-    showSeconds, 
-    clockColor,
     isConnected
   } = useSettings();
   const router = useRouter();
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
   
   const toggleMicrophone = (newState: boolean) => {
     setIsOn(newState);
@@ -45,19 +33,10 @@ export function MicrophoneControl() {
           paddingTop: Platform.OS === 'web' ? 0 : 20
         }
       ]}>
-        {showClock && (
-          <View style={styles.clockContainer}>
-            <ThemedText style={[styles.clockText, { fontSize: clockSize, color: clockColor }]}>
-              {currentTime.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: showSeconds ? '2-digit' : undefined,
-                hour12: false
-              })}
-            </ThemedText>
-          </View>
-        )}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 16, marginLeft: 'auto' }}>
+        <View style={styles.leftSection}>
+          <ClockDisplay />
+        </View>
+        <View style={styles.rightSection}>
           <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
           <Pressable 
             onPress={() => router.push('/settings')}
@@ -151,16 +130,15 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(150, 150, 150, 0.2)',
     zIndex: 10,
   },
-  clockContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: -1,
+  leftSection: {
+    flex: 1,
+    paddingLeft: 16,
   },
-  clockText: {
-    fontWeight: '600',
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingRight: 16,
   },
   connectionDot: {
     width: 10,

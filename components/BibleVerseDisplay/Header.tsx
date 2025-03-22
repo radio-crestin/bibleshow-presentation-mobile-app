@@ -1,10 +1,9 @@
 import { View, Pressable, Platform } from 'react-native';
-import { useState, useEffect } from 'react';
-import { ThemedText } from '../ThemedText';
 import { IconSymbol } from '../ui/IconSymbol';
 import { styles } from './styles';
 import { useRouter } from 'expo-router';
-import {useSettings, UsageMode, USAGE_MODE_LABELS} from "@/contexts/SettingsContext";
+import { useSettings } from "@/contexts/SettingsContext";
+import { ClockDisplay } from '../ClockDisplay';
 
 type HeaderProps = {
   currentReference: string;
@@ -20,16 +19,7 @@ export function Header({
   onRefresh,
 }: HeaderProps) {
   const router = useRouter();
-  const { showSeconds, clockSize, showClock, colorScheme, clockColor, normalVerseBackgroundColor } = useSettings();
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  const { normalVerseBackgroundColor } = useSettings();
 
   return (
     <View style={[
@@ -39,19 +29,10 @@ export function Header({
         paddingTop: Platform.OS === 'web' ? 0 : 20
       }
     ]}>
-      {showClock && (
-        <View style={[styles.clockContainer]}>
-          <ThemedText style={[styles.clockText, { fontSize: clockSize, color: clockColor }]}>
-            {currentTime.toLocaleTimeString('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: showSeconds ? '2-digit' : undefined,
-              hour12: false
-            })}
-          </ThemedText>
-        </View>
-      )}
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 16, marginLeft: 'auto' }}>
+      <View style={styles.leftSection}>
+        <ClockDisplay />
+      </View>
+      <View style={styles.rightSection}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
         <Pressable 
           onPress={onRefresh}
