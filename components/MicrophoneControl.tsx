@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
   title: {
     fontSize: 24,
@@ -288,10 +289,10 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     gap: 20,
     marginBottom: 40,
-    marginTop: -40,
   },
   button: {
     flex: 1,

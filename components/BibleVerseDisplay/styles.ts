@@ -15,6 +15,21 @@ export const styles = StyleSheet.create({
     // borderBottomWidth: StyleSheet.hairlineWidth,
     // borderBottomColor: '#ccc',
   },
+  leftSection: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  centerSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rightSection: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
   connectionDot: {
     width: 8,
     height: 8,
