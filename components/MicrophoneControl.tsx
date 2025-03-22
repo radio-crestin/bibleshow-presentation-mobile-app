@@ -258,6 +258,8 @@ const styles = StyleSheet.create({
   },
   controlsContainerLandscape: {
     width: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerLoadingContainer: {
     marginLeft: 10,
@@ -293,6 +295,7 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 20,
     marginBottom: 40,
+    alignSelf: 'center',
   },
   button: {
     flex: 1,

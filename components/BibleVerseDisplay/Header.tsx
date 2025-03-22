@@ -1,9 +1,10 @@
-import { View, Pressable, Platform } from 'react-native';
+import { View, Pressable, Platform, ActivityIndicator } from 'react-native';
 import { IconSymbol } from '../ui/IconSymbol';
 import { styles } from './styles';
 import { useRouter } from 'expo-router';
 import { useSettings } from "@/contexts/SettingsContext";
 import { ClockDisplay } from '../ClockDisplay';
+import { useMicrophoneContext } from '../MicrophoneContext';
 
 type HeaderProps = {
   currentReference: string;
@@ -20,6 +21,9 @@ export function Header({
 }: HeaderProps) {
   const router = useRouter();
   const { normalVerseBackgroundColor } = useSettings();
+  const { isUpdating } = useMicrophoneContext();
+
+  const textColor = normalVerseBackgroundColor === '#000000' ? '#fff' : '#000';
 
   return (
     <View style={[
@@ -32,6 +36,13 @@ export function Header({
       <View style={styles.leftSection}>
         <ClockDisplay />
       </View>
+      
+      {isUpdating && (
+        <View style={styles.centerSection}>
+          <ActivityIndicator size="small" color={textColor} />
+        </View>
+      )}
+      
       <View style={styles.rightSection}>
         <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
         <Pressable 
@@ -41,7 +52,7 @@ export function Header({
           <IconSymbol 
             name="arrow.clockwise" 
             size={24} 
-            color={normalVerseBackgroundColor === '#000000' ? '#fff' : '#000'}
+            color={textColor}
           />
         </Pressable>
         <Pressable 
@@ -51,7 +62,7 @@ export function Header({
           <IconSymbol 
             name="gear" 
             size={24} 
-            color={normalVerseBackgroundColor === '#000000' ? '#fff' : '#000'} 
+            color={textColor} 
           />
         </Pressable>
       </View>
