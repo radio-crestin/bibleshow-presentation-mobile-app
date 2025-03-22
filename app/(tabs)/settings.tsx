@@ -93,7 +93,10 @@ export default function SettingsScreen() {
                 <select 
                   value={usageMode}
                   onChange={(e) => setUsageMode(e.target.value as UsageMode)}
-                  style={styles.webSelect}
+                  style={[
+                    styles.webSelect,
+                    colorScheme === 'dark' && { backgroundColor: '#333', color: 'white', borderColor: '#666' }
+                  ]}
                 >
                   {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -101,12 +104,19 @@ export default function SettingsScreen() {
                 </select>
               </View>
             ) : (
-              <View style={styles.pickerContainer}>
+              <View style={[
+                styles.pickerContainer, 
+                colorScheme === 'dark' && { borderColor: '#666', backgroundColor: '#333' }
+              ]}>
                 <Picker
                   selectedValue={usageMode}
                   onValueChange={(itemValue) => setUsageMode(itemValue as UsageMode)}
                   style={styles.picker}
-                  itemStyle={styles.pickerItem}
+                  itemStyle={[
+                    styles.pickerItem,
+                    { color: colorScheme === 'dark' ? 'white' : 'black' }
+                  ]}
+                  dropdownIconColor={colorScheme === 'dark' ? 'white' : 'black'}
                 >
                   {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
                     <Picker.Item key={value} label={label} value={value} />
@@ -413,6 +423,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     backgroundColor: 'white',
+    color: 'black',
   },
   container: {
     flex: 1,
