@@ -63,7 +63,11 @@ export function Header({
           onPress={() => router.push('/settings')}
           style={styles.iconButton}
         >
-          <IconSymbol name="gear" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+          <IconSymbol 
+            name="gear" 
+            size={24} 
+            color={normalVerseBackgroundColor === '#000000' ? '#fff' : '#000'} 
+          />
         </Pressable>
       </View>
     </View>
