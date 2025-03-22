@@ -161,7 +161,7 @@ export function MicrophoneControl() {
             !isOn && styles.activeButton,
             colorScheme === 'dark' && styles.buttonDark,
             isUpdating && styles.updatingButton,
-            !isOn && { backgroundColor: 'rgba(255, 58, 58, 0.5)' }
+            !isOn && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
           ]}
           onPress={() => toggleMicrophone(false)}
           disabled={isUpdating || !isConnected}
