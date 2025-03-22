@@ -1,4 +1,4 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
+import { Text, type TextProps, StyleSheet, Platform } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedTextProps = TextProps & {
@@ -15,9 +15,29 @@ export function ThemedText({
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
-  const fontSize = StyleSheet.flatten(style)?.fontSize || getDefaultFontSize(type);
+  const fontSize = StyleSheet.flatten(style || {})?.fontSize || getDefaultFontSize(type);
   const lineHeight = Math.round(fontSize * 1.3); // 1.3x line height ratio
 
+  // For web platform, we need to be extra careful with styles
+  if (Platform.OS === 'web') {
+    // Create a base style object with all the type-specific styles
+    const baseStyle = {
+      color,
+      lineHeight,
+      ...(type === 'default' ? StyleSheet.flatten(styles.default) : {}),
+      ...(type === 'title' ? StyleSheet.flatten(styles.title) : {}),
+      ...(type === 'defaultSemiBold' ? StyleSheet.flatten(styles.defaultSemiBold) : {}),
+      ...(type === 'subtitle' ? StyleSheet.flatten(styles.subtitle) : {}),
+      ...(type === 'link' ? StyleSheet.flatten(styles.link) : {})
+    };
+    
+    // Flatten everything into a single style object
+    const flattenedStyle = StyleSheet.flatten([baseStyle, style || {}]);
+    
+    return <Text style={flattenedStyle} {...rest} />;
+  }
+  
+  // For native platforms, array styles work fine
   return (
     <Text
       style={[
