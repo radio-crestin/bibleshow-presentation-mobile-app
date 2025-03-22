@@ -14,26 +14,6 @@ import ColorPicker from "react-native-wheel-color-picker";
 
 export default function SettingsScreen() {
   const selectRef = useRef<HTMLSelectElement>(null);
-  
-  
-  // Apply custom styling to the web select element
-  useEffect(() => {
-    if (Platform.OS === 'web' && selectRef.current) {
-      // Get all option elements
-      const options = selectRef.current.querySelectorAll('option');
-      
-      // Apply styling to each option
-      options.forEach(option => {
-        if (option.value === usageMode) {
-          option.style.fontWeight = 'bold';
-        } else {
-          option.style.fontWeight = 'normal';
-        }
-        option.style.color = colorScheme === 'dark' ? 'white' : 'black';
-      });
-    }
-  }, [usageMode, colorScheme]);
-  
   const [activeColorPicker, setActiveColorPicker] = useState<{
     type: 'clock' | 'normalBackground' | 'normalText' | 'highlightBackground' | 'highlightText' | null;
     title: string;
@@ -78,6 +58,24 @@ export default function SettingsScreen() {
     setUsageMode,
   } = useSettings();
   const router = useRouter();
+  
+  // Apply custom styling to the web select element
+  useEffect(() => {
+    if (Platform.OS === 'web' && selectRef.current) {
+      // Get all option elements
+      const options = selectRef.current.querySelectorAll('option');
+      
+      // Apply styling to each option
+      options.forEach(option => {
+        if (option.value === usageMode) {
+          option.style.fontWeight = 'bold';
+        } else {
+          option.style.fontWeight = 'normal';
+        }
+        option.style.color = colorScheme === 'dark' ? 'white' : 'black';
+      });
+    }
+  }, [usageMode, colorScheme]);
 
   return (
     <ThemedView style={styles.container}>
