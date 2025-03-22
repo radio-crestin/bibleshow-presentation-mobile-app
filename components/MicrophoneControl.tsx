@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 
 export function MicrophoneControl() {
-  const [isOn, setIsOn] = useState(false);
+  const [isOn, setIsOn] = useState<boolean | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const { 
     colorScheme, 
     normalVerseBackgroundColor, 
@@ -23,6 +24,7 @@ export function MicrophoneControl() {
         if (data.type === 'microphoneStatus') {
           setIsOn(data.status === 'on');
           setIsUpdating(false);
+          setIsInitializing(false);
           console.log(`Received microphone status: ${data.status}`);
         }
       } catch (error) {
@@ -41,17 +43,32 @@ export function MicrophoneControl() {
     
     // Try to request status immediately and retry after a delay
     requestStatus();
-    const retryTimeout = setTimeout(requestStatus, 1000);
+    
+    // Set up multiple retries to ensure we get the status
+    const retryTimeouts = [
+      setTimeout(requestStatus, 1000),
+      setTimeout(requestStatus, 3000),
+      setTimeout(() => {
+        requestStatus();
+        // If we still don't have a status after 5 seconds, stop showing the initializing state
+        setTimeout(() => {
+          if (isInitializing) {
+            setIsInitializing(false);
+          }
+        }, 2000);
+      }, 5000)
+    ];
     
     return () => {
       ws.removeEventListener('message', handleMessage);
-      clearTimeout(retryTimeout);
+      retryTimeouts.forEach(timeout => clearTimeout(timeout));
     };
   }, [ws]);
   
   // Re-request status when connection is restored
   useEffect(() => {
     if (isConnected && ws && ws.readyState === WebSocket.OPEN) {
+      setIsInitializing(true);
       ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
     }
   }, [isConnected]);
@@ -82,7 +99,16 @@ export function MicrophoneControl() {
       <View style={styles.content}>
         <ThemedText style={[styles.title, { color: textColor }]}>Control Microfon Tineri</ThemedText>
       
-      <View style={styles.buttonContainer}>
+      {isInitializing ? (
+        <View style={styles.initializingContainer}>
+          <ActivityIndicator size="large" color={textColor} />
+          <ThemedText style={[styles.initializingText, { color: textColor }]}>
+            Se încarcă starea microfonului...
+          </ThemedText>
+        </View>
+      ) : (
+        <>
+        <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
             styles.button,
@@ -148,6 +174,8 @@ export function MicrophoneControl() {
             Se actualizează...
           </ThemedText>
         </View>
+      )}
+      </>
       )}
       </View>
     </View>
@@ -234,5 +262,16 @@ const styles = StyleSheet.create({
   updatingText: {
     fontSize: 16,
     fontStyle: 'italic',
+  },
+  initializingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+    marginBottom: 40,
+  },
+  initializingText: {
+    fontSize: 18,
+    fontWeight: '500',
   },
 });
