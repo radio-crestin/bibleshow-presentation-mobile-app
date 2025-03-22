@@ -57,7 +57,11 @@ export function Header({
           onPress={onRefresh}
           style={[styles.iconButton, isRefreshing && styles.rotating]}
         >
-          <IconSymbol name="arrow.clockwise" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'}/>
+          <IconSymbol 
+            name="arrow.clockwise" 
+            size={24} 
+            color={normalVerseBackgroundColor === '#000000' ? '#fff' : '#000'}
+          />
         </Pressable>
         <Pressable 
           onPress={() => router.push('/settings')}
