@@ -115,11 +115,13 @@ export function MicrophoneControl() {
       <View style={styles.content}>
         <ThemedText style={[styles.title, { color: textColor }]}>Control Microfon Tineri</ThemedText>
       
-      {isInitializing ? (
+      {isInitializing || !isConnected ? (
         <View style={styles.initializingContainer}>
           <ActivityIndicator size="large" color={textColor} />
           <ThemedText style={[styles.initializingText, { color: textColor }]}>
-            Se încarcă starea microfonului...
+            {isInitializing 
+              ? 'Se încarcă starea microfonului...'
+              : 'Se așteaptă conexiunea la server...'}
           </ThemedText>
         </View>
       ) : (
@@ -178,9 +180,7 @@ export function MicrophoneControl() {
           { backgroundColor: isOn ? '#4CAF50' : '#FF5252' }
         ]} />
         <ThemedText style={[styles.statusText, { color: textColor }]}>
-          {isConnected 
-            ? `Microfonul este ${isOn ? 'PORNIT' : 'OPRIT'}`
-            : 'Deconectat de la server'}
+          Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
         </ThemedText>
       </View>
       
