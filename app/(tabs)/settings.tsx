@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity } from 'react-native';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import { ColorPickerDialog } from '@/components/ColorPickerDialog';
 import { ColorPreview } from '@/components/ColorPreview';
@@ -53,6 +53,8 @@ export default function SettingsScreen() {
     setNormalVerseTextColor,
     highlightedTextBold,
     setHighlightedTextBold,
+    usageMode,
+    setUsageMode,
   } = useSettings();
   const router = useRouter();
 
@@ -77,6 +79,51 @@ export default function SettingsScreen() {
         style={styles.content} 
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <IconSymbol name="gearshape.2" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
+            <ThemedText style={styles.sectionTitle}>Mod utilizare</ThemedText>
+          </View>
+          
+          <View style={styles.usageModeContainer}>
+            <ThemedText style={styles.usageModeLabel}>Selectează modul de utilizare:</ThemedText>
+            <View style={styles.usageModeOptions}>
+              <TouchableOpacity 
+                style={[
+                  styles.usageModeOption, 
+                  usageMode === 'bible' && styles.usageModeOptionSelected
+                ]}
+                onPress={() => setUsageMode('bible')}
+              >
+                <ThemedText 
+                  style={[
+                    styles.usageModeOptionText,
+                    usageMode === 'bible' && styles.usageModeOptionTextSelected
+                  ]}
+                >
+                  Biblie amvon
+                </ThemedText>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.usageModeOption, 
+                  usageMode === 'microphone' && styles.usageModeOptionSelected
+                ]}
+                onPress={() => setUsageMode('microphone')}
+              >
+                <ThemedText 
+                  style={[
+                    styles.usageModeOptionText,
+                    usageMode === 'microphone' && styles.usageModeOptionTextSelected
+                  ]}
+                >
+                  Control microfon tineri
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <IconSymbol name="moon.fill" size={24} color={colorScheme === 'dark' ? '#fff' : '#000'} />
@@ -341,6 +388,40 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  usageModeContainer: {
+    borderRadius: 12,
+    padding: 16,
+  },
+  usageModeLabel: {
+    marginBottom: 16,
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  usageModeOptions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  usageModeOption: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#ccc',
+    alignItems: 'center',
+  },
+  usageModeOptionSelected: {
+    borderColor: '#007AFF',
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+  },
+  usageModeOptionText: {
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+  usageModeOptionTextSelected: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
   container: {
     flex: 1,
   },
