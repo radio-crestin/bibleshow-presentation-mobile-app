@@ -13,6 +13,7 @@
     "build:ios-remote-development": "eas build --platform ios --profile preview",
     "submit-to-appstore:ios": "eas submit --platform ios ",
     "build:ios-locally": "eas build --platform ios --profile preview --local --output ./builds/ios/app.ipa",
+    "build:android-locally": "ANDROID_HOME=/Users/iosif/Library/Android/sdk eas build --platform android --profile preview --local --output ./builds/android/app.apk",
     "web": "expo start --web",
     "doctor": "npx expo-doctor",
     "test": "jest --watchAll",
