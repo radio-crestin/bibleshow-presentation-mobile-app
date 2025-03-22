@@ -4,6 +4,10 @@
     "bibleShowRemoteEndpoint": "http://192.168.0.147:8282",
     "obs": {
         "address": "192.168.0.147:4455",
-        "password": "john1234"
+        "password": "john1234",
+        "scenes": {
+            "solo": "solo",
+            "default": "tineri"
+        }
     }
 }

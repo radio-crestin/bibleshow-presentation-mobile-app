@@ -51,10 +51,14 @@ async function connectToOBS() {
       console.log('OBS scene changed:', data.sceneName);
       currentScene = data.sceneName;
       
-      // Automatically set microphone to 'on' when scene is "solo"
-      if (currentScene === "solo" && microphoneState !== 'on') {
+      // Automatically set microphone state based on scene
+      if (currentScene === config.obs.scenes.solo && microphoneState !== 'on') {
         microphoneState = 'on';
         console.log('Microphone automatically turned on due to "solo" scene');
+        broadcastMicrophoneState();
+      } else if (currentScene === config.obs.scenes.default && microphoneState !== 'off') {
+        microphoneState = 'off';
+        console.log('Microphone automatically turned off due to default scene');
         broadcastMicrophoneState();
       }
       
@@ -404,6 +408,29 @@ wss.on('connection', async (ws) => {
       if (data.type === 'microphone') {
         microphoneState = data.action; // 'on' or 'off'
         console.log(`Microphone state changed to: ${microphoneState}`);
+        
+        // Change OBS scene based on microphone state
+        if (obsConnected) {
+          try {
+            let targetScene = '';
+            if (microphoneState === 'on') {
+              targetScene = config.obs.scenes.solo;
+              console.log(`Changing scene to ${targetScene} because microphone turned on`);
+            } else if (microphoneState === 'off') {
+              targetScene = config.obs.scenes.default;
+              console.log(`Changing scene to ${targetScene} because microphone turned off`);
+            }
+            
+            if (targetScene && targetScene !== currentScene) {
+              await obs.call('SetCurrentProgramScene', {
+                sceneName: targetScene
+              });
+              console.log(`Changed OBS scene to: ${targetScene}`);
+            }
+          } catch (error) {
+            console.error('Error changing OBS scene:', error.message);
+          }
+        }
         
         // Broadcast the new microphone state to all clients
         broadcastMicrophoneState();
