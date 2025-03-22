@@ -5,10 +5,12 @@ import { useSettings } from '@/contexts/SettingsContext';
 
 export function MicrophoneControl() {
   const [isOn, setIsOn] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { 
     colorScheme, 
     normalVerseBackgroundColor, 
-    ws
+    ws,
+    isConnected
   } = useSettings();
   
   // Listen for microphone status updates from the server
@@ -20,6 +22,7 @@ export function MicrophoneControl() {
         const data = JSON.parse(event.data);
         if (data.type === 'microphoneStatus') {
           setIsOn(data.status === 'on');
+          setIsUpdating(false);
           console.log(`Received microphone status: ${data.status}`);
         }
       } catch (error) {
@@ -46,8 +49,18 @@ export function MicrophoneControl() {
     };
   }, [ws]);
   
+  // Re-request status when connection is restored
+  useEffect(() => {
+    if (isConnected && ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
+    }
+  }, [isConnected]);
+  
   const toggleMicrophone = (newState: boolean) => {
-    setIsOn(newState);
+    // Only proceed if we're not already updating
+    if (isUpdating) return;
+    
+    setIsUpdating(true);
     
     // Send microphone control command to the server
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -57,7 +70,8 @@ export function MicrophoneControl() {
       }));
       console.log(`Microphone command sent: ${newState ? 'ON' : 'OFF'}`);
     } else {
-      console.log(`WebSocket not connected. Microphone state changed locally: ${newState ? 'ON' : 'OFF'}`);
+      console.log(`WebSocket not connected. Cannot change microphone state.`);
+      setIsUpdating(false);
     }
   };
 
@@ -74,15 +88,18 @@ export function MicrophoneControl() {
             styles.button,
             styles.onButton,
             isOn && styles.activeButton,
-            colorScheme === 'dark' && styles.buttonDark
+            colorScheme === 'dark' && styles.buttonDark,
+            isUpdating && styles.updatingButton
           ]}
           onPress={() => toggleMicrophone(true)}
+          disabled={isUpdating || !isConnected}
         >
           <ThemedText 
             style={[
               styles.buttonText, 
               isOn && styles.activeButtonText,
-              { color: textColor }
+              { color: textColor },
+              (isUpdating || !isConnected) && styles.disabledText
             ]}
           >
             Pornit
@@ -94,15 +111,18 @@ export function MicrophoneControl() {
             styles.button,
             styles.offButton,
             !isOn && styles.activeButton,
-            colorScheme === 'dark' && styles.buttonDark
+            colorScheme === 'dark' && styles.buttonDark,
+            isUpdating && styles.updatingButton
           ]}
           onPress={() => toggleMicrophone(false)}
+          disabled={isUpdating || !isConnected}
         >
           <ThemedText 
             style={[
               styles.buttonText, 
               !isOn && styles.activeButtonText,
-              { color: textColor }
+              { color: textColor },
+              (isUpdating || !isConnected) && styles.disabledText
             ]}
           >
             Oprit
@@ -116,9 +136,19 @@ export function MicrophoneControl() {
           { backgroundColor: isOn ? '#4CAF50' : '#FF5252' }
         ]} />
         <ThemedText style={[styles.statusText, { color: textColor }]}>
-          Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
+          {isConnected 
+            ? `Microfonul este ${isOn ? 'PORNIT' : 'OPRIT'}`
+            : 'Deconectat de la server'}
         </ThemedText>
       </View>
+      
+      {isUpdating && (
+        <View style={styles.updatingContainer}>
+          <ThemedText style={[styles.updatingText, { color: textColor }]}>
+            Se actualizează...
+          </ThemedText>
+        </View>
+      )}
       </View>
     </View>
   );
@@ -191,5 +221,18 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 18,
     fontWeight: '600',
+  },
+  updatingButton: {
+    opacity: 0.7,
+  },
+  disabledText: {
+    opacity: 0.5,
+  },
+  updatingContainer: {
+    marginTop: 20,
+  },
+  updatingText: {
+    fontSize: 16,
+    fontStyle: 'italic',
   },
 });

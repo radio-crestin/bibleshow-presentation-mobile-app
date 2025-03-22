@@ -133,6 +133,7 @@ const wss = new WebSocketServer({ server });
 const XML_PATH = config.xmlPath;
 let currentVerse = null;
 let verses = [];
+let microphoneState = 'off'; // Add microphone state
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
@@ -255,13 +256,44 @@ wss.on('connection', async (ws) => {
       verses
     }
   }));
+  
+  // Send initial microphone state
+  ws.send(JSON.stringify({
+    type: 'microphoneStatus',
+    status: microphoneState
+  }));
 
   ws.on('message', async (message) => {
     try {
       const data = JSON.parse(message);
       console.log('Received message:', {data});
+      
       if (data.type === 'refresh') {
         await handleVerseUpdate();
+      }
+      
+      // Handle microphone control messages
+      if (data.type === 'microphone') {
+        microphoneState = data.action; // 'on' or 'off'
+        console.log(`Microphone state changed to: ${microphoneState}`);
+        
+        // Broadcast the new microphone state to all clients
+        wss.clients.forEach(client => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(JSON.stringify({
+              type: 'microphoneStatus',
+              status: microphoneState
+            }));
+          }
+        });
+      }
+      
+      // Handle microphone status request
+      if (data.type === 'getMicrophoneStatus') {
+        ws.send(JSON.stringify({
+          type: 'microphoneStatus',
+          status: microphoneState
+        }));
       }
     } catch (error) {
       console.error('Error processing message:', error);
