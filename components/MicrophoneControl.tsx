@@ -5,7 +5,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { useMicrophoneContext } from './MicrophoneContext';
 
 export function MicrophoneControl() {
-  const [isOn, setIsOn] = useState<boolean | null>(null);
+  const [isOn, setIsOn] = useState<boolean | null | 'other'>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const { isUpdating, setIsUpdating } = useMicrophoneContext();
   
@@ -24,7 +24,13 @@ export function MicrophoneControl() {
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'microphoneStatus') {
-          setIsOn(data.status === 'on');
+          if (data.status === 'on') {
+            setIsOn(true);
+          } else if (data.status === 'off') {
+            setIsOn(false);
+          } else {
+            setIsOn('other');
+          }
           setIsUpdating(false);
           setIsInitializing(false);
           console.log(`Received microphone status: ${data.status}`);
@@ -133,10 +139,10 @@ export function MicrophoneControl() {
           style={[
             styles.button,
             styles.onButton,
-            isOn && styles.activeButton,
+            isOn === true && styles.activeButton,
             colorScheme === 'dark' && styles.buttonDark,
             isUpdating && styles.updatingButton,
-            isOn && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
+            isOn === true && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
           ]}
           onPress={() => toggleMicrophone(true)}
           disabled={isUpdating || !isConnected}
@@ -144,7 +150,7 @@ export function MicrophoneControl() {
           <ThemedText 
             style={[
               styles.buttonText, 
-              isOn && styles.activeButtonText,
+              isOn === true && styles.activeButtonText,
               { color: textColor },
               (isUpdating || !isConnected) && styles.disabledText
             ]}
@@ -157,10 +163,10 @@ export function MicrophoneControl() {
           style={[
             styles.button,
             styles.offButton,
-            !isOn && styles.activeButton,
+            isOn === false && styles.activeButton,
             colorScheme === 'dark' && styles.buttonDark,
             isUpdating && styles.updatingButton,
-            !isOn && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
+            isOn === false && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
           ]}
           onPress={() => toggleMicrophone(false)}
           disabled={isUpdating || !isConnected}
@@ -168,7 +174,7 @@ export function MicrophoneControl() {
           <ThemedText 
             style={[
               styles.buttonText, 
-              !isOn && styles.activeButtonText,
+              isOn === false && styles.activeButtonText,
               { color: textColor },
               (isUpdating || !isConnected) && styles.disabledText
             ]}
@@ -179,14 +185,30 @@ export function MicrophoneControl() {
               </View>
               
               <View style={styles.statusContainer}>
-                <View style={[
-                  styles.statusIndicator, 
-                  { backgroundColor: isOn ? '#4AFF50' : '#FF3A3A' }
-                ]} />
-                <ThemedText style={[styles.statusText, { color: textColor }]}>
-                  Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
-                </ThemedText>
+                {isOn !== 'other' ? (
+                  <>
+                    <View style={[
+                      styles.statusIndicator, 
+                      { backgroundColor: isOn ? '#4AFF50' : '#FF3A3A' }
+                    ]} />
+                    <ThemedText style={[styles.statusText, { color: textColor }]}>
+                      Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
+                    </ThemedText>
+                  </>
+                ) : (
+                  <ThemedText style={[styles.statusText, { color: textColor }]}>
+                    Stare necunoscută
+                  </ThemedText>
+                )}
               </View>
+              
+              {isOn === 'other' && (
+                <View style={styles.warningContainer}>
+                  <ThemedText style={styles.warningText}>
+                    Nu uita să oprești microfonul la sfârșitul programului tinerilor.
+                  </ThemedText>
+                </View>
+              )}
             </View>
             
             </>
@@ -304,5 +326,20 @@ const styles = StyleSheet.create({
   initializingText: {
     fontSize: 18,
     fontWeight: '500',
+  },
+  warningContainer: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 0, 0, 0.3)',
+    alignSelf: 'center',
+  },
+  warningText: {
+    color: '#FF0000',
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
   },
 });
