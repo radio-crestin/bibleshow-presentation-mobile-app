@@ -124,14 +124,22 @@ export function MicrophoneControl() {
           styles.titleContainer,
           isLandscape && styles.titleContainerLandscape
         ]}>
-          <ThemedText style={[styles.title, { color: textColor }]}>
-            Control Microfon Tineri
-            {isUpdating && (
-              <View style={styles.headerLoadingContainer}>
-                <ActivityIndicator size="small" color={textColor} style={styles.headerLoader} />
+          {!isLandscape ? (
+            <ThemedText style={[styles.title, { color: textColor }]}>
+              Control Microfon Tineri
+              {isUpdating && (
+                <View style={styles.headerLoadingContainer}>
+                  <ActivityIndicator size="small" color={textColor} style={styles.headerLoader} />
+                </View>
+              )}
+            </ThemedText>
+          ) : (
+            isUpdating && (
+              <View style={styles.landscapeLoaderContainer}>
+                <ActivityIndicator size="small" color={textColor} />
               </View>
-            )}
-          </ThemedText>
+            )
+          )}
         </View>
       
         <View style={[
@@ -260,6 +268,11 @@ const styles = StyleSheet.create({
   },
   headerLoader: {
     marginLeft: 10,
+  },
+  landscapeLoaderContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
   },
   mainControlsArea: {
     width: '100%',
