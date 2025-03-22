@@ -116,14 +116,11 @@ export function MicrophoneControl() {
     <View style={[styles.container, { backgroundColor: normalVerseBackgroundColor }]}>
       <View style={styles.content}>
         <View style={styles.titleContainer}>
-          <ThemedText style={[styles.title, { color: textColor }]}>
-            Control Microfon Tineri
-            {isUpdating && (
-              <View style={styles.headerLoadingContainer}>
-                <ActivityIndicator size="small" color={textColor} style={styles.headerLoader} />
-              </View>
-            )}
-          </ThemedText>
+          {isUpdating && (
+            <View style={styles.headerLoadingContainer}>
+              <ActivityIndicator size="small" color={textColor} />
+            </View>
+          )}
         </View>
       
         <View style={styles.controlsContainer}>
@@ -228,26 +225,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerLoadingContainer: {
-    marginLeft: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  headerLoader: {
-    marginLeft: 10,
+    padding: 10,
   },
   mainControlsArea: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 40,
-    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
