@@ -1,6 +1,7 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import {FC, useEffect} from 'react';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { MicrophoneProvider } from '@/components/MicrophoneContext';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -67,7 +68,9 @@ export default function RootLayout() {
 
   return (
     <SettingsProvider>
-      <RootLayoutContent colorScheme={colorScheme} />
+      <MicrophoneProvider>
+        <RootLayoutContent colorScheme={colorScheme} />
+      </MicrophoneProvider>
     </SettingsProvider>
   );
 }
