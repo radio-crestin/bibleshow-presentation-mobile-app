@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { ThemedView } from '@/components/ThemedView';
 import { BibleVerseDisplay } from '@/components/BibleVerseDisplay';
+import { MicrophoneControl } from '@/components/MicrophoneControl';
 import { useSettings } from '@/contexts/SettingsContext';
 
 export default function HomeScreen() {
   const [currentVerse, setCurrentVerse] = useState(null);
   const [verses, setVerses] = useState([]);
-  const { ws } = useSettings();
+  const { ws, usageMode } = useSettings();
 
   useEffect(() => {
-    if (!ws) return;
+    if (!ws || usageMode !== 'bible') return;
 
     const handleMessage = (event: MessageEvent) => {
       console.log({event});
@@ -17,7 +18,6 @@ export default function HomeScreen() {
         const data = JSON.parse(event.data);
         if (data.type === 'verses') {
           setCurrentVerse(data.data.currentVerse);
-
           setVerses(data.data.verses);
         }
       } catch (error) {
@@ -42,11 +42,15 @@ export default function HomeScreen() {
       ws.removeEventListener('message', handleMessage);
       clearTimeout(retryTimeout);
     };
-  }, [ws]);
+  }, [ws, usageMode]);
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <BibleVerseDisplay verses={verses} currentVerse={currentVerse} />
+      {usageMode === 'bible' ? (
+        <BibleVerseDisplay verses={verses} currentVerse={currentVerse} />
+      ) : (
+        <MicrophoneControl />
+      )}
     </ThemedView>
   );
 }
