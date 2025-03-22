@@ -241,8 +241,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     gap: 20,
-    marginBottom: 30,
-    marginTop: -20,
+    marginBottom: 40,
+    marginTop: -40,
   },
   button: {
     flex: 1,
@@ -280,6 +280,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
+    marginTop: 10,
   },
   statusIndicator: {
     width: 16,
