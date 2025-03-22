@@ -60,6 +60,12 @@ async function connectToOBS() {
         microphoneState = 'off';
         console.log('Microphone automatically turned off due to default scene');
         broadcastMicrophoneState();
+      } else if (currentScene !== config.obs.scenes.solo && 
+                 currentScene !== config.obs.scenes.default && 
+                 microphoneState !== 'other') {
+        microphoneState = 'other';
+        console.log('Microphone set to "other" due to different scene');
+        broadcastMicrophoneState();
       }
       
       broadcastOBSInfo();
@@ -406,7 +412,7 @@ wss.on('connection', async (ws) => {
       
       // Handle microphone control messages
       if (data.type === 'microphone') {
-        microphoneState = data.action; // 'on' or 'off'
+        microphoneState = data.action; // 'on', 'off', or 'other'
         console.log(`Microphone state changed to: ${microphoneState}`);
         
         // Change OBS scene based on microphone state
@@ -420,6 +426,7 @@ wss.on('connection', async (ws) => {
               targetScene = config.obs.scenes.default;
               console.log(`Changing scene to ${targetScene} because microphone turned off`);
             }
+            // Note: For 'other' state, we don't change the scene
             
             if (targetScene && targetScene !== currentScene) {
               await obs.call('SetCurrentProgramScene', {
