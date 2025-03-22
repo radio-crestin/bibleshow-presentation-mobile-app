@@ -185,7 +185,7 @@ export function MicrophoneControl() {
               </View>
               
               <View style={styles.statusContainer}>
-                {isOn !== 'other' ? (
+                {isOn !== 'other' && (
                   <>
                     <View style={[
                       styles.statusIndicator, 
@@ -195,10 +195,6 @@ export function MicrophoneControl() {
                       Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
                     </ThemedText>
                   </>
-                ) : (
-                  <ThemedText style={[styles.statusText, { color: textColor }]}>
-                    Stare necunoscută
-                  </ThemedText>
                 )}
               </View>
               
@@ -328,7 +324,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   warningContainer: {
-    marginTop: 20,
+    marginTop: 40,
     padding: 10,
     backgroundColor: 'rgba(255, 0, 0, 0.1)',
     borderRadius: 8,
