@@ -133,7 +133,8 @@ export function MicrophoneControl() {
             styles.onButton,
             isOn && styles.activeButton,
             colorScheme === 'dark' && styles.buttonDark,
-            isUpdating && styles.updatingButton
+            isUpdating && styles.updatingButton,
+            isOn && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
           ]}
           onPress={() => toggleMicrophone(true)}
           disabled={isUpdating || !isConnected}
@@ -156,7 +157,8 @@ export function MicrophoneControl() {
             styles.offButton,
             !isOn && styles.activeButton,
             colorScheme === 'dark' && styles.buttonDark,
-            isUpdating && styles.updatingButton
+            isUpdating && styles.updatingButton,
+            !isOn && { backgroundColor: 'rgba(255, 58, 58, 0.5)' }
           ]}
           onPress={() => toggleMicrophone(false)}
           disabled={isUpdating || !isConnected}
@@ -235,14 +237,15 @@ const styles = StyleSheet.create({
   },
   onButton: {
     borderColor: '#4AFF50',
-    backgroundColor: 'rgba(74, 255, 80, 0.3)',
+    backgroundColor: 'rgba(74, 255, 80, 0.15)',
   },
   offButton: {
     borderColor: '#FF3A3A',
-    backgroundColor: 'rgba(255, 58, 58, 0.3)',
+    backgroundColor: 'rgba(255, 58, 58, 0.15)',
   },
   activeButton: {
     borderWidth: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   buttonText: {
     fontSize: 22,
