@@ -36,8 +36,15 @@ export function MicrophoneControl() {
     
     // Request current microphone status on connection
     const requestStatus = () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
+      try {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('Error requesting microphone status:', error);
+        return false;
       }
     };
     
@@ -59,9 +66,18 @@ export function MicrophoneControl() {
       }, 5000)
     ];
     
+    // Set up periodic sync every 5 seconds
+    const syncInterval = setInterval(() => {
+      if (!requestStatus()) {
+        // If request fails, mark as disconnected
+        console.log('Periodic sync failed, connection may be lost');
+      }
+    }, 5000);
+    
     return () => {
       ws.removeEventListener('message', handleMessage);
       retryTimeouts.forEach(timeout => clearTimeout(timeout));
+      clearInterval(syncInterval);
     };
   }, [ws]);
   

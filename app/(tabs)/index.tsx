@@ -32,18 +32,36 @@ export default function HomeScreen() {
 
     // Request verses on connection
     const requestVerses = () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: 'refresh' }));
+      try {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'refresh' }));
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('Error requesting verses:', error);
+        return false;
       }
     };
 
     // Try to request verses immediately and retry after a delay
     requestVerses();
     const retryTimeout = setTimeout(requestVerses, 1000);
+    
+    // Set up periodic sync every 5 seconds
+    const syncInterval = setInterval(() => {
+      if (usageMode === 'bible') {
+        if (!requestVerses()) {
+          // If request fails, mark as disconnected
+          console.log('Periodic verse sync failed, connection may be lost');
+        }
+      }
+    }, 5000);
 
     return () => {
       ws.removeEventListener('message', handleMessage);
       clearTimeout(retryTimeout);
+      clearInterval(syncInterval);
     };
   }, [ws, usageMode]);
 

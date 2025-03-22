@@ -295,6 +295,14 @@ wss.on('connection', async (ws) => {
           status: microphoneState
         }));
       }
+      
+      // Handle ping request (for connection verification)
+      if (data.type === 'ping') {
+        ws.send(JSON.stringify({
+          type: 'pong',
+          timestamp: Date.now()
+        }));
+      }
     } catch (error) {
       console.error('Error processing message:', error);
     }

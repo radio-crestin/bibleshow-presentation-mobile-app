@@ -158,10 +158,30 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
             }
         }, 1000);
 
+        // Periodic connection check
+        const connectionCheckInterval = setInterval(() => {
+            if (ws && isConnected) {
+                try {
+                    // Check if connection is still alive
+                    if (ws.readyState !== WebSocket.OPEN) {
+                        console.log('WebSocket not in OPEN state, marking as disconnected');
+                        setIsConnected(false);
+                    } else {
+                        // Send a ping to verify connection
+                        ws.send(JSON.stringify({ type: 'ping' }));
+                    }
+                } catch (error) {
+                    console.error('Error during connection check:', error);
+                    setIsConnected(false);
+                }
+            }
+        }, 5000);
+
         return () => {
             clearInterval(reconnectInterval);
+            clearInterval(connectionCheckInterval);
         };
-    }, [wsUrl, isConnected]);
+    }, [wsUrl, isConnected, ws]);
 
     // Power save effect
     useEffect(() => {
