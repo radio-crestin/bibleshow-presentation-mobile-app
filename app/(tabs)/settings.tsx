@@ -7,7 +7,7 @@ import { FontSizeControl } from '@/components/FontSizeControl';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings, UsageMode, USAGE_MODE_LABELS } from '@/contexts/SettingsContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useRouter } from 'expo-router';
 import {useState} from "react";
