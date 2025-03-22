@@ -21,20 +21,28 @@ export function ThemedText({
   // For web platform, we need to be extra careful with styles
   if (Platform.OS === 'web') {
     // Create a base style object with all the type-specific styles
+    // Explicitly set properties to avoid array or object values
     const baseStyle = {
-      color,
-      lineHeight,
-      ...(type === 'default' ? StyleSheet.flatten(styles.default) : {}),
-      ...(type === 'title' ? StyleSheet.flatten(styles.title) : {}),
-      ...(type === 'defaultSemiBold' ? StyleSheet.flatten(styles.defaultSemiBold) : {}),
-      ...(type === 'subtitle' ? StyleSheet.flatten(styles.subtitle) : {}),
-      ...(type === 'link' ? StyleSheet.flatten(styles.link) : {})
+      color: color,
+      lineHeight: lineHeight,
+      fontSize: getDefaultFontSize(type),
+      fontWeight: type === 'default' ? 'normal' : 
+                 type === 'title' ? 'bold' : 
+                 type === 'defaultSemiBold' ? '600' : 
+                 type === 'subtitle' ? 'bold' : 
+                 type === 'link' ? 'normal' : 'normal'
     };
     
-    // Flatten everything into a single style object
-    const flattenedStyle = StyleSheet.flatten([baseStyle, style || {}]);
-    
-    return <Text style={flattenedStyle} {...rest} />;
+    // Use try/catch to handle any potential errors with StyleSheet.flatten
+    try {
+      // Only flatten if style is provided
+      const flattenedStyle = style ? StyleSheet.flatten([baseStyle, style]) : baseStyle;
+      return <Text style={flattenedStyle} {...rest} />;
+    } catch (error) {
+      console.warn('Style flattening error:', error);
+      // Fallback to just using the base style if there's an error
+      return <Text style={baseStyle} {...rest} />;
+    }
   }
   
   // For native platforms, array styles work fine

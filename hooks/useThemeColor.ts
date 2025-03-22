@@ -13,9 +13,11 @@ export function useThemeColor(
   const theme = useColorScheme() ?? 'light';
   const colorFromProps = props[theme];
 
-  if (colorFromProps) {
+  // Ensure we always return a valid color string
+  if (colorFromProps && typeof colorFromProps === 'string') {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    // Provide a fallback in case Colors[theme][colorName] is undefined
+    return Colors[theme][colorName] || (theme === 'dark' ? '#000' : '#fff');
   }
 }
