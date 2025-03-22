@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useMicrophoneContext } from './MicrophoneContext';
@@ -8,8 +8,6 @@ export function MicrophoneControl() {
   const [isOn, setIsOn] = useState<boolean | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const { isUpdating, setIsUpdating } = useMicrophoneContext();
-  const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
   
   const { 
     colorScheme, 
@@ -116,36 +114,19 @@ export function MicrophoneControl() {
   
   return (
     <View style={[styles.container, { backgroundColor: normalVerseBackgroundColor }]}>
-      <View style={[
-        styles.content,
-        isLandscape && styles.contentLandscape
-      ]}>
-        <View style={[
-          styles.titleContainer,
-          isLandscape && styles.titleContainerLandscape
-        ]}>
-          {!isLandscape ? (
-            <ThemedText style={[styles.title, { color: textColor }]}>
-              Control Microfon Tineri
-              {isUpdating && (
-                <View style={styles.headerLoadingContainer}>
-                  <ActivityIndicator size="small" color={textColor} style={styles.headerLoader} />
-                </View>
-              )}
-            </ThemedText>
-          ) : (
-            isUpdating && (
-              <View style={styles.landscapeLoaderContainer}>
-                <ActivityIndicator size="small" color={textColor} />
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <ThemedText style={[styles.title, { color: textColor }]}>
+            Control Microfon Tineri
+            {isUpdating && (
+              <View style={styles.headerLoadingContainer}>
+                <ActivityIndicator size="small" color={textColor} style={styles.headerLoader} />
               </View>
-            )
-          )}
+            )}
+          </ThemedText>
         </View>
       
-        <View style={[
-          styles.controlsContainer,
-          isLandscape && styles.controlsContainerLandscape
-        ]}>
+        <View style={styles.controlsContainer}>
           {isInitializing || !isConnected ? (
             <View style={styles.initializingContainer}>
               <ActivityIndicator size="large" color={textColor} />
@@ -237,27 +218,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-  contentLandscape: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   titleContainer: {
     alignItems: 'center',
     paddingVertical: 20,
   },
-  titleContainerLandscape: {
-    width: '30%',
-    paddingHorizontal: 10,
-    paddingVertical: 0,
-    justifyContent: 'center',
-  },
   controlsContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  controlsContainerLandscape: {
-    width: '70%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -270,11 +236,6 @@ const styles = StyleSheet.create({
   },
   headerLoader: {
     marginLeft: 10,
-  },
-  landscapeLoaderContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
   },
   mainControlsArea: {
     width: '100%',
@@ -292,10 +253,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
     gap: 20,
     marginBottom: 40,
     alignSelf: 'center',
+    maxWidth: 420,
   },
   button: {
     flex: 1,
