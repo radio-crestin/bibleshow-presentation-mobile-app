@@ -129,7 +129,8 @@ export function MicrophoneControl() {
             </View>
           ) : (
             <>
-            <View style={styles.buttonContainer}>
+            <View style={styles.mainControlsArea}>
+              <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
             styles.button,
@@ -177,25 +178,26 @@ export function MicrophoneControl() {
             Oprit
           </ThemedText>
         </TouchableOpacity>
-      </View>
-      
-      <View style={styles.statusContainer}>
-        <View style={[
-          styles.statusIndicator, 
-          { backgroundColor: isOn ? '#4AFF50' : '#FF3A3A' }
-        ]} />
-        <ThemedText style={[styles.statusText, { color: textColor }]}>
-          Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
-        </ThemedText>
-      </View>
-      
-      {isUpdating && (
-        <View style={styles.updatingContainer}>
-          <ThemedText style={[styles.updatingText, { color: textColor }]}>
-            Se actualizează...
-          </ThemedText>
-        </View>
-      )}
+              </View>
+              
+              <View style={styles.statusContainer}>
+                <View style={[
+                  styles.statusIndicator, 
+                  { backgroundColor: isOn ? '#4AFF50' : '#FF3A3A' }
+                ]} />
+                <ThemedText style={[styles.statusText, { color: textColor }]}>
+                  Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
+                </ThemedText>
+              </View>
+              
+              <View style={styles.updatingContainer}>
+                {isUpdating && (
+                  <ThemedText style={[styles.updatingText, { color: textColor }]}>
+                    Se actualizează...
+                  </ThemedText>
+                )}
+              </View>
+            </View>
             </>
           )}
         </View>
@@ -223,6 +225,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  mainControlsArea: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -234,7 +241,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     gap: 20,
-    marginBottom: 40,
+    marginBottom: 30,
+    marginTop: -20,
   },
   button: {
     flex: 1,
@@ -291,7 +299,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   updatingContainer: {
-    marginTop: 20,
+    height: 24,
+    marginTop: 10,
   },
   updatingText: {
     fontSize: 16,
