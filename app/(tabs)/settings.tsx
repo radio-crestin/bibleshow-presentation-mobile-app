@@ -15,6 +15,7 @@ import ColorPicker from "react-native-wheel-color-picker";
 export default function SettingsScreen() {
   const selectRef = useRef<HTMLSelectElement>(null);
   
+  
   // Apply custom styling to the web select element
   useEffect(() => {
     if (Platform.OS === 'web' && selectRef.current) {
