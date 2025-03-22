@@ -3,6 +3,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Appearance} from 'react-native';
 import {persistentState} from "@/contexts/utils";
 
+export type UsageMode = 'bible' | 'microphone';
+
+export const USAGE_MODE_LABELS = {
+  bible: 'Biblie amvon',
+  microphone: 'Control microfon tineri'
+};
+
 type SettingsContextType = {
     normalFontSize: number;
     increaseNormalFontSize: () => void;
