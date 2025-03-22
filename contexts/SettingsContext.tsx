@@ -57,7 +57,7 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
     const [showSeconds, setShowSeconds] = persistentState('showSeconds', true);
     const [clockSize, setClockSize] = persistentState('clockSize', 40);
     const [showClock, setShowClock] = persistentState('showClock', true);
-    const [colorScheme, setColorScheme] = persistentState('colorScheme', Appearance.getColorScheme() || 'light');
+    const [colorScheme, setColorScheme] = persistentState('colorScheme', 'dark');
     const [clockColor, setClockColor] = persistentState('clockColor', '#FF0000'); // Default red
     const [highlightColor, setHighlightColor] = persistentState('highlightColor', '#212121'); // Default orange
     const [verseTextColor, setVerseTextColor] = persistentState('verseTextColor', '#21F900'); // Default black
