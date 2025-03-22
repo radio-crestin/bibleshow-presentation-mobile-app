@@ -9,6 +9,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "ios:device": "expo run:ios --device",
+    "android:device": "expo run:android --device",
     "build:ios-remote": "eas build --platform ios",
     "build:ios-remote-development": "eas build --platform ios --profile preview",
     "submit-to-appstore:ios": "eas submit --platform ios ",
