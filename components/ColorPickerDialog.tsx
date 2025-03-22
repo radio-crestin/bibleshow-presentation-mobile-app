@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {Modal, StyleSheet, Pressable, View} from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import ColorPicker from 'react-native-wheel-color-picker';
 
 type ColorPickerDialogProps = {
@@ -17,10 +16,10 @@ export function ColorPickerDialog({
   visible, 
   onClose, 
   onColorSelected, 
-  initialColor,
-  title 
+  initialColor = '#ffffff',
+  title = 'Select Color'
 }: ColorPickerDialogProps) {
-  const [selectedColor, setSelectedColor] = useState(initialColor);
+  const [selectedColor, setSelectedColor] = useState(initialColor || '#ffffff');
 
   return (
     <Modal
