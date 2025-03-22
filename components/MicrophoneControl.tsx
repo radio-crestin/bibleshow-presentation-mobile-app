@@ -122,7 +122,10 @@ export function MicrophoneControl() {
   
   return (
     <View style={[styles.container, { backgroundColor: normalVerseBackgroundColor }]}>
-      <View style={styles.content}>
+      <View style={[
+        styles.content,
+        isLandscape && styles.contentLandscape
+      ]}>
         <View style={styles.controlsContainer}>
           {isInitializing || !isConnected ? (
             <View style={styles.initializingContainer}>
@@ -230,6 +233,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
+  contentLandscape: {
+    paddingHorizontal: 40,
+  },
   titleContainer: {
     alignItems: 'center',
     paddingVertical: 20,
@@ -258,6 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     alignSelf: 'center',
     maxWidth: 420,
+    width: '100%',
   },
   button: {
     flex: 1,
@@ -267,6 +274,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     maxWidth: 200,
+    minWidth: 120,
   },
   buttonDark: {
     borderColor: '#666',
