@@ -177,7 +177,7 @@ export function MicrophoneControl() {
       <View style={styles.statusContainer}>
         <View style={[
           styles.statusIndicator, 
-          { backgroundColor: isOn ? '#4CAF50' : '#FF5252' }
+          { backgroundColor: isOn ? '#4AFF50' : '#FF3A3A' }
         ]} />
         <ThemedText style={[styles.statusText, { color: textColor }]}>
           Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
@@ -235,11 +235,11 @@ const styles = StyleSheet.create({
   },
   onButton: {
     borderColor: '#4CAF50',
-    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    backgroundColor: 'rgba(76, 175, 80, 0.2)',
   },
   offButton: {
     borderColor: '#FF5252',
-    backgroundColor: 'rgba(255, 82, 82, 0.1)',
+    backgroundColor: 'rgba(255, 82, 82, 0.2)',
   },
   activeButton: {
     borderWidth: 3,
@@ -261,6 +261,8 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   statusText: {
     fontSize: 18,

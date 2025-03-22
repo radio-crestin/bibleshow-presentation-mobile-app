@@ -32,7 +32,7 @@ export function AppHeader({
         <ClockDisplay />
       </View>
       <View style={styles.rightSection}>
-        <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4CAF50' : '#FF5252' }]} />
+        <View style={[styles.connectionDot, { backgroundColor: isConnected ? '#4AFF50' : '#FF3A3A' }]} />
         {usageMode === 'bible' && onRefresh && (
           <Pressable 
             onPress={onRefresh}
@@ -85,6 +85,8 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   iconButton: {
     padding: 8,
