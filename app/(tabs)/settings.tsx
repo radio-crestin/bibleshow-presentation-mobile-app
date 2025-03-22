@@ -125,29 +125,30 @@ export default function SettingsScreen() {
                 </select>
               </View>
             ) : (
-              <View style={[
-                styles.pickerContainer, 
-                colorScheme === 'dark' && { borderColor: '#666', backgroundColor: '#333' }
-              ]}>
-                <Picker
-                  selectedValue={usageMode}
-                  onValueChange={(itemValue) => setUsageMode(itemValue as UsageMode)}
-                  style={styles.picker}
-                  itemStyle={[
-                    styles.pickerItem,
-                    { color: colorScheme === 'dark' ? 'white' : 'black' }
-                  ]}
-                  dropdownIconColor={colorScheme === 'dark' ? 'white' : 'black'}
-                >
-                  {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
-                    <Picker.Item 
-                      key={value} 
-                      label={label} 
-                      value={value} 
-                      color={colorScheme === 'dark' ? 'white' : 'black'}
-                    />
-                  ))}
-                </Picker>
+              <View style={styles.nativePickerContainer}>
+                <View style={[
+                  styles.pickerBorder,
+                  colorScheme === 'dark' && { borderColor: '#666', backgroundColor: '#333' }
+                ]}>
+                  <Picker
+                    selectedValue={usageMode}
+                    onValueChange={(itemValue) => setUsageMode(itemValue as UsageMode)}
+                    style={[
+                      styles.nativePicker,
+                      { color: colorScheme === 'dark' ? 'white' : 'black' }
+                    ]}
+                    dropdownIconColor={colorScheme === 'dark' ? 'white' : 'black'}
+                  >
+                    {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
+                      <Picker.Item 
+                        key={value} 
+                        label={label} 
+                        value={value} 
+                        color={colorScheme === 'dark' ? 'white' : 'black'}
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
             )}
           </View>
@@ -425,18 +426,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  pickerContainer: {
+  pickerBorder: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     overflow: 'hidden',
   },
-  picker: {
+  nativePickerContainer: {
     width: '100%',
-    backgroundColor: 'transparent',
   },
-  pickerItem: {
-    fontSize: 16,
+  nativePicker: {
+    width: '100%',
+    height: 50,
+    backgroundColor: 'transparent',
   },
   selectContainer: {
     width: '100%',
