@@ -1,5 +1,4 @@
 import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity, Platform } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import { ColorPickerDialog } from '@/components/ColorPickerDialog';
 import { ColorPreview } from '@/components/ColorPreview';
@@ -125,30 +124,29 @@ export default function SettingsScreen() {
                 </select>
               </View>
             ) : (
-              <View style={styles.nativePickerContainer}>
-                <View style={[
-                  styles.pickerBorder,
-                  colorScheme === 'dark' && { borderColor: '#666', backgroundColor: '#333' }
-                ]}>
-                  <Picker
-                    selectedValue={usageMode}
-                    onValueChange={(itemValue) => setUsageMode(itemValue as UsageMode)}
+              <View style={styles.nativeOptionsContainer}>
+                {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
+                  <TouchableOpacity
+                    key={value}
                     style={[
-                      styles.nativePicker,
-                      { color: colorScheme === 'dark' ? 'white' : 'black' }
+                      styles.optionButton,
+                      usageMode === value && styles.selectedOptionButton,
+                      colorScheme === 'dark' && styles.optionButtonDark,
+                      usageMode === value && colorScheme === 'dark' && styles.selectedOptionButtonDark
                     ]}
-                    dropdownIconColor={colorScheme === 'dark' ? 'white' : 'black'}
+                    onPress={() => setUsageMode(value as UsageMode)}
                   >
-                    {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
-                      <Picker.Item 
-                        key={value} 
-                        label={label} 
-                        value={value} 
-                        color={colorScheme === 'dark' ? 'white' : 'black'}
-                      />
-                    ))}
-                  </Picker>
-                </View>
+                    <ThemedText 
+                      style={[
+                        styles.optionText,
+                        usageMode === value && styles.selectedOptionText,
+                        colorScheme === 'dark' && styles.optionTextDark
+                      ]}
+                    >
+                      {label}
+                    </ThemedText>
+                  </TouchableOpacity>
+                ))}
               </View>
             )}
           </View>
@@ -426,19 +424,41 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  pickerBorder: {
+  nativeOptionsContainer: {
+    width: '100%',
+    flexDirection: 'column',
+    gap: 12,
+  },
+  optionButton: {
+    padding: 16,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
-    overflow: 'hidden',
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
   },
-  nativePickerContainer: {
-    width: '100%',
+  selectedOptionButton: {
+    borderColor: '#007AFF',
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
   },
-  nativePicker: {
-    width: '100%',
-    height: 50,
-    backgroundColor: 'transparent',
+  optionButtonDark: {
+    backgroundColor: '#333',
+    borderColor: '#666',
+  },
+  selectedOptionButtonDark: {
+    borderColor: '#007AFF',
+    backgroundColor: 'rgba(0, 122, 255, 0.2)',
+  },
+  optionText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
+  },
+  optionTextDark: {
+    color: '#fff',
+  },
+  selectedOptionText: {
+    fontWeight: '700',
   },
   selectContainer: {
     width: '100%',
