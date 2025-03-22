@@ -189,15 +189,15 @@ export function MicrophoneControl() {
                   Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
                 </ThemedText>
               </View>
-              
-              <View style={styles.updatingContainer}>
-                {isUpdating && (
-                  <ThemedText style={[styles.updatingText, { color: textColor }]}>
-                    Se actualizează...
-                  </ThemedText>
-                )}
-              </View>
             </View>
+            
+            {isUpdating && (
+              <View style={styles.bottomUpdatingContainer}>
+                <ThemedText style={[styles.updatingText, { color: textColor }]}>
+                  Se actualizează...
+                </ThemedText>
+              </View>
+            )}
             </>
           )}
         </View>
@@ -300,8 +300,17 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   updatingContainer: {
-    height: 24,
-    marginTop: 10,
+    height: 0,
+    margin: 0,
+  },
+  bottomUpdatingContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
   updatingText: {
     fontSize: 16,
