@@ -3,11 +3,14 @@ import { ThemedView } from '@/components/ThemedView';
 import { BibleVerseDisplay } from '@/components/BibleVerseDisplay';
 import { MicrophoneControl } from '@/components/MicrophoneControl';
 import { useSettings } from '@/contexts/SettingsContext';
+import { AppHeader } from '@/components/AppHeader';
+import { View } from 'react-native';
 
 export default function HomeScreen() {
   const [currentVerse, setCurrentVerse] = useState(null);
   const [verses, setVerses] = useState([]);
-  const { ws, usageMode } = useSettings();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { ws, usageMode, isConnected, reConnectWebSocket } = useSettings();
 
   useEffect(() => {
     if (!ws || usageMode !== 'bible') return;
@@ -44,8 +47,20 @@ export default function HomeScreen() {
     };
   }, [ws, usageMode]);
 
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    reConnectWebSocket();
+    setIsRefreshing(false);
+  };
+
   return (
     <ThemedView style={{ flex: 1 }}>
+      <AppHeader 
+        isConnected={isConnected}
+        isRefreshing={isRefreshing}
+        onRefresh={handleRefresh}
+        currentReference={currentVerse?.reference || ''}
+      />
       {usageMode === 'bible' ? (
         <BibleVerseDisplay verses={verses} currentVerse={currentVerse} />
       ) : (

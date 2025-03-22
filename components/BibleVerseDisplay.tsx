@@ -5,18 +5,16 @@ import {
     Text,
     ScrollView,
     Pressable,
-    Button,
     NativeSyntheticEvent,
     NativeScrollEvent
 } from 'react-native';
 import {router} from 'expo-router';
 import {useKeepAwake} from 'expo-keep-awake';
 import {useSettings} from '@/contexts/SettingsContext';
-import {useState, useRef, useEffect} from 'react';
+import {useRef, useEffect} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BibleVerseDisplayProps} from './BibleVerseDisplay/types';
 import {styles} from './BibleVerseDisplay/styles';
-import {Header} from './BibleVerseDisplay/Header';
 import {VerseSection} from './BibleVerseDisplay/VerseSection';
 
 export function BibleVerseDisplay({verses: initialVerses, currentVerse}: BibleVerseDisplayProps) {
@@ -30,12 +28,10 @@ export function BibleVerseDisplay({verses: initialVerses, currentVerse}: BibleVe
         isConnected,
         ws,
         colorScheme,
-        normalVerseBackgroundColor,
-        reConnectWebSocket
+        normalVerseBackgroundColor
     } = useSettings();
     const {width, height} = useWindowDimensions();
     const isLandscape = width > height;
-    const [isRefreshing, setIsRefreshing] = useState(false);
     const verseMeasurements = useRef<{ [key: string]: number }>({});
     const scrollViewRef = useRef<ScrollView>(null);
     const scrollInfo = useRef<{
@@ -146,11 +142,6 @@ export function BibleVerseDisplay({verses: initialVerses, currentVerse}: BibleVe
         return verseA.verse - verseB.verse;
     });
 
-    const handleRefresh = () => {
-        setIsRefreshing(true);
-        reConnectWebSocket();
-        setIsRefreshing(false);
-    };
     return (
         <View style={[styles.container, {
             paddingBottom: insets.bottom,
@@ -159,12 +150,6 @@ export function BibleVerseDisplay({verses: initialVerses, currentVerse}: BibleVe
             paddingTop: isLandscape ? 20 : 0,
             backgroundColor: normalVerseBackgroundColor
         }]}>
-            <Header
-                currentReference={currentVerse?.reference || ''}
-                isConnected={isConnected}
-                isRefreshing={isRefreshing}
-                onRefresh={handleRefresh}
-            />
             <View style={styles.versesContainer}>
                 {isConnected && (
                     <Animated.ScrollView
