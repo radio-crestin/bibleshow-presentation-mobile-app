@@ -10,10 +10,31 @@ import { ThemedView } from '@/components/ThemedView';
 import { useSettings, UsageMode, USAGE_MODE_LABELS } from '@/contexts/SettingsContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useRouter } from 'expo-router';
-import {useState} from "react";
+import {useState, useEffect, useRef} from "react";
 import ColorPicker from "react-native-wheel-color-picker";
 
 export default function SettingsScreen() {
+  const selectRef = useRef<HTMLSelectElement>(null);
+  
+  // Apply custom styling to the web select element
+  useEffect(() => {
+    if (Platform.OS === 'web' && selectRef.current) {
+      // Get all option elements
+      const options = selectRef.current.querySelectorAll('option');
+      
+      // Apply styling to each option
+      options.forEach(option => {
+        if (option.value === usageMode) {
+          option.style.color = '#007AFF';
+          option.style.fontWeight = 'bold';
+        } else {
+          option.style.color = colorScheme === 'dark' ? 'white' : 'black';
+          option.style.fontWeight = 'normal';
+        }
+      });
+    }
+  }, [usageMode, colorScheme]);
+  
   const [activeColorPicker, setActiveColorPicker] = useState<{
     type: 'clock' | 'normalBackground' | 'normalText' | 'highlightBackground' | 'highlightText' | null;
     title: string;
@@ -91,6 +112,7 @@ export default function SettingsScreen() {
             {Platform.OS === 'web' ? (
               <View style={styles.selectContainer}>
                 <select 
+                  ref={selectRef}
                   value={usageMode}
                   onChange={(e) => setUsageMode(e.target.value as UsageMode)}
                   style={[
@@ -119,7 +141,12 @@ export default function SettingsScreen() {
                   dropdownIconColor={colorScheme === 'dark' ? 'white' : 'black'}
                 >
                   {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
-                    <Picker.Item key={value} label={label} value={value} />
+                    <Picker.Item 
+                      key={value} 
+                      label={label} 
+                      value={value} 
+                      color={value === usageMode ? '#007AFF' : (colorScheme === 'dark' ? 'white' : 'black')}
+                    />
                   ))}
                 </Picker>
               </View>
