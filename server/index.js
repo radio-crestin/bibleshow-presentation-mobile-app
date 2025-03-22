@@ -50,6 +50,14 @@ async function connectToOBS() {
     obs.on('CurrentProgramSceneChanged', async (data) => {
       console.log('OBS scene changed:', data.sceneName);
       currentScene = data.sceneName;
+      
+      // Automatically set microphone to 'on' when scene is "solo"
+      if (currentScene === "solo" && microphoneState !== 'on') {
+        microphoneState = 'on';
+        console.log('Microphone automatically turned on due to "solo" scene');
+        broadcastMicrophoneState();
+      }
+      
       broadcastOBSInfo();
     });
     
@@ -110,6 +118,18 @@ function broadcastOBSInfo() {
           currentScene,
           availableScenes
         }
+      }));
+    }
+  });
+}
+
+// Broadcast microphone state to all clients
+function broadcastMicrophoneState() {
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) { // WebSocket.OPEN
+      client.send(JSON.stringify({
+        type: 'microphoneStatus',
+        status: microphoneState
       }));
     }
   });
@@ -386,14 +406,7 @@ wss.on('connection', async (ws) => {
         console.log(`Microphone state changed to: ${microphoneState}`);
         
         // Broadcast the new microphone state to all clients
-        wss.clients.forEach(client => {
-          if (client.readyState === 1) { // WebSocket.OPEN
-            client.send(JSON.stringify({
-              type: 'microphoneStatus',
-              status: microphoneState
-            }));
-          }
-        });
+        broadcastMicrophoneState();
       }
       
       // Handle microphone status request
