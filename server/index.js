@@ -4,6 +4,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const cheerio = require('cheerio');
+const OBSWebSocket = require('obs-websocket-js').default;
 
 // Retry configuration
 const RETRY_DELAYS = [1000, 2000, 5000]; // Delays in milliseconds
@@ -28,6 +29,92 @@ async function withRetry(operation, operationName) {
   throw new Error(`All ${MAX_RETRIES} attempts failed for ${operationName}. Last error: ${lastError.message}`);
 }
 
+// Connect to OBS WebSocket
+async function connectToOBS() {
+  if (!config.obs || !config.obs.address) {
+    console.log('OBS WebSocket configuration not found, skipping connection');
+    return;
+  }
+
+  try {
+    const [host, port] = config.obs.address.split(':');
+    
+    await obs.connect(`ws://${config.obs.address}`, config.obs.password);
+    console.log('Connected to OBS WebSocket server');
+    obsConnected = true;
+    
+    // Get initial scene information
+    await updateOBSSceneInfo();
+    
+    // Set up event listeners
+    obs.on('CurrentProgramSceneChanged', async (data) => {
+      console.log('OBS scene changed:', data.sceneName);
+      currentScene = data.sceneName;
+      broadcastOBSInfo();
+    });
+    
+    obs.on('SceneListChanged', async () => {
+      console.log('OBS scene list changed');
+      await updateOBSSceneInfo();
+    });
+    
+    // Handle disconnection
+    obs.on('ConnectionClosed', () => {
+      console.log('OBS WebSocket disconnected, attempting to reconnect...');
+      obsConnected = false;
+      setTimeout(() => {
+        connectToOBS().catch(err => {
+          console.error('Failed to reconnect to OBS:', err.message);
+        });
+      }, 5000);
+    });
+    
+  } catch (error) {
+    console.error('Failed to connect to OBS WebSocket:', error.message);
+    console.log('Will retry OBS connection in 10 seconds...');
+    setTimeout(connectToOBS, 10000);
+  }
+}
+
+// Update OBS scene information
+async function updateOBSSceneInfo() {
+  if (!obsConnected) return;
+  
+  try {
+    // Get current scene
+    const sceneInfo = await obs.call('GetCurrentProgramScene');
+    currentScene = sceneInfo.currentProgramSceneName;
+    
+    // Get list of available scenes
+    const sceneList = await obs.call('GetSceneList');
+    availableScenes = sceneList.scenes.map(scene => scene.sceneName);
+    
+    console.log('Current OBS scene:', currentScene);
+    console.log('Available scenes:', availableScenes);
+    
+    // Broadcast updated info to clients
+    broadcastOBSInfo();
+  } catch (error) {
+    console.error('Error updating OBS scene info:', error.message);
+  }
+}
+
+// Broadcast OBS information to all clients
+function broadcastOBSInfo() {
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) { // WebSocket.OPEN
+      client.send(JSON.stringify({
+        type: 'obsInfo',
+        data: {
+          connected: obsConnected,
+          currentScene,
+          availableScenes
+        }
+      }));
+    }
+  });
+}
+
 // Handle graceful shutdown
 process.on('SIGTERM', () => {
   console.log('Received SIGTERM. Performing graceful shutdown...');
@@ -43,6 +130,11 @@ function shutdown() {
   // Close the watcher
   if (watcher) {
     watcher.close();
+  }
+  
+  // Disconnect from OBS
+  if (obsConnected) {
+    obs.disconnect();
   }
   
   // Close all WebSocket connections
@@ -134,6 +226,12 @@ const XML_PATH = config.xmlPath;
 let currentVerse = null;
 let verses = [];
 let microphoneState = 'off'; // Add microphone state
+
+// OBS WebSocket state
+const obs = new OBSWebSocket();
+let obsConnected = false;
+let currentScene = null;
+let availableScenes = [];
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
@@ -262,6 +360,16 @@ wss.on('connection', async (ws) => {
     type: 'microphoneStatus',
     status: microphoneState
   }));
+  
+  // Send initial OBS information
+  ws.send(JSON.stringify({
+    type: 'obsInfo',
+    data: {
+      connected: obsConnected,
+      currentScene,
+      availableScenes
+    }
+  }));
 
   ws.on('message', async (message) => {
     try {
@@ -303,6 +411,30 @@ wss.on('connection', async (ws) => {
           timestamp: Date.now()
         }));
       }
+      
+      // Handle OBS scene change request
+      if (data.type === 'changeScene' && data.sceneName && obsConnected) {
+        try {
+          await obs.call('SetCurrentProgramScene', {
+            sceneName: data.sceneName
+          });
+          console.log(`Changed OBS scene to: ${data.sceneName}`);
+        } catch (error) {
+          console.error('Error changing OBS scene:', error.message);
+        }
+      }
+      
+      // Handle OBS info request
+      if (data.type === 'getOBSInfo') {
+        ws.send(JSON.stringify({
+          type: 'obsInfo',
+          data: {
+            connected: obsConnected,
+            currentScene,
+            availableScenes
+          }
+        }));
+      }
     } catch (error) {
       console.error('Error processing message:', error);
     }
@@ -327,4 +459,7 @@ server.listen(PORT, () => {
   });
   
   console.log(`\nPrimary IP: ${ip.address()}`);
+  
+  // Connect to OBS WebSocket
+  connectToOBS();
 });
