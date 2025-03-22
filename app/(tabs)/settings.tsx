@@ -25,12 +25,11 @@ export default function SettingsScreen() {
       // Apply styling to each option
       options.forEach(option => {
         if (option.value === usageMode) {
-          option.style.color = '#007AFF';
           option.style.fontWeight = 'bold';
         } else {
-          option.style.color = colorScheme === 'dark' ? 'white' : 'black';
           option.style.fontWeight = 'normal';
         }
+        option.style.color = colorScheme === 'dark' ? 'white' : 'black';
       });
     }
   }, [usageMode, colorScheme]);
@@ -145,7 +144,7 @@ export default function SettingsScreen() {
                       key={value} 
                       label={label} 
                       value={value} 
-                      color={value === usageMode ? '#007AFF' : (colorScheme === 'dark' ? 'white' : 'black')}
+                      color={colorScheme === 'dark' ? 'white' : 'black'}
                     />
                   ))}
                 </Picker>
