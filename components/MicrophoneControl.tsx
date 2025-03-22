@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useMicrophoneContext } from './MicrophoneContext';
@@ -8,6 +8,8 @@ export function MicrophoneControl() {
   const [isOn, setIsOn] = useState<boolean | null | 'other'>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const { isUpdating, setIsUpdating } = useMicrophoneContext();
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   
   const { 
     colorScheme, 
@@ -199,7 +201,10 @@ export function MicrophoneControl() {
               </View>
               
               {isOn === 'other' && (
-                <View style={styles.warningContainer}>
+                <View style={[
+                  styles.warningContainer,
+                  isLandscape && styles.warningContainerLandscape
+                ]}>
                   <ThemedText style={styles.warningText}>
                     Nu uita să oprești microfonul la sfârșitul programului tinerilor.
                   </ThemedText>
@@ -331,6 +336,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 0, 0, 0.3)',
     alignSelf: 'center',
+  },
+  warningContainerLandscape: {
+    marginTop: 0,
   },
   warningText: {
     color: '#FF0000',
