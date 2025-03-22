@@ -113,20 +113,23 @@ export function MicrophoneControl() {
   return (
     <View style={[styles.container, { backgroundColor: normalVerseBackgroundColor }]}>
       <View style={styles.content}>
-        <ThemedText style={[styles.title, { color: textColor }]}>Control Microfon Tineri</ThemedText>
-      
-      {isInitializing || !isConnected ? (
-        <View style={styles.initializingContainer}>
-          <ActivityIndicator size="large" color={textColor} />
-          <ThemedText style={[styles.initializingText, { color: textColor }]}>
-            {isInitializing 
-              ? 'Se încarcă starea microfonului...'
-              : 'Se așteaptă conexiunea la server...'}
-          </ThemedText>
+        <View style={styles.titleContainer}>
+          <ThemedText style={[styles.title, { color: textColor }]}>Control Microfon Tineri</ThemedText>
         </View>
-      ) : (
-        <>
-        <View style={styles.buttonContainer}>
+      
+        <View style={styles.controlsContainer}>
+          {isInitializing || !isConnected ? (
+            <View style={styles.initializingContainer}>
+              <ActivityIndicator size="large" color={textColor} />
+              <ThemedText style={[styles.initializingText, { color: textColor }]}>
+                {isInitializing 
+                  ? 'Se încarcă starea microfonului...'
+                  : 'Se așteaptă conexiunea la server...'}
+              </ThemedText>
+            </View>
+          ) : (
+            <>
+            <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
             styles.button,
@@ -193,8 +196,9 @@ export function MicrophoneControl() {
           </ThemedText>
         </View>
       )}
-      </>
-      )}
+            </>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -206,9 +210,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    padding: 20,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  controlsContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   title: {
     fontSize: 24,
@@ -285,7 +298,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   initializingContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
