@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform, Pressable } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useEffect } from 'react';
 import { IconSymbol } from './ui/IconSymbol';
 import { useRouter } from 'expo-router';
 import { ClockDisplay } from './ClockDisplay';
@@ -11,14 +12,59 @@ export function MicrophoneControl() {
   const { 
     colorScheme, 
     normalVerseBackgroundColor, 
-    isConnected
+    isConnected,
+    ws
   } = useSettings();
+  
+  // Listen for microphone status updates from the server
+  useEffect(() => {
+    if (!ws) return;
+    
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'microphoneStatus') {
+          setIsOn(data.status === 'on');
+          console.log(`Received microphone status: ${data.status}`);
+        }
+      } catch (error) {
+        console.error('Error processing message:', error);
+      }
+    };
+    
+    ws.addEventListener('message', handleMessage);
+    
+    // Request current microphone status on connection
+    const requestStatus = () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
+      }
+    };
+    
+    // Try to request status immediately and retry after a delay
+    requestStatus();
+    const retryTimeout = setTimeout(requestStatus, 1000);
+    
+    return () => {
+      ws.removeEventListener('message', handleMessage);
+      clearTimeout(retryTimeout);
+    };
+  }, [ws]);
   const router = useRouter();
   
   const toggleMicrophone = (newState: boolean) => {
     setIsOn(newState);
-    // Here you would add the actual microphone control logic
-    console.log(`Microphone ${newState ? 'ON' : 'OFF'}`);
+    
+    // Send microphone control command to the server
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({
+        type: 'microphone',
+        action: newState ? 'on' : 'off'
+      }));
+      console.log(`Microphone command sent: ${newState ? 'ON' : 'OFF'}`);
+    } else {
+      console.log(`WebSocket not connected. Microphone state changed locally: ${newState ? 'ON' : 'OFF'}`);
+    }
   };
 
   const textColor = normalVerseBackgroundColor === '#000000' ? '#fff' : '#000';
