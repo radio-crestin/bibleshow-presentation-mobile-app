@@ -115,14 +115,6 @@ export function MicrophoneControl() {
   return (
     <View style={[styles.container, { backgroundColor: normalVerseBackgroundColor }]}>
       <View style={styles.content}>
-        <View style={styles.titleContainer}>
-          {isUpdating && (
-            <View style={styles.headerLoadingContainer}>
-              <ActivityIndicator size="small" color={textColor} />
-            </View>
-          )}
-        </View>
-      
         <View style={styles.controlsContainer}>
           {isInitializing || !isConnected ? (
             <View style={styles.initializingContainer}>
