@@ -243,7 +243,8 @@ export default function SettingsScreen() {
             <TextInput
               style={[
                 styles.wsUrlInput,
-                connectionError && styles.wsUrlInputError
+                connectionError && styles.wsUrlInputError,
+                colorScheme === 'dark' && { backgroundColor: '#333', color: '#fff', borderColor: '#666' }
               ]}
               value={tempWsUrl}
               onChangeText={(text) => {
@@ -251,6 +252,7 @@ export default function SettingsScreen() {
                 setConnectionError(null);
               }}
               placeholder="ws://localhost:3000"
+              placeholderTextColor={colorScheme === 'dark' ? '#999' : '#aaa'}
               autoCapitalize="none"
               autoCorrect={false}
             />
@@ -259,9 +261,10 @@ export default function SettingsScreen() {
             )}
             <Pressable
               onPress={handleConnect}
-              style={[
+              style={({pressed}) => [
                 styles.connectButton,
-                isConnecting && styles.connectButtonDisabled
+                isConnecting && styles.connectButtonDisabled,
+                pressed && {opacity: 0.8}
               ]}
               disabled={isConnecting}
             >
@@ -656,9 +659,18 @@ const styles = StyleSheet.create({
   connectButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
-    padding: 12,
+    padding: 14,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 12,
+    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   connectButtonDisabled: {
     backgroundColor: '#999999',
@@ -666,6 +678,7 @@ const styles = StyleSheet.create({
   connectButtonText: {
     color: 'white',
     fontWeight: '600',
+    fontSize: 16,
   },
   currentConnectionText: {
     marginTop: 12,
