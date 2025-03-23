@@ -8,7 +8,8 @@
         "password": "john1234",
         "scenes": {
             "solo": "solo",
-            "default": "tineri"
+            "tineri": "tineri",
+            "sala": "sala"
         }
     }
 }
