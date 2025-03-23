@@ -385,8 +385,8 @@ const styles = StyleSheet.create({
   },
   buttonContainerLandscape: {
     flexDirection: 'column',
-    width: '48%',
-    maxWidth: 220,
+    width: '50%',
+    maxWidth: undefined,
   },
   rightContainer: {
     width: '100%',
@@ -394,8 +394,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightContainerLandscape: {
-    width: '48%',
-    maxWidth: 300,
+    width: '50%',
+    maxWidth: undefined,
   },
   button: {
     flex: 1,
