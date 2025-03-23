@@ -254,7 +254,7 @@ export function MicrophoneControl() {
                   </TouchableOpacity>
                   
                   {isLandscape && (
-                    <>
+                    <View style={styles.statusMessageContainerLandscape}>
                       {(activeScene === 'pornit' || activeScene === 'oprit') && (
                         <View style={styles.microphoneStatusContainer}>
                           <ThemedText style={[
@@ -275,31 +275,49 @@ export function MicrophoneControl() {
                           </ThemedText>
                         </View>
                       )}
-                    </>
+                      
+                      {!activeScene && (
+                        <View style={styles.placeholderContainer}>
+                          <ThemedText style={styles.placeholderText}>
+                            Selectați o opțiune
+                          </ThemedText>
+                        </View>
+                      )}
+                    </View>
                   )}
                 </View>
               </View>
               
-              {(activeScene === 'pornit' || activeScene === 'oprit') && !isLandscape && (
-                <View style={styles.microphoneStatusContainer}>
-                  <ThemedText style={[
-                    styles.microphoneStatusText, 
-                    { 
-                      color: activeScene === 'pornit' ? '#4AFF50' : '#FF3A3A'
-                    }
-                  ]}>
-                    Microfonul este {activeScene === 'pornit' ? 'PORNIT' : 'OPRIT'}
-                  </ThemedText>
-                </View>
-              )}
-              
-              {activeScene === 'finish' && !isLandscape && (
-                <View style={styles.reminderContainer}>
-                  <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
-                    Nu uitați să opriți microfonul pentru a nu se consuma bateria
-                  </ThemedText>
-                </View>
-              )}
+              <View style={styles.statusMessageContainer}>
+                {(activeScene === 'pornit' || activeScene === 'oprit') && !isLandscape && (
+                  <View style={styles.microphoneStatusContainer}>
+                    <ThemedText style={[
+                      styles.microphoneStatusText, 
+                      { 
+                        color: activeScene === 'pornit' ? '#4AFF50' : '#FF3A3A'
+                      }
+                    ]}>
+                      Microfonul este {activeScene === 'pornit' ? 'PORNIT' : 'OPRIT'}
+                    </ThemedText>
+                  </View>
+                )}
+                
+                {activeScene === 'finish' && !isLandscape && (
+                  <View style={styles.reminderContainer}>
+                    <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
+                      Nu uitați să opriți microfonul pentru a nu se consuma bateria
+                    </ThemedText>
+                  </View>
+                )}
+                
+                {!activeScene && !isLandscape && (
+                  <View style={styles.placeholderContainer}>
+                    <ThemedText style={styles.placeholderText}>
+                      Selectați o opțiune
+                    </ThemedText>
+                  </View>
+                )}
+              </View>
             </View>
             </>
           )}
@@ -498,5 +516,28 @@ const styles = StyleSheet.create({
   },
   fullWidthButtonLandscape: {
     height: 100,
+  },
+  statusMessageContainer: {
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  statusMessageContainerLandscape: {
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+    width: '100%',
+  },
+  placeholderContainer: {
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 16,
+    fontWeight: '500',
+    opacity: 0.6,
   },
 });
