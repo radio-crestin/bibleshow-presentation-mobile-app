@@ -5,6 +5,7 @@ const https = require('https');
 const fs = require('fs');
 const cheerio = require('cheerio');
 const OBSWebSocket = require('obs-websocket-js').default;
+const url = require('url');
 
 // Retry configuration
 const RETRY_DELAYS = [1000, 2000, 5000]; // Delays in milliseconds
@@ -249,8 +250,40 @@ try {
 }
 
 const app = express();
+
+// Add authentication middleware for HTTP routes
+app.use((req, res, next) => {
+  const query = url.parse(req.url, true).query;
+  if (!config.serverPassword || query.password === config.serverPassword) {
+    next();
+  } else {
+    res.status(401).send('Unauthorized: Invalid password');
+  }
+});
+
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
+
+// Custom WebSocket server with authentication
+const wss = new WebSocketServer({ 
+  noServer: true // Don't attach to server automatically
+});
+
+// Handle upgrade requests with authentication
+server.on('upgrade', (request, socket, head) => {
+  const pathname = url.parse(request.url).pathname;
+  const query = url.parse(request.url, true).query;
+  
+  // Check password
+  if (!config.serverPassword || query.password === config.serverPassword) {
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit('connection', ws, request);
+    });
+  } else {
+    console.log('WebSocket connection rejected: Invalid password');
+    socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+    socket.destroy();
+  }
+});
 
 const XML_PATH = config.xmlPath;
 let currentVerse = null;
@@ -506,6 +539,10 @@ server.listen(PORT, () => {
   });
   
   console.log(`\nPrimary IP: ${ip.address()}`);
+  console.log(`\nServer password protection is ${config.serverPassword ? 'ENABLED' : 'DISABLED'}`);
+  if (config.serverPassword) {
+    console.log(`Connect with: ws://${ip.address()}:${PORT}/?password=${config.serverPassword}`);
+  }
   
   // Connect to OBS WebSocket
   connectToOBS();
