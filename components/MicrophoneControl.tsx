@@ -4,6 +4,13 @@ import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useMicrophoneContext } from './MicrophoneContext';
 
+// Scene mapping configuration
+const SCENE_CONFIG = {
+  PORNIT: 'solo',
+  OPRIT: 'tineri',
+  FINISH: 'sala'
+};
+
 type SceneType = 'pornit' | 'oprit' | 'finish';
 
 export function MicrophoneControl() {
@@ -29,7 +36,16 @@ export function MicrophoneControl() {
         const data = JSON.parse(event.data);
         if (data.type === 'sceneStatus' || data.type === 'obsSceneChanged') {
           console.log(`Received scene status: ${data.scene}`);
-          setActiveScene(data.scene as SceneType);
+          
+          // Map the received OBS scene name to our scene type
+          const mappedScene = mapSceneToType(data.scene);
+          if (mappedScene) {
+            setActiveScene(mappedScene);
+          } else if (data.scene) {
+            // If we receive a direct scene type (for backward compatibility)
+            setActiveScene(data.scene as SceneType);
+          }
+          
           setIsUpdating(false);
           setIsInitializing(false);
         }
@@ -95,19 +111,33 @@ export function MicrophoneControl() {
     }
   }, [isConnected]);
   
+  // Map received scene name to our scene type
+  const mapSceneToType = (sceneName: string): SceneType | null => {
+    if (sceneName === SCENE_CONFIG.PORNIT) return 'pornit';
+    if (sceneName === SCENE_CONFIG.OPRIT) return 'oprit';
+    if (sceneName === SCENE_CONFIG.FINISH) return 'finish';
+    return null;
+  };
+
   const changeScene = (scene: SceneType) => {
     // Only proceed if we're not already updating
     if (isUpdating) return;
     
     setIsUpdating(true);
     
+    // Map the scene type to the actual OBS scene name
+    let obsSceneName = '';
+    if (scene === 'pornit') obsSceneName = SCENE_CONFIG.PORNIT;
+    else if (scene === 'oprit') obsSceneName = SCENE_CONFIG.OPRIT;
+    else if (scene === 'finish') obsSceneName = SCENE_CONFIG.FINISH;
+    
     // Send scene change command to the server
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({
         type: 'changeObsScene',
-        scene: scene
+        scene: obsSceneName
       }));
-      console.log(`Scene change command sent: ${scene}`);
+      console.log(`Scene change command sent: ${scene} (OBS scene: ${obsSceneName})`);
     } else {
       console.log(`WebSocket not connected. Cannot change scene.`);
       setIsUpdating(false);

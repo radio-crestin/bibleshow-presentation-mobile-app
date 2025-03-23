@@ -55,17 +55,17 @@ async function connectToOBS() {
       console.log(`Current scene: ${currentScene}`);
       
       // Automatically set microphone state based on scene
-      if (currentScene === 'pornit' && microphoneState !== 'on') {
+      if (currentScene === 'solo' && microphoneState !== 'on') {
         microphoneState = 'on';
-        console.log('Microphone automatically turned on due to "pornit" scene');
+        console.log('Microphone automatically turned on due to "solo" scene');
         broadcastMicrophoneState();
-      } else if (currentScene === 'oprit' && microphoneState !== 'off') {
+      } else if (currentScene === 'tineri' && microphoneState !== 'off') {
         microphoneState = 'off';
-        console.log('Microphone automatically turned off due to "oprit" scene');
+        console.log('Microphone automatically turned off due to "tineri" scene');
         broadcastMicrophoneState();
-      } else if (currentScene === 'finish' && microphoneState !== 'other') {
+      } else if (currentScene === 'sala' && microphoneState !== 'other') {
         microphoneState = 'other';
-        console.log('Microphone set to "other" due to "finish" scene');
+        console.log('Microphone set to "other" due to "sala" scene');
         broadcastMicrophoneState();
       }
       
@@ -460,11 +460,11 @@ wss.on('connection', async (ws) => {
           try {
             let sceneName = '';
             if (microphoneState === 'on') {
-              sceneName = 'pornit';
+              sceneName = 'solo';
             } else if (microphoneState === 'off') {
-              sceneName = 'oprit';
+              sceneName = 'tineri';
             } else if (microphoneState === 'other') {
-              sceneName = 'finish';
+              sceneName = 'sala';
             }
             
             if (sceneName && sceneName !== currentScene) {
@@ -507,13 +507,14 @@ wss.on('connection', async (ws) => {
       // Handle OBS scene change request
       if (data.type === 'changeObsScene' && data.scene && obsConnected) {
         try {
+          const sceneName = data.scene;
           await obs.call('SetCurrentProgramScene', {
-            sceneName: data.scene
+            sceneName: sceneName
           });
-          console.log(`Changed OBS scene to: ${data.scene}`);
+          console.log(`Changed OBS scene to: ${sceneName}`);
           
           // Update current scene
-          currentScene = data.scene;
+          currentScene = sceneName;
           
           // Broadcast the scene change to all clients
           broadcastSceneChange();
