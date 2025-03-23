@@ -30,6 +30,7 @@ export default function TabLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="gear" color={color} />,
+          href: '/settings',
         }}
       />
     </Tabs>

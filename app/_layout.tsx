@@ -31,13 +31,6 @@ const RootLayoutContent: FC<{ colorScheme: ColorSchemeName }> = ({ colorScheme }
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen
-            name="settings"
-            options={{
-              presentation: 'modal',
-              animation: 'slide_from_bottom',
-            }}
-          />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" backgroundColor="white" hidden />
