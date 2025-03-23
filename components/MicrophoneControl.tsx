@@ -246,8 +246,8 @@ export function MicrophoneControl() {
                       styles.statusIndicator, 
                       { 
                         backgroundColor: 
-                          activeScene === 'solo' ? '#4AFF50' : 
-                          activeScene === 'tineri' ? '#FF3A3A' : 
+                          activeScene === 'pornit' ? '#4AFF50' : 
+                          activeScene === 'oprit' ? '#FF3A3A' : 
                           '#FFA500' 
                       }
                     ]} />
@@ -261,6 +261,19 @@ export function MicrophoneControl() {
                   </>
                 )}
               </View>
+              
+              {(activeScene === 'pornit' || activeScene === 'oprit') && (
+                <View style={styles.microphoneStatusContainer}>
+                  <ThemedText style={[
+                    styles.microphoneStatusText, 
+                    { 
+                      color: activeScene === 'pornit' ? '#4AFF50' : '#FF3A3A'
+                    }
+                  ]}>
+                    Microfonul este {activeScene === 'pornit' ? 'PORNIT' : 'OPRIT'}
+                  </ThemedText>
+                </View>
+              )}
             </View>
             </>
           )}
@@ -396,5 +409,16 @@ const styles = StyleSheet.create({
   initializingText: {
     fontSize: 18,
     fontWeight: '500',
+  },
+  microphoneStatusContainer: {
+    marginTop: 15,
+    padding: 10,
+    borderRadius: 8,
+    alignSelf: 'center',
+  },
+  microphoneStatusText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
