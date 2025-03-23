@@ -4,7 +4,7 @@ import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useMicrophoneContext } from './MicrophoneContext';
 
-type SceneType = 'solo' | 'tineri' | 'sala';
+type SceneType = 'pornit' | 'oprit' | 'finish';
 
 export function MicrophoneControl() {
   const [activeScene, setActiveScene] = useState<SceneType | null>(null);
@@ -140,18 +140,18 @@ export function MicrophoneControl() {
                   style={[
                     styles.button,
                     styles.startButton,
-                    activeScene === 'solo' && styles.activeButton,
+                    activeScene === 'pornit' && styles.activeButton,
                     colorScheme === 'dark' && styles.buttonDark,
                     isUpdating && styles.updatingButton,
-                    activeScene === 'solo' && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
+                    activeScene === 'pornit' && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
                   ]}
-                  onPress={() => changeScene('solo')}
+                  onPress={() => changeScene('pornit')}
                   disabled={isUpdating || !isConnected}
                 >
                   <ThemedText 
                     style={[
                       styles.buttonText, 
-                      activeScene === 'solo' && styles.activeButtonText,
+                      activeScene === 'pornit' && styles.activeButtonText,
                       { color: textColor },
                       (isUpdating || !isConnected) && styles.disabledText
                     ]}
@@ -164,18 +164,18 @@ export function MicrophoneControl() {
                   style={[
                     styles.button,
                     styles.stopButton,
-                    activeScene === 'tineri' && styles.activeButton,
+                    activeScene === 'oprit' && styles.activeButton,
                     colorScheme === 'dark' && styles.buttonDark,
                     isUpdating && styles.updatingButton,
-                    activeScene === 'tineri' && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
+                    activeScene === 'oprit' && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
                   ]}
-                  onPress={() => changeScene('tineri')}
+                  onPress={() => changeScene('oprit')}
                   disabled={isUpdating || !isConnected}
                 >
                   <ThemedText 
                     style={[
                       styles.buttonText, 
-                      activeScene === 'tineri' && styles.activeButtonText,
+                      activeScene === 'oprit' && styles.activeButtonText,
                       { color: textColor },
                       (isUpdating || !isConnected) && styles.disabledText
                     ]}
@@ -189,18 +189,18 @@ export function MicrophoneControl() {
                 style={[
                   styles.fullWidthButton,
                   styles.endButton,
-                  activeScene === 'sala' && styles.activeButton,
+                  activeScene === 'finish' && styles.activeButton,
                   colorScheme === 'dark' && styles.buttonDark,
                   isUpdating && styles.updatingButton,
-                  activeScene === 'sala' && { backgroundColor: 'rgba(255, 165, 0, 0.6)' }
+                  activeScene === 'finish' && { backgroundColor: 'rgba(255, 165, 0, 0.6)' }
                 ]}
-                onPress={() => changeScene('sala')}
+                onPress={() => changeScene('finish')}
                 disabled={isUpdating || !isConnected}
               >
                 <ThemedText 
                   style={[
                     styles.buttonText, 
-                    activeScene === 'sala' && styles.activeButtonText,
+                    activeScene === 'finish' && styles.activeButtonText,
                     { color: textColor },
                     (isUpdating || !isConnected) && styles.disabledText
                   ]}
@@ -223,8 +223,8 @@ export function MicrophoneControl() {
                     ]} />
                     <ThemedText style={[styles.statusText, { color: textColor }]}>
                       Scenă activă: {
-                        activeScene === 'solo' ? 'PORNIT' : 
-                        activeScene === 'tineri' ? 'OPRIT' : 
+                        activeScene === 'pornit' ? 'PORNIT' : 
+                        activeScene === 'oprit' ? 'OPRIT' : 
                         'ÎNCHEIERE PROGRAM'
                       }
                     </ThemedText>

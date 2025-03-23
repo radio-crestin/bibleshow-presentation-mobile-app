@@ -5,11 +5,6 @@
     "serverPassword": "your-password-here",
     "obs": {
         "address": "localhost:4455",
-        "password": "your-obs-password",
-        "scenes": {
-            "solo": "pornit",
-            "tineri": "oprit",
-            "sala": "finish"
-        }
+        "password": "your-obs-password"
     }
 }

@@ -52,23 +52,20 @@ async function connectToOBS() {
       console.log('OBS scene changed:', data.sceneName);
       currentScene = data.sceneName;
       
-      // Map the current scene to a scene type
-      currentSceneType = getSceneTypeFromName(currentScene);
-      
-      console.log(`Current scene type: ${currentSceneType || 'unknown'}`);
+      console.log(`Current scene: ${currentScene}`);
       
       // Automatically set microphone state based on scene
-      if (currentSceneType === 'solo' && microphoneState !== 'on') {
+      if (currentScene === 'pornit' && microphoneState !== 'on') {
         microphoneState = 'on';
-        console.log('Microphone automatically turned on due to "solo" scene');
+        console.log('Microphone automatically turned on due to "pornit" scene');
         broadcastMicrophoneState();
-      } else if (currentSceneType === 'tineri' && microphoneState !== 'off') {
+      } else if (currentScene === 'oprit' && microphoneState !== 'off') {
         microphoneState = 'off';
-        console.log('Microphone automatically turned off due to "tineri" scene');
+        console.log('Microphone automatically turned off due to "oprit" scene');
         broadcastMicrophoneState();
-      } else if (currentSceneType === 'sala' && microphoneState !== 'other') {
+      } else if (currentScene === 'finish' && microphoneState !== 'other') {
         microphoneState = 'other';
-        console.log('Microphone set to "other" due to "sala" scene');
+        console.log('Microphone set to "other" due to "finish" scene');
         broadcastMicrophoneState();
       }
       
@@ -108,15 +105,11 @@ async function updateOBSSceneInfo() {
     const sceneInfo = await obs.call('GetCurrentProgramScene');
     currentScene = sceneInfo.currentProgramSceneName;
     
-    // Map the current scene to a scene type
-    currentSceneType = getSceneTypeFromName(currentScene);
-    
     // Get list of available scenes
     const sceneList = await obs.call('GetSceneList');
     availableScenes = sceneList.scenes.map(scene => scene.sceneName);
     
     console.log('Current OBS scene:', currentScene);
-    console.log('Current scene type:', currentSceneType || 'unknown');
     console.log('Available scenes:', availableScenes);
     
     // Broadcast updated info to clients
@@ -132,7 +125,7 @@ function broadcastSceneChange() {
     if (client.readyState === 1) { // WebSocket.OPEN
       client.send(JSON.stringify({
         type: 'obsSceneChanged',
-        scene: currentSceneType
+        scene: currentScene
       }));
       
       // Also send detailed OBS info
@@ -308,23 +301,7 @@ let microphoneState = 'off'; // Add microphone state
 const obs = new OBSWebSocket();
 let obsConnected = false;
 let currentScene = null;
-let currentSceneType = null;
 let availableScenes = [];
-
-// Simple mapping from OBS scene name to scene type
-function getSceneTypeFromName(sceneName) {
-  for (const [type, name] of Object.entries(config.obs.scenes)) {
-    if (name === sceneName) {
-      return type;
-    }
-  }
-  return null;
-}
-
-// Simple mapping from scene type to OBS scene name
-function getSceneNameFromType(sceneType) {
-  return config.obs.scenes[sceneType] || null;
-}
 
 // XML parser
 const parser = new xml2js.Parser({ explicitArray: false });
@@ -481,30 +458,26 @@ wss.on('connection', async (ws) => {
         // Change OBS scene based on microphone state
         if (obsConnected) {
           try {
-            let sceneType = '';
+            let sceneName = '';
             if (microphoneState === 'on') {
-              sceneType = 'solo';
+              sceneName = 'pornit';
             } else if (microphoneState === 'off') {
-              sceneType = 'tineri';
+              sceneName = 'oprit';
             } else if (microphoneState === 'other') {
-              sceneType = 'sala';
+              sceneName = 'finish';
             }
             
-            if (sceneType) {
-              const sceneName = getSceneNameFromType(sceneType);
-              if (sceneName && sceneName !== currentScene) {
-                console.log(`Changing scene to ${sceneName} because microphone state is ${microphoneState}`);
-                await obs.call('SetCurrentProgramScene', {
-                  sceneName: sceneName
-                });
-                
-                // Update current scene and type
-                currentScene = sceneName;
-                currentSceneType = sceneType;
-                
-                // Broadcast the scene change
-                broadcastSceneChange();
-              }
+            if (sceneName && sceneName !== currentScene) {
+              console.log(`Changing scene to ${sceneName} because microphone state is ${microphoneState}`);
+              await obs.call('SetCurrentProgramScene', {
+                sceneName: sceneName
+              });
+              
+              // Update current scene
+              currentScene = sceneName;
+              
+              // Broadcast the scene change
+              broadcastSceneChange();
             }
           } catch (error) {
             console.error('Error changing OBS scene:', error.message);
@@ -534,24 +507,13 @@ wss.on('connection', async (ws) => {
       // Handle OBS scene change request
       if (data.type === 'changeObsScene' && data.scene && obsConnected) {
         try {
-          const sceneName = getSceneNameFromType(data.scene);
-          if (!sceneName) {
-            console.error(`Scene mapping not found for: ${data.scene}`);
-            ws.send(JSON.stringify({
-              type: 'error',
-              message: `Scene mapping not found for: ${data.scene}`
-            }));
-            return;
-          }
-          
           await obs.call('SetCurrentProgramScene', {
-            sceneName: sceneName
+            sceneName: data.scene
           });
-          console.log(`Changed OBS scene to: ${sceneName} (from request: ${data.scene})`);
+          console.log(`Changed OBS scene to: ${data.scene}`);
           
-          // Set the current scene type directly from the request
-          currentSceneType = data.scene;
-          currentScene = sceneName;
+          // Update current scene
+          currentScene = data.scene;
           
           // Broadcast the scene change to all clients
           broadcastSceneChange();
@@ -562,17 +524,12 @@ wss.on('connection', async (ws) => {
       
       // Handle OBS info request
       if (data.type === 'getOBSInfo' || data.type === 'getObsSceneStatus') {
-        // Make sure currentSceneType is set correctly
-        if (currentScene) {
-          currentSceneType = getSceneTypeFromName(currentScene);
-        }
-        
-        console.log(`Sending scene status: ${currentSceneType} (current scene: ${currentScene})`);
+        console.log(`Sending scene status: ${currentScene}`);
         
         // Send OBS info
         ws.send(JSON.stringify({
           type: data.type === 'getObsSceneStatus' ? 'sceneStatus' : 'obsInfo',
-          scene: currentSceneType,
+          scene: currentScene,
           data: {
             connected: obsConnected,
             currentScene,
