@@ -1,0 +1,15 @@
+{
+    "xmlPath": "bibleshow.xml",
+    "port": 3000,
+    "bibleShowRemoteEndpoint": "http://192.168.0.147:8282",
+    "serverPassword": "XXXX",
+    "obs": {
+        "address": "192.168.0.147:4455",
+        "password": "XXXXX",
+        "scenes": {
+            "solo": "pornit",
+            "tineri": "oprit",
+            "sala": "finish"
+        }
+    }
+}

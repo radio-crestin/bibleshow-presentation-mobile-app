@@ -9,7 +9,10 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "ANDROID_ENABLE_PROGUARD_IN_RELEASE_BUILDS": "false"
+      }
     },
     "production": {
       "autoIncrement": true

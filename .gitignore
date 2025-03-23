@@ -42,4 +42,5 @@ yarn-error.*
 app-example
 .aider*
 
-.env.local
+.env
+.env.*

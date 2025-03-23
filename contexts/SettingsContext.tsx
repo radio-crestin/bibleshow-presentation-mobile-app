@@ -49,6 +49,8 @@ type SettingsContextType = {
     highlightedTextBold: boolean;
     setHighlightedTextBold: (bold: boolean) => void;
     reConnectWebSocket: () => WebSocket;
+    usageMode: UsageMode;
+    setUsageMode: (mode: UsageMode) => void;
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -103,26 +105,32 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
 
         console.log('Connecting to server...');
 
-        const websocket = new WebSocket(wsUrl);
+        try {
+            const websocket = new WebSocket(wsUrl);
 
-        websocket.onopen = () => {
-            console.log('Connected to server');
-            setWs(websocket);
-            setIsConnected(true);
-        };
+            websocket.onopen = () => {
+                console.log('Connected to server');
+                setWs(websocket);
+                setIsConnected(true);
+            };
 
-        websocket.onclose = () => {
-            console.log('Disconnected from server');
+            websocket.onclose = () => {
+                console.log('Disconnected from server');
+                setIsConnected(false);
+                setWs(null);
+            };
+
+            websocket.onerror = (error) => {
+                console.log('WebSocket error:', error);
+                setIsConnected(false);
+            };
+
+            return websocket;
+        } catch (error) {
+            console.error('Error connecting to WebSocket:', error);
             setIsConnected(false);
-            setWs(null);
-        };
-
-        websocket.onerror = (error) => {
-            console.log('WebSocket error:', error);
-            setIsConnected(false);
-        };
-
-        return websocket;
+            return null;
+        }
     };
 
     // Load saved settings
@@ -154,7 +162,11 @@ export function SettingsProvider({children}: { children: React.ReactNode }) {
         const reconnectInterval = setInterval(() => {
             if (!isConnected) {
                 console.log('Attempting to reconnect...');
-                reConnectWebSocket();
+                try {
+                    reConnectWebSocket();
+                } catch(e) {
+                    console.error('Error reconnecting:', e);
+                }
             }
         }, 1000);
 
