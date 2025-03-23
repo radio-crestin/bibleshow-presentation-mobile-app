@@ -27,7 +27,7 @@ export function MicrophoneControl() {
     const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === 'sceneStatus') {
+        if (data.type === 'sceneStatus' || data.type === 'obsSceneChanged') {
           setActiveScene(data.scene as SceneType);
           setIsUpdating(false);
           setIsInitializing(false);
@@ -44,7 +44,7 @@ export function MicrophoneControl() {
     const requestStatus = () => {
       try {
         if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: 'getSceneStatus' }));
+          ws.send(JSON.stringify({ type: 'getObsSceneStatus' }));
           return true;
         }
         return false;
@@ -91,7 +91,7 @@ export function MicrophoneControl() {
   useEffect(() => {
     if (isConnected && ws && ws.readyState === WebSocket.OPEN) {
       setIsInitializing(true);
-      ws.send(JSON.stringify({ type: 'getSceneStatus' }));
+      ws.send(JSON.stringify({ type: 'getObsSceneStatus' }));
     }
   }, [isConnected]);
   
@@ -104,7 +104,7 @@ export function MicrophoneControl() {
     // Send scene change command to the server
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({
-        type: 'changeScene',
+        type: 'changeObsScene',
         scene: scene
       }));
       console.log(`Scene change command sent: ${scene}`);
