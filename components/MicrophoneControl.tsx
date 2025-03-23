@@ -254,7 +254,7 @@ export function MicrophoneControl() {
               
               {activeScene === 'finish' && (
                 <View style={styles.reminderContainer}>
-                  <ThemedText style={styles.reminderText}>
+                  <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
                     Nu uitați să opriți microfonul pentru a nu se consuma bateria
                   </ThemedText>
                 </View>
@@ -419,6 +419,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
-    color: '#FFA500',
+    color: '#FF0000',
   },
 });
