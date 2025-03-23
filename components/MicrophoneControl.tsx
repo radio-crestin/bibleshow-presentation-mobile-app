@@ -253,17 +253,34 @@ export function MicrophoneControl() {
                     </ThemedText>
                   </TouchableOpacity>
                   
-                  {activeScene === 'finish' && isLandscape && (
-                    <View style={styles.reminderContainer}>
-                      <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
-                        Nu uitați să opriți microfonul pentru a nu se consuma bateria
-                      </ThemedText>
-                    </View>
+                  {isLandscape && (
+                    <>
+                      {(activeScene === 'pornit' || activeScene === 'oprit') && (
+                        <View style={styles.microphoneStatusContainer}>
+                          <ThemedText style={[
+                            styles.microphoneStatusText, 
+                            { 
+                              color: activeScene === 'pornit' ? '#4AFF50' : '#FF3A3A'
+                            }
+                          ]}>
+                            Microfonul este {activeScene === 'pornit' ? 'PORNIT' : 'OPRIT'}
+                          </ThemedText>
+                        </View>
+                      )}
+                      
+                      {activeScene === 'finish' && (
+                        <View style={styles.reminderContainer}>
+                          <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
+                            Nu uitați să opriți microfonul pentru a nu se consuma bateria
+                          </ThemedText>
+                        </View>
+                      )}
+                    </>
                   )}
                 </View>
               </View>
               
-              {(activeScene === 'pornit' || activeScene === 'oprit') && (
+              {(activeScene === 'pornit' || activeScene === 'oprit') && !isLandscape && (
                 <View style={styles.microphoneStatusContainer}>
                   <ThemedText style={[
                     styles.microphoneStatusText, 
@@ -371,6 +388,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     maxWidth: 200,
     minWidth: 120,
+    width: '100%',
   },
   fullWidthButton: {
     height: 80,
@@ -475,7 +493,8 @@ const styles = StyleSheet.create({
   buttonLandscape: {
     height: 140,
     minWidth: 140,
-    maxWidth: 220,
+    maxWidth: '100%',
+    width: '100%',
   },
   fullWidthButtonLandscape: {
     height: 100,
