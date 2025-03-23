@@ -271,7 +271,7 @@ export function MicrophoneControl() {
                       {activeScene === 'finish' && (
                         <View style={styles.reminderContainer}>
                           <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
-                            Nu uitați să opriți microfonul pentru a nu se consuma bateria
+                            Nu uitați să opriți microfonul!
                           </ThemedText>
                         </View>
                       )}
