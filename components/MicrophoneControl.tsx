@@ -239,29 +239,6 @@ export function MicrophoneControl() {
                 </ThemedText>
               </TouchableOpacity>
               
-              <View style={styles.statusContainer}>
-                {activeScene && (
-                  <>
-                    <View style={[
-                      styles.statusIndicator, 
-                      { 
-                        backgroundColor: 
-                          activeScene === 'pornit' ? '#4AFF50' : 
-                          activeScene === 'oprit' ? '#FF3A3A' : 
-                          '#FFA500' 
-                      }
-                    ]} />
-                    <ThemedText style={[styles.statusText, { color: textColor }]}>
-                      Scenă activă: {
-                        activeScene === 'pornit' ? 'PORNIT' : 
-                        activeScene === 'oprit' ? 'OPRIT' : 
-                        'ÎNCHEIERE PROGRAM'
-                      }
-                    </ThemedText>
-                  </>
-                )}
-              </View>
-              
               {(activeScene === 'pornit' || activeScene === 'oprit') && (
                 <View style={styles.microphoneStatusContainer}>
                   <ThemedText style={[
@@ -271,6 +248,14 @@ export function MicrophoneControl() {
                     }
                   ]}>
                     Microfonul este {activeScene === 'pornit' ? 'PORNIT' : 'OPRIT'}
+                  </ThemedText>
+                </View>
+              )}
+              
+              {activeScene === 'finish' && (
+                <View style={styles.reminderContainer}>
+                  <ThemedText style={styles.reminderText}>
+                    Nu uitați să opriți microfonul pentru a nu se consuma bateria
                   </ThemedText>
                 </View>
               )}
@@ -420,5 +405,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  reminderContainer: {
+    marginTop: 15,
+    padding: 10,
+    borderRadius: 8,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 165, 0, 0.5)',
+  },
+  reminderText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#FFA500',
   },
 });
