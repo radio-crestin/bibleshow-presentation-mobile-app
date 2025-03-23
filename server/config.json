@@ -7,9 +7,9 @@
         "address": "192.168.0.147:4455",
         "password": "john1234",
         "scenes": {
-            "pornit": "solo",
-            "oprit": "tineri",
-            "finish": "sala"
+            "solo": "pornit",
+            "tineri": "oprit",
+            "sala": "finish"
         }
     }
 }
