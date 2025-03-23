@@ -305,7 +305,7 @@ export function MicrophoneControl() {
                 {activeScene === 'finish' && !isLandscape && (
                   <View style={styles.reminderContainer}>
                     <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
-                      Nu uitați să opriți microfonul pentru a nu se consuma bateria
+                      Nu uitați să opriți microfonul!
                     </ThemedText>
                   </View>
                 )}
@@ -385,8 +385,8 @@ const styles = StyleSheet.create({
   },
   buttonContainerLandscape: {
     flexDirection: 'column',
-    width: '50%',
-    maxWidth: none,
+    width: '48%',
+    maxWidth: 220,
   },
   rightContainer: {
     width: '100%',
@@ -394,8 +394,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightContainerLandscape: {
-    width: '50%',
-    maxWidth: none,
+    width: '48%',
+    maxWidth: 300,
   },
   button: {
     flex: 1,
