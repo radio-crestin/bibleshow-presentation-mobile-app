@@ -177,6 +177,7 @@ export function MicrophoneControl() {
                     style={[
                       styles.button,
                       styles.startButton,
+                      isLandscape && styles.buttonLandscape,
                       activeScene === 'pornit' && styles.activeButton,
                       colorScheme === 'dark' && styles.buttonDark,
                       isUpdating && styles.updatingButton,
@@ -201,6 +202,7 @@ export function MicrophoneControl() {
                     style={[
                       styles.button,
                       styles.stopButton,
+                      isLandscape && styles.buttonLandscape,
                       activeScene === 'oprit' && styles.activeButton,
                       colorScheme === 'dark' && styles.buttonDark,
                       isUpdating && styles.updatingButton,
@@ -230,6 +232,7 @@ export function MicrophoneControl() {
                     style={[
                       styles.fullWidthButton,
                       styles.endButton,
+                      isLandscape && styles.fullWidthButtonLandscape,
                       activeScene === 'finish' && styles.activeButton,
                       colorScheme === 'dark' && styles.buttonDark,
                       isUpdating && styles.updatingButton,
@@ -333,6 +336,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     gap: 20,
+    paddingTop: 40,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -347,7 +351,7 @@ const styles = StyleSheet.create({
   buttonContainerLandscape: {
     flexDirection: 'column',
     width: '48%',
-    maxWidth: 200,
+    maxWidth: 220,
   },
   rightContainer: {
     width: '100%',
@@ -467,5 +471,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     color: '#FF0000',
+  },
+  buttonLandscape: {
+    height: 140,
+    minWidth: 140,
+    maxWidth: 220,
+  },
+  fullWidthButtonLandscape: {
+    height: 100,
   },
 });
