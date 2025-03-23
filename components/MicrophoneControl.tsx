@@ -28,10 +28,12 @@ export function MicrophoneControl() {
       try {
         const data = JSON.parse(event.data);
         if (data.type === 'sceneStatus' || data.type === 'obsSceneChanged') {
-          setActiveScene(data.scene as SceneType);
-          setIsUpdating(false);
-          setIsInitializing(false);
           console.log(`Received scene status: ${data.scene}`);
+          if (data.scene) {
+            setActiveScene(data.scene as SceneType);
+            setIsUpdating(false);
+          }
+          setIsInitializing(false);
         }
       } catch (error) {
         console.error('Error processing message:', error);
