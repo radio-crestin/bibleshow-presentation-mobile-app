@@ -156,48 +156,30 @@ export default function SettingsScreen() {
           
           <View style={styles.usageModeContainer}>
             <ThemedText style={styles.usageModeLabel}>Selectează modul de utilizare:</ThemedText>
-            {Platform.OS === 'web' ? (
-              <View style={styles.selectContainer}>
-                <select 
-                  ref={selectRef}
-                  value={usageMode}
-                  onChange={(e) => setUsageMode(e.target.value as UsageMode)}
-                  style={[
-                    styles.webSelect,
-                    colorScheme === 'dark' && { backgroundColor: '#333', color: 'white', borderColor: '#666' }
-                  ]}
-                >
-                  {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
-                    <option key={value} value={value}>{label}</option>
-                  ))}
-                </select>
-              </View>
-            ) : (
-              <View style={styles.nativeOptionsContainer}>
-                {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
+            <View style={styles.nativeOptionsContainer}>
+              {Object.entries(USAGE_MODE_LABELS).map(([value, label]) => (
                   <TouchableOpacity
-                    key={value}
-                    style={[
-                      styles.optionButton,
-                      usageMode === value && styles.selectedOptionButton,
-                      colorScheme === 'dark' && styles.optionButtonDark,
-                      usageMode === value && colorScheme === 'dark' && styles.selectedOptionButtonDark
-                    ]}
-                    onPress={() => setUsageMode(value as UsageMode)}
-                  >
-                    <ThemedText 
+                      key={value}
                       style={[
-                        styles.optionText,
-                        usageMode === value && styles.selectedOptionText,
-                        colorScheme === 'dark' && styles.optionTextDark
+                        styles.optionButton,
+                        usageMode === value && styles.selectedOptionButton,
+                        colorScheme === 'dark' && styles.optionButtonDark,
+                        usageMode === value && colorScheme === 'dark' && styles.selectedOptionButtonDark
                       ]}
+                      onPress={() => setUsageMode(value as UsageMode)}
+                  >
+                    <ThemedText
+                        style={[
+                          styles.optionText,
+                          usageMode === value && styles.selectedOptionText,
+                          colorScheme === 'dark' && styles.optionTextDark
+                        ]}
                     >
                       {label}
                     </ThemedText>
                   </TouchableOpacity>
-                ))}
-              </View>
-            )}
+              ))}
+            </View>
           </View>
         </View>
         <View style={styles.section}>
