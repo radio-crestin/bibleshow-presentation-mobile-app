@@ -156,7 +156,7 @@ export function MicrophoneControl() {
                       (isUpdating || !isConnected) && styles.disabledText
                     ]}
                   >
-                    Start
+                    Pornit
                   </ThemedText>
                 </TouchableOpacity>
                 
@@ -180,7 +180,7 @@ export function MicrophoneControl() {
                       (isUpdating || !isConnected) && styles.disabledText
                     ]}
                   >
-                    Stop
+                    Oprit
                   </ThemedText>
                 </TouchableOpacity>
               </View>
@@ -223,8 +223,8 @@ export function MicrophoneControl() {
                     ]} />
                     <ThemedText style={[styles.statusText, { color: textColor }]}>
                       Scenă activă: {
-                        activeScene === 'solo' ? 'START' : 
-                        activeScene === 'tineri' ? 'STOP' : 
+                        activeScene === 'solo' ? 'PORNIT' : 
+                        activeScene === 'tineri' ? 'OPRIT' : 
                         'ÎNCHEIERE PROGRAM'
                       }
                     </ThemedText>

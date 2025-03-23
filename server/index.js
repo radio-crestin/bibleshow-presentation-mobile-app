@@ -64,15 +64,15 @@ async function connectToOBS() {
       // Automatically set microphone state based on scene
       if (currentScene === config.obs.scenes.solo && microphoneState !== 'on') {
         microphoneState = 'on';
-        console.log('Microphone automatically turned on due to "solo" scene');
+        console.log('Microphone automatically turned on due to "pornit" scene');
         broadcastMicrophoneState();
       } else if (currentScene === config.obs.scenes.tineri && microphoneState !== 'off') {
         microphoneState = 'off';
-        console.log('Microphone automatically turned off due to "tineri" scene');
+        console.log('Microphone automatically turned off due to "oprit" scene');
         broadcastMicrophoneState();
       } else if (currentScene === config.obs.scenes.sala && microphoneState !== 'other') {
         microphoneState = 'other';
-        console.log('Microphone set to "other" due to "sala" scene');
+        console.log('Microphone set to "other" due to "finish" scene');
         broadcastMicrophoneState();
       }
       
