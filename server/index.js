@@ -475,7 +475,7 @@ wss.on('connection', async (ws) => {
               targetScene = config.obs.scenes.solo;
               console.log(`Changing scene to ${targetScene} because microphone turned on`);
             } else if (microphoneState === 'off') {
-              targetScene = config.obs.scenes.default;
+              targetScene = config.obs.scenes.tineri;
               console.log(`Changing scene to ${targetScene} because microphone turned off`);
             }
             // Note: For 'other' state, we don't change the scene
