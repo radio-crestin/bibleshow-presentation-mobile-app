@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity, Platform, Alert, ActivityIndicator } from 'react-native';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import { ColorPickerDialog } from '@/components/ColorPickerDialog';
 import { ColorPreview } from '@/components/ColorPreview';
@@ -66,10 +66,44 @@ export default function SettingsScreen() {
     setTempWsUrl(wsUrl);
   }, [wsUrl]);
   
+  // Function to validate WebSocket URL
+  const validateWsUrl = (url: string): { isValid: boolean; message?: string } => {
+    // Check if URL is empty
+    if (!url.trim()) {
+      return { isValid: false, message: 'Adresa serverului nu poate fi goală' };
+    }
+    
+    // Check if URL starts with ws:// or wss://
+    if (!url.startsWith('ws://') && !url.startsWith('wss://')) {
+      return { isValid: false, message: 'Adresa trebuie să înceapă cu ws:// sau wss://' };
+    }
+    
+    try {
+      // Parse the URL to validate its format
+      const parsedUrl = new URL(url);
+      
+      // Check if port is specified and is a valid number
+      if (parsedUrl.port && !/^\d+$/.test(parsedUrl.port)) {
+        return { isValid: false, message: 'Portul trebuie să fie un număr' };
+      }
+      
+      // Check if port is in valid range (1-65535)
+      if (parsedUrl.port && (parseInt(parsedUrl.port) < 1 || parseInt(parsedUrl.port) > 65535)) {
+        return { isValid: false, message: 'Portul trebuie să fie între 1 și 65535' };
+      }
+      
+      return { isValid: true };
+    } catch (error) {
+      return { isValid: false, message: 'Format URL invalid' };
+    }
+  };
+  
   // Function to test connection to WebSocket server
   const testConnection = async () => {
-    if (!tempWsUrl.trim()) {
-      Alert.alert('Eroare', 'Adresa serverului nu poate fi goală');
+    // Validate the URL first
+    const validation = validateWsUrl(tempWsUrl);
+    if (!validation.isValid) {
+      Alert.alert('Eroare', validation.message || 'URL invalid');
       return;
     }
     
@@ -215,17 +249,37 @@ export default function SettingsScreen() {
               autoCapitalize="none"
               autoCorrect={false}
             />
+            <View style={styles.urlValidationContainer}>
+              {tempWsUrl.trim() !== '' && (
+                <ThemedText style={[
+                  styles.validationText,
+                  validateWsUrl(tempWsUrl).isValid ? styles.validText : styles.invalidText
+                ]}>
+                  {validateWsUrl(tempWsUrl).isValid 
+                    ? '✓ Format URL valid' 
+                    : `✗ ${validateWsUrl(tempWsUrl).message}`}
+                </ThemedText>
+              )}
+            </View>
             <Pressable
               onPress={testConnection}
               style={[
                 styles.connectButton,
-                isConnecting && styles.connectingButton
+                isConnecting && styles.connectingButton,
+                !validateWsUrl(tempWsUrl).isValid && styles.disabledButton
               ]}
-              disabled={isConnecting}
+              disabled={isConnecting || !validateWsUrl(tempWsUrl).isValid}
             >
-              <ThemedText style={styles.connectButtonText}>
-                {isConnecting ? 'Se conectează...' : 'Conectare și salvare'}
-              </ThemedText>
+              {isConnecting ? (
+                <View style={styles.loadingContainer}>
+                  <ActivityIndicator size="small" color="white" />
+                  <ThemedText style={styles.connectButtonText}>Se conectează...</ThemedText>
+                </View>
+              ) : (
+                <ThemedText style={styles.connectButtonText}>
+                  Conectare și salvare
+                </ThemedText>
+              )}
             </Pressable>
             <ThemedText style={styles.currentConnectionText}>
               Adresă curentă: {wsUrl}
@@ -595,6 +649,28 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 14,
     fontStyle: 'italic',
+  },
+  urlValidationContainer: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  validationText: {
+    fontSize: 14,
+  },
+  validText: {
+    color: '#4CAF50',
+  },
+  invalidText: {
+    color: '#F44336',
+  },
+  disabledButton: {
+    backgroundColor: '#cccccc',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
   powerSaveContainer: {
     borderRadius: 12,
