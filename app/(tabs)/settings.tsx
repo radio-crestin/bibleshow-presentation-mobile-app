@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Pressable, TextInput, ScrollView, Switch, TouchableOpacity, Platform, Alert } from 'react-native';
 import { VerseSection } from '@/components/BibleVerseDisplay/VerseSection';
 import { ColorPickerDialog } from '@/components/ColorPickerDialog';
 import { ColorPreview } from '@/components/ColorPreview';
@@ -20,6 +20,8 @@ export default function SettingsScreen() {
     color: string;
     onSelect: (color: string) => void;
   } | null>(null);
+  const [tempWsUrl, setTempWsUrl] = useState('');
+  const [isConnecting, setIsConnecting] = useState(false);
   const { 
     normalFontSize,
     increaseNormalFontSize,
@@ -58,6 +60,54 @@ export default function SettingsScreen() {
     setUsageMode,
   } = useSettings();
   const router = useRouter();
+  
+  // Initialize tempWsUrl with the current wsUrl when component mounts
+  useEffect(() => {
+    setTempWsUrl(wsUrl);
+  }, [wsUrl]);
+  
+  // Function to test connection to WebSocket server
+  const testConnection = async () => {
+    if (!tempWsUrl.trim()) {
+      Alert.alert('Eroare', 'Adresa serverului nu poate fi goală');
+      return;
+    }
+    
+    setIsConnecting(true);
+    
+    try {
+      // Create a new WebSocket connection
+      const testWs = new WebSocket(tempWsUrl);
+      
+      // Set up a timeout to abort connection attempt after 5 seconds
+      const connectionTimeout = setTimeout(() => {
+        testWs.close();
+        setIsConnecting(false);
+        Alert.alert('Eroare', 'Conexiunea a expirat. Verificați adresa și asigurați-vă că serverul rulează.');
+      }, 5000);
+      
+      // Handle successful connection
+      testWs.onopen = () => {
+        clearTimeout(connectionTimeout);
+        testWs.close();
+        setIsConnecting(false);
+        
+        // Save the new URL
+        setWsUrl(tempWsUrl);
+        Alert.alert('Succes', 'Conexiune stabilită cu succes. Noua adresă a fost salvată.');
+      };
+      
+      // Handle connection error
+      testWs.onerror = (error) => {
+        clearTimeout(connectionTimeout);
+        setIsConnecting(false);
+        Alert.alert('Eroare', 'Nu s-a putut conecta la server. Verificați adresa și asigurați-vă că serverul rulează.');
+      };
+    } catch (error) {
+      setIsConnecting(false);
+      Alert.alert('Eroare', `Eroare la conectare: ${error instanceof Error ? error.message : 'Eroare necunoscută'}`);
+    }
+  };
   
   // Apply custom styling to the web select element
   useEffect(() => {
@@ -177,12 +227,27 @@ export default function SettingsScreen() {
             <ThemedText style={styles.wsUrlLabel}>Adresă server:</ThemedText>
             <TextInput
               style={styles.wsUrlInput}
-              value={wsUrl}
-              onChangeText={setWsUrl}
+              value={tempWsUrl}
+              onChangeText={setTempWsUrl}
               placeholder="ws://localhost:3000"
               autoCapitalize="none"
               autoCorrect={false}
             />
+            <Pressable
+              onPress={testConnection}
+              style={[
+                styles.connectButton,
+                isConnecting && styles.connectingButton
+              ]}
+              disabled={isConnecting}
+            >
+              <ThemedText style={styles.connectButtonText}>
+                {isConnecting ? 'Se conectează...' : 'Conectare și salvare'}
+              </ThemedText>
+            </Pressable>
+            <ThemedText style={styles.currentConnectionText}>
+              Adresă curentă: {wsUrl}
+            </ThemedText>
           </View>
         </View>
 
@@ -528,6 +593,26 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     color: '#000000',
+    marginBottom: 12,
+  },
+  connectButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  connectingButton: {
+    backgroundColor: '#999999',
+  },
+  connectButtonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  currentConnectionText: {
+    marginTop: 12,
+    fontSize: 14,
+    fontStyle: 'italic',
   },
   powerSaveContainer: {
     borderRadius: 12,
