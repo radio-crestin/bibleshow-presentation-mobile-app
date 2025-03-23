@@ -20,6 +20,9 @@ export default function SettingsScreen() {
     color: string;
     onSelect: (color: string) => void;
   } | null>(null);
+  const [tempWsUrl, setTempWsUrl] = useState('');
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
   const { 
     normalFontSize,
     increaseNormalFontSize,
@@ -29,6 +32,8 @@ export default function SettingsScreen() {
     decreaseHighlightedFontSize,
     wsUrl, 
     setWsUrl,
+    ws,
+    isConnected,
     powerSaveEnabled,
     setPowerSaveEnabled,
     powerSaveTimeout,
@@ -59,6 +64,11 @@ export default function SettingsScreen() {
   } = useSettings();
   const router = useRouter();
   
+  // Initialize tempWsUrl with the current wsUrl
+  useEffect(() => {
+    setTempWsUrl(wsUrl);
+  }, [wsUrl]);
+
   // Apply custom styling to the web select element
   useEffect(() => {
     if (Platform.OS === 'web' && selectRef.current) {
@@ -76,6 +86,50 @@ export default function SettingsScreen() {
       });
     }
   }, [usageMode, colorScheme]);
+
+  // Function to handle connection attempt
+  const handleConnect = async () => {
+    if (!tempWsUrl.trim()) {
+      setConnectionError('Adresa nu poate fi goală');
+      return;
+    }
+
+    setIsConnecting(true);
+    setConnectionError(null);
+
+    try {
+      // Create a new WebSocket connection
+      const newWs = new WebSocket(tempWsUrl);
+      
+      // Set a timeout for the connection attempt
+      const connectionTimeout = setTimeout(() => {
+        if (newWs.readyState !== WebSocket.OPEN) {
+          newWs.close();
+          setConnectionError('Conexiunea a expirat. Verificați adresa și încercați din nou.');
+          setIsConnecting(false);
+        }
+      }, 5000);
+
+      // Handle successful connection
+      newWs.onopen = () => {
+        clearTimeout(connectionTimeout);
+        setWsUrl(tempWsUrl); // Save the new URL to settings
+        setIsConnecting(false);
+      };
+
+      // Handle connection error
+      newWs.onerror = (error) => {
+        clearTimeout(connectionTimeout);
+        console.error('WebSocket connection error:', error);
+        setConnectionError('Eroare de conexiune. Verificați adresa și încercați din nou.');
+        setIsConnecting(false);
+      };
+    } catch (error) {
+      console.error('Error creating WebSocket:', error);
+      setConnectionError('Adresă invalidă. Verificați formatul și încercați din nou.');
+      setIsConnecting(false);
+    }
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -177,14 +231,51 @@ export default function SettingsScreen() {
           
           <View style={styles.wsUrlContainer}>
             <ThemedText style={styles.wsUrlLabel}>Adresă server:</ThemedText>
+            <View style={styles.connectionStatusContainer}>
+              <View style={[
+                styles.connectionIndicator, 
+                isConnected ? styles.connectionIndicatorConnected : styles.connectionIndicatorDisconnected
+              ]} />
+              <ThemedText style={styles.connectionStatusText}>
+                {isConnected ? 'Conectat' : 'Deconectat'}
+              </ThemedText>
+            </View>
             <TextInput
-              style={styles.wsUrlInput}
-              value={wsUrl}
-              onChangeText={setWsUrl}
+              style={[
+                styles.wsUrlInput,
+                connectionError && styles.wsUrlInputError
+              ]}
+              value={tempWsUrl}
+              onChangeText={(text) => {
+                setTempWsUrl(text);
+                setConnectionError(null);
+              }}
               placeholder="ws://localhost:3000"
               autoCapitalize="none"
               autoCorrect={false}
             />
+            {connectionError && (
+              <ThemedText style={styles.errorText}>{connectionError}</ThemedText>
+            )}
+            <Pressable
+              onPress={handleConnect}
+              style={[
+                styles.connectButton,
+                isConnecting && styles.connectButtonDisabled
+              ]}
+              disabled={isConnecting}
+            >
+              {isConnecting ? (
+                <ThemedText style={styles.connectButtonText}>Se conectează...</ThemedText>
+              ) : (
+                <ThemedText style={styles.connectButtonText}>Conectare</ThemedText>
+              )}
+            </Pressable>
+            {isConnected && (
+              <ThemedText style={styles.currentConnectionText}>
+                Adresă curentă: {wsUrl}
+              </ThemedText>
+            )}
           </View>
         </View>
 
@@ -524,12 +615,62 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: '600',
   },
+  connectionStatusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  connectionIndicator: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  connectionIndicatorConnected: {
+    backgroundColor: '#4CD964', // Green
+  },
+  connectionIndicatorDisconnected: {
+    backgroundColor: '#FF3B30', // Red
+  },
+  connectionStatusText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
   wsUrlInput: {
     backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
     color: '#000000',
+    marginBottom: 8,
+  },
+  wsUrlInputError: {
+    borderWidth: 1,
+    borderColor: '#FF3B30',
+  },
+  errorText: {
+    color: '#FF3B30',
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  connectButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  connectButtonDisabled: {
+    backgroundColor: '#999999',
+  },
+  connectButtonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  currentConnectionText: {
+    marginTop: 12,
+    fontSize: 14,
+    fontStyle: 'italic',
   },
   powerSaveContainer: {
     borderRadius: 12,
