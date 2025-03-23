@@ -165,79 +165,100 @@ export function MicrophoneControl() {
           ) : (
             <>
             <View style={styles.mainControlsArea}>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={[
-                    styles.button,
-                    styles.startButton,
-                    activeScene === 'pornit' && styles.activeButton,
-                    colorScheme === 'dark' && styles.buttonDark,
-                    isUpdating && styles.updatingButton,
-                    activeScene === 'pornit' && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
-                  ]}
-                  onPress={() => changeScene('pornit')}
-                  disabled={isUpdating || !isConnected}
-                >
-                  <ThemedText 
+              <View style={[
+                styles.buttonsLayout,
+                isLandscape && styles.buttonsLayoutLandscape
+              ]}>
+                <View style={[
+                  styles.buttonContainer,
+                  isLandscape && styles.buttonContainerLandscape
+                ]}>
+                  <TouchableOpacity
                     style={[
-                      styles.buttonText, 
-                      activeScene === 'pornit' && styles.activeButtonText,
-                      { color: textColor },
-                      (isUpdating || !isConnected) && styles.disabledText
+                      styles.button,
+                      styles.startButton,
+                      activeScene === 'pornit' && styles.activeButton,
+                      colorScheme === 'dark' && styles.buttonDark,
+                      isUpdating && styles.updatingButton,
+                      activeScene === 'pornit' && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
                     ]}
+                    onPress={() => changeScene('pornit')}
+                    disabled={isUpdating || !isConnected}
                   >
-                    Pornit
-                  </ThemedText>
-                </TouchableOpacity>
+                    <ThemedText 
+                      style={[
+                        styles.buttonText, 
+                        activeScene === 'pornit' && styles.activeButtonText,
+                        { color: textColor },
+                        (isUpdating || !isConnected) && styles.disabledText
+                      ]}
+                    >
+                      Pornit
+                    </ThemedText>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      styles.stopButton,
+                      activeScene === 'oprit' && styles.activeButton,
+                      colorScheme === 'dark' && styles.buttonDark,
+                      isUpdating && styles.updatingButton,
+                      activeScene === 'oprit' && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
+                    ]}
+                    onPress={() => changeScene('oprit')}
+                    disabled={isUpdating || !isConnected}
+                  >
+                    <ThemedText 
+                      style={[
+                        styles.buttonText, 
+                        activeScene === 'oprit' && styles.activeButtonText,
+                        { color: textColor },
+                        (isUpdating || !isConnected) && styles.disabledText
+                      ]}
+                    >
+                      Oprit
+                    </ThemedText>
+                  </TouchableOpacity>
+                </View>
                 
-                <TouchableOpacity
-                  style={[
-                    styles.button,
-                    styles.stopButton,
-                    activeScene === 'oprit' && styles.activeButton,
-                    colorScheme === 'dark' && styles.buttonDark,
-                    isUpdating && styles.updatingButton,
-                    activeScene === 'oprit' && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
-                  ]}
-                  onPress={() => changeScene('oprit')}
-                  disabled={isUpdating || !isConnected}
-                >
-                  <ThemedText 
+                <View style={[
+                  styles.rightContainer,
+                  isLandscape && styles.rightContainerLandscape
+                ]}>
+                  <TouchableOpacity
                     style={[
-                      styles.buttonText, 
-                      activeScene === 'oprit' && styles.activeButtonText,
-                      { color: textColor },
-                      (isUpdating || !isConnected) && styles.disabledText
+                      styles.fullWidthButton,
+                      styles.endButton,
+                      activeScene === 'finish' && styles.activeButton,
+                      colorScheme === 'dark' && styles.buttonDark,
+                      isUpdating && styles.updatingButton,
+                      activeScene === 'finish' && { backgroundColor: 'rgba(255, 165, 0, 0.6)' }
                     ]}
+                    onPress={() => changeScene('finish')}
+                    disabled={isUpdating || !isConnected}
                   >
-                    Oprit
-                  </ThemedText>
-                </TouchableOpacity>
+                    <ThemedText 
+                      style={[
+                        styles.buttonText, 
+                        activeScene === 'finish' && styles.activeButtonText,
+                        { color: textColor },
+                        (isUpdating || !isConnected) && styles.disabledText
+                      ]}
+                    >
+                      Încheiere program
+                    </ThemedText>
+                  </TouchableOpacity>
+                  
+                  {activeScene === 'finish' && isLandscape && (
+                    <View style={styles.reminderContainer}>
+                      <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
+                        Nu uitați să opriți microfonul pentru a nu se consuma bateria
+                      </ThemedText>
+                    </View>
+                  )}
+                </View>
               </View>
-              
-              <TouchableOpacity
-                style={[
-                  styles.fullWidthButton,
-                  styles.endButton,
-                  activeScene === 'finish' && styles.activeButton,
-                  colorScheme === 'dark' && styles.buttonDark,
-                  isUpdating && styles.updatingButton,
-                  activeScene === 'finish' && { backgroundColor: 'rgba(255, 165, 0, 0.6)' }
-                ]}
-                onPress={() => changeScene('finish')}
-                disabled={isUpdating || !isConnected}
-              >
-                <ThemedText 
-                  style={[
-                    styles.buttonText, 
-                    activeScene === 'finish' && styles.activeButtonText,
-                    { color: textColor },
-                    (isUpdating || !isConnected) && styles.disabledText
-                  ]}
-                >
-                  Încheiere program
-                </ThemedText>
-              </TouchableOpacity>
               
               {(activeScene === 'pornit' || activeScene === 'oprit') && (
                 <View style={styles.microphoneStatusContainer}>
@@ -252,7 +273,7 @@ export function MicrophoneControl() {
                 </View>
               )}
               
-              {activeScene === 'finish' && (
+              {activeScene === 'finish' && !isLandscape && (
                 <View style={styles.reminderContainer}>
                   <ThemedText style={[styles.reminderText, { color: '#FF0000' }]}>
                     Nu uitați să opriți microfonul pentru a nu se consuma bateria
@@ -301,6 +322,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
   },
+  buttonsLayout: {
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonsLayoutLandscape: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: 20,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -310,6 +343,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     maxWidth: 420,
     width: '100%',
+  },
+  buttonContainerLandscape: {
+    flexDirection: 'column',
+    width: '48%',
+    maxWidth: 200,
+  },
+  rightContainer: {
+    width: '100%',
+    maxWidth: 420,
+    alignItems: 'center',
+  },
+  rightContainerLandscape: {
+    width: '48%',
+    maxWidth: 300,
   },
   button: {
     flex: 1,
