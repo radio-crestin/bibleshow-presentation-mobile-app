@@ -411,9 +411,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     alignSelf: 'center',
-    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+    backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: 'rgba(255, 165, 0, 0.5)',
+    borderColor: '#FF0000',
   },
   reminderText: {
     fontSize: 16,
