@@ -4,8 +4,10 @@ import { ThemedText } from './ThemedText';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useMicrophoneContext } from './MicrophoneContext';
 
+type SceneType = 'solo' | 'tineri' | 'sala';
+
 export function MicrophoneControl() {
-  const [isOn, setIsOn] = useState<boolean | null | 'other'>(null);
+  const [activeScene, setActiveScene] = useState<SceneType | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const { isUpdating, setIsUpdating } = useMicrophoneContext();
   const { width, height } = useWindowDimensions();
@@ -18,24 +20,18 @@ export function MicrophoneControl() {
     isConnected
   } = useSettings();
   
-  // Listen for microphone status updates from the server
+  // Listen for scene status updates from the server
   useEffect(() => {
     if (!ws) return;
     
     const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === 'microphoneStatus') {
-          if (data.status === 'on') {
-            setIsOn(true);
-          } else if (data.status === 'off') {
-            setIsOn(false);
-          } else {
-            setIsOn('other');
-          }
+        if (data.type === 'sceneStatus') {
+          setActiveScene(data.scene as SceneType);
           setIsUpdating(false);
           setIsInitializing(false);
-          console.log(`Received microphone status: ${data.status}`);
+          console.log(`Received scene status: ${data.scene}`);
         }
       } catch (error) {
         console.error('Error processing message:', error);
@@ -44,16 +40,16 @@ export function MicrophoneControl() {
     
     ws.addEventListener('message', handleMessage);
     
-    // Request current microphone status on connection
+    // Request current scene status on connection
     const requestStatus = () => {
       try {
         if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
+          ws.send(JSON.stringify({ type: 'getSceneStatus' }));
           return true;
         }
         return false;
       } catch (error) {
-        console.error('Error requesting microphone status:', error);
+        console.error('Error requesting scene status:', error);
         return false;
       }
     };
@@ -95,25 +91,25 @@ export function MicrophoneControl() {
   useEffect(() => {
     if (isConnected && ws && ws.readyState === WebSocket.OPEN) {
       setIsInitializing(true);
-      ws.send(JSON.stringify({ type: 'getMicrophoneStatus' }));
+      ws.send(JSON.stringify({ type: 'getSceneStatus' }));
     }
   }, [isConnected]);
   
-  const toggleMicrophone = (newState: boolean) => {
+  const changeScene = (scene: SceneType) => {
     // Only proceed if we're not already updating
     if (isUpdating) return;
     
     setIsUpdating(true);
     
-    // Send microphone control command to the server
+    // Send scene change command to the server
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({
-        type: 'microphone',
-        action: newState ? 'on' : 'off'
+        type: 'changeScene',
+        scene: scene
       }));
-      console.log(`Microphone command sent: ${newState ? 'ON' : 'OFF'}`);
+      console.log(`Scene change command sent: ${scene}`);
     } else {
-      console.log(`WebSocket not connected. Cannot change microphone state.`);
+      console.log(`WebSocket not connected. Cannot change scene.`);
       setIsUpdating(false);
     }
   };
@@ -132,7 +128,7 @@ export function MicrophoneControl() {
               <ActivityIndicator size="large" color={textColor} />
               <ThemedText style={[styles.initializingText, { color: textColor }]}>
                 {isInitializing 
-                  ? 'Se încarcă starea microfonului...'
+                  ? 'Se încarcă starea scenei...'
                   : 'Se așteaptă conexiunea la server...'}
               </ThemedText>
             </View>
@@ -140,81 +136,102 @@ export function MicrophoneControl() {
             <>
             <View style={styles.mainControlsArea}>
               <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.onButton,
-            isOn === true && styles.activeButton,
-            colorScheme === 'dark' && styles.buttonDark,
-            isUpdating && styles.updatingButton,
-            isOn === true && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
-          ]}
-          onPress={() => toggleMicrophone(true)}
-          disabled={isUpdating || !isConnected}
-        >
-          <ThemedText 
-            style={[
-              styles.buttonText, 
-              isOn === true && styles.activeButtonText,
-              { color: textColor },
-              (isUpdating || !isConnected) && styles.disabledText
-            ]}
-          >
-            Pornit
-          </ThemedText>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.offButton,
-            isOn === false && styles.activeButton,
-            colorScheme === 'dark' && styles.buttonDark,
-            isUpdating && styles.updatingButton,
-            isOn === false && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
-          ]}
-          onPress={() => toggleMicrophone(false)}
-          disabled={isUpdating || !isConnected}
-        >
-          <ThemedText 
-            style={[
-              styles.buttonText, 
-              isOn === false && styles.activeButtonText,
-              { color: textColor },
-              (isUpdating || !isConnected) && styles.disabledText
-            ]}
-          >
-            Oprit
-          </ThemedText>
-        </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    styles.startButton,
+                    activeScene === 'solo' && styles.activeButton,
+                    colorScheme === 'dark' && styles.buttonDark,
+                    isUpdating && styles.updatingButton,
+                    activeScene === 'solo' && { backgroundColor: 'rgba(74, 255, 80, 0.5)' }
+                  ]}
+                  onPress={() => changeScene('solo')}
+                  disabled={isUpdating || !isConnected}
+                >
+                  <ThemedText 
+                    style={[
+                      styles.buttonText, 
+                      activeScene === 'solo' && styles.activeButtonText,
+                      { color: textColor },
+                      (isUpdating || !isConnected) && styles.disabledText
+                    ]}
+                  >
+                    Start
+                  </ThemedText>
+                </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    styles.stopButton,
+                    activeScene === 'tineri' && styles.activeButton,
+                    colorScheme === 'dark' && styles.buttonDark,
+                    isUpdating && styles.updatingButton,
+                    activeScene === 'tineri' && { backgroundColor: 'rgba(255, 0, 0, 0.6)' }
+                  ]}
+                  onPress={() => changeScene('tineri')}
+                  disabled={isUpdating || !isConnected}
+                >
+                  <ThemedText 
+                    style={[
+                      styles.buttonText, 
+                      activeScene === 'tineri' && styles.activeButtonText,
+                      { color: textColor },
+                      (isUpdating || !isConnected) && styles.disabledText
+                    ]}
+                  >
+                    Stop
+                  </ThemedText>
+                </TouchableOpacity>
               </View>
               
+              <TouchableOpacity
+                style={[
+                  styles.fullWidthButton,
+                  styles.endButton,
+                  activeScene === 'sala' && styles.activeButton,
+                  colorScheme === 'dark' && styles.buttonDark,
+                  isUpdating && styles.updatingButton,
+                  activeScene === 'sala' && { backgroundColor: 'rgba(255, 165, 0, 0.6)' }
+                ]}
+                onPress={() => changeScene('sala')}
+                disabled={isUpdating || !isConnected}
+              >
+                <ThemedText 
+                  style={[
+                    styles.buttonText, 
+                    activeScene === 'sala' && styles.activeButtonText,
+                    { color: textColor },
+                    (isUpdating || !isConnected) && styles.disabledText
+                  ]}
+                >
+                  Încheiere program
+                </ThemedText>
+              </TouchableOpacity>
+              
               <View style={styles.statusContainer}>
-                {isOn !== 'other' && (
+                {activeScene && (
                   <>
                     <View style={[
                       styles.statusIndicator, 
-                      { backgroundColor: isOn ? '#4AFF50' : '#FF3A3A' }
+                      { 
+                        backgroundColor: 
+                          activeScene === 'solo' ? '#4AFF50' : 
+                          activeScene === 'tineri' ? '#FF3A3A' : 
+                          '#FFA500' 
+                      }
                     ]} />
                     <ThemedText style={[styles.statusText, { color: textColor }]}>
-                      Microfonul este {isOn ? 'PORNIT' : 'OPRIT'}
+                      Scenă activă: {
+                        activeScene === 'solo' ? 'START' : 
+                        activeScene === 'tineri' ? 'STOP' : 
+                        'ÎNCHEIERE PROGRAM'
+                      }
                     </ThemedText>
                   </>
                 )}
               </View>
-              
-              {isOn === 'other' && (
-                <View style={[
-                  styles.warningContainer,
-                  isLandscape && styles.warningContainerLandscape
-                ]}>
-                  <ThemedText style={styles.warningText}>
-                    Nu uita să oprești microfonul la sfârșitul programului tinerilor.
-                  </ThemedText>
-                </View>
-              )}
             </View>
-            
             </>
           )}
         </View>
@@ -261,7 +278,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
-    marginBottom: 40,
+    marginBottom: 20,
     alignSelf: 'center',
     maxWidth: 420,
     width: '100%',
@@ -276,16 +293,30 @@ const styles = StyleSheet.create({
     maxWidth: 200,
     minWidth: 120,
   },
+  fullWidthButton: {
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 2,
+    marginBottom: 30,
+    width: '100%',
+    maxWidth: 420,
+  },
   buttonDark: {
     borderColor: '#666',
   },
-  onButton: {
+  startButton: {
     borderColor: '#4AFF50',
     backgroundColor: 'rgba(74, 255, 80, 0.15)',
   },
-  offButton: {
+  stopButton: {
     borderColor: '#FF3A3A',
     backgroundColor: 'rgba(255, 58, 58, 0.15)',
+  },
+  endButton: {
+    borderColor: '#FFA500',
+    backgroundColor: 'rgba(255, 165, 0, 0.15)',
   },
   activeButton: {
     borderWidth: 3,
@@ -335,23 +366,5 @@ const styles = StyleSheet.create({
   initializingText: {
     fontSize: 18,
     fontWeight: '500',
-  },
-  warningContainer: {
-    marginTop: 40,
-    padding: 10,
-    backgroundColor: 'rgba(255, 0, 0, 0.1)',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 0, 0, 0.3)',
-    alignSelf: 'center',
-  },
-  warningContainerLandscape: {
-    marginTop: 0,
-  },
-  warningText: {
-    color: '#FF0000',
-    fontSize: 16,
-    fontWeight: '500',
-    textAlign: 'center',
   },
 });
